@@ -1,0 +1,12 @@
+{
+  "total_nodes": 171,
+  "reuse_hits": 97,
+  "reuse_rate": 0.5672514619883041,
+  "plan_critical_total": 107,
+  "plan_critical_hits": 48,
+  "plan_critical_reuse_rate": 0.4485981308411215,
+  "hintable_hits": 33,
+  "applicability_rate": 0.3402061855670103,
+  "hintable_plan_critical_hits": 33,
+  "hintable_pc_rate": 0.6875
+}

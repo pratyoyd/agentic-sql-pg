@@ -1,0 +1,17 @@
+SQL: SELECT 
+    department,
+    EXTRACT(YEAR FROM start_date)::INTEGER as yr,
+    COUNT(*) as total,
+    ROUND(100.0 * SUM(CASE WHEN state = 'Completed' THEN 1 ELSE 0 END) / COUNT(*), 1) as completion_rate_pct,
+    ROUND(AVG(target_percentage), 1) as avg_target,
+    SUM(CASE WHEN percent_complete >= target_percentage THEN 1 ELSE 0 END) as targets_met,
+    ROUND(100.0 * SUM(CASE WHEN percent_complete >= target_percentage THEN 1 ELSE 0 END) / COUNT(*), 1) as pct_targets_met
+FROM flag_28
+GROUP BY department, yr
+HAVING COUNT(*) >= 5
+ORDER BY yr, completion_rate_pct DESC;
+
+Error: function pg_catalog.extract(unknown, text) does not exist
+LINE 3:     EXTRACT(YEAR FROM start_date)::INTEGER as yr,
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

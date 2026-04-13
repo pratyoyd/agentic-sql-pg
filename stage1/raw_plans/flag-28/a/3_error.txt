@@ -1,0 +1,14 @@
+SQL: SELECT 
+    department,
+    ROUND(AVG(target_percentage), 1) as avg_target,
+    ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY target_percentage), 1) as median_target,
+    ROUND(AVG(CASE WHEN priority IN ('Critical','High') THEN 1.0 ELSE 0.0 END) * 100, 1) as pct_high_critical,
+    COUNT(*) as total_goals
+FROM flag_28
+GROUP BY department
+ORDER BY pct_high_critical DESC;
+
+Error: function round(double precision, integer) does not exist
+LINE 4:     ROUND(PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY target...
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

@@ -1,0 +1,15 @@
+SQL: SELECT 
+    g.department,
+    ROUND(AVG(u.tenure_years), 2) as avg_tenure_years,
+    ROUND(AVG(u.decline_rate), 4) as avg_decline_rate,
+    ROUND(100.0 * SUM(CASE WHEN g.state = 'Completed' THEN 1 ELSE 0 END) / COUNT(*), 1) as completion_rate,
+    COUNT(*) as total_goals
+FROM flag_28 g
+JOIN flag_28_sysuser u ON g.owner = u.name
+GROUP BY g.department
+ORDER BY completion_rate DESC;
+
+Error: function round(double precision, integer) does not exist
+LINE 3:     ROUND(AVG(u.tenure_years), 2) as avg_tenure_years,
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

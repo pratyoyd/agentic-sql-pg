@@ -1,0 +1,15 @@
+SQL: SELECT 
+    priority,
+    department,
+    COUNT(*) as total,
+    ROUND(100.0 * SUM(CASE WHEN state = 'Completed' THEN 1 ELSE 0 END) / COUNT(*), 1) as completion_rate,
+    ROUND(AVG(end_date - start_date), 0) as avg_days
+FROM flag_28
+WHERE priority IN ('Critical', 'High')
+GROUP BY priority, department
+ORDER BY priority, completion_rate DESC;
+
+Error: operator does not exist: text - text
+LINE 6:     ROUND(AVG(end_date - start_date), 0) as avg_days
+                               ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

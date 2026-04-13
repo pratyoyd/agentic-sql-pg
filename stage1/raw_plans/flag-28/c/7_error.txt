@@ -1,0 +1,17 @@
+SQL: SELECT 
+    department,
+    priority,
+    ROUND(AVG(DATEDIFF('day', start_date, end_date)), 0) as avg_duration_days,
+    ROUND(AVG(target_percentage), 1) as avg_target_pct,
+    ROUND(AVG(percent_complete), 1) as avg_achieved_pct,
+    ROUND(100.0 * SUM(CASE WHEN state = 'Completed' THEN 1 ELSE 0 END) / COUNT(*), 1) as completion_rate,
+    COUNT(*) as n
+FROM flag_28
+WHERE priority IN ('Critical', 'High')
+GROUP BY department, priority
+ORDER BY priority, department
+
+Error: function datediff(unknown, text, text) does not exist
+LINE 4:     ROUND(AVG(DATEDIFF('day', start_date, end_date)), 0) as ...
+                      ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

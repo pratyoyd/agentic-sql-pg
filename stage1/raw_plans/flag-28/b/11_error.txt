@@ -1,0 +1,18 @@
+SQL: SELECT 
+    f.department,
+    ROUND(AVG(u.tenure_years), 2) as avg_tenure_years,
+    ROUND(AVG(u.decline_rate), 3) as avg_decline_rate,
+    ROUND(AVG(CASE WHEN f.state = 'Completed' THEN u.decline_rate END), 3) as decline_rate_completed,
+    ROUND(AVG(CASE WHEN f.state != 'Completed' THEN u.decline_rate END), 3) as decline_rate_incomplete,
+    ROUND(AVG(CASE WHEN f.state = 'Completed' THEN u.tenure_years END), 2) as tenure_completed,
+    ROUND(AVG(CASE WHEN f.state != 'Completed' THEN u.tenure_years END), 2) as tenure_incomplete
+FROM flag_28 f
+LEFT JOIN flag_28_sysuser u ON f.owner = u.name
+WHERE u.department = f.department
+GROUP BY f.department
+ORDER BY f.department;
+
+Error: function round(double precision, integer) does not exist
+LINE 3:     ROUND(AVG(u.tenure_years), 2) as avg_tenure_years,
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

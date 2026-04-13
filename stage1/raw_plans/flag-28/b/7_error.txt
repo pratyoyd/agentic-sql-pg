@@ -1,0 +1,19 @@
+SQL: SELECT 
+    department,
+    CASE 
+        WHEN (end_date - start_date) <= 60 THEN '0-60 days'
+        WHEN (end_date - start_date) <= 120 THEN '61-120 days'
+        WHEN (end_date - start_date) <= 180 THEN '121-180 days'
+        ELSE '180+ days'
+    END as duration_bucket,
+    COUNT(*) as total,
+    ROUND(100.0 * SUM(CASE WHEN state = 'Completed' THEN 1 ELSE 0 END) / COUNT(*), 1) as completion_rate_pct,
+    ROUND(AVG(target_percentage), 1) as avg_target
+FROM flag_28
+GROUP BY department, duration_bucket
+ORDER BY department, MIN(end_date - start_date);
+
+Error: operator does not exist: text - text
+LINE 4:         WHEN (end_date - start_date) <= 60 THEN '0-60 days'
+                               ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

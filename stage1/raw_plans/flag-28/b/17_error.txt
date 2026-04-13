@@ -1,0 +1,17 @@
+SQL: SELECT 
+    department,
+    state,
+    COUNT(*) as total,
+    SUM(CASE WHEN percent_complete >= target_percentage THEN 1 ELSE 0 END) as met_target,
+    SUM(CASE WHEN percent_complete < target_percentage THEN 1 ELSE 0 END) as missed_target,
+    ROUND(AVG(CASE WHEN percent_complete < target_percentage THEN target_percentage - percent_complete END), 1) as avg_shortfall_when_missed,
+    ROUND(MIN(CASE WHEN percent_complete < target_percentage THEN percent_complete::DOUBLE / target_percentage END) * 100, 1) as min_pct_of_target_still_completed,
+    ROUND(AVG(CASE WHEN percent_complete < target_percentage THEN percent_complete::DOUBLE / target_percentage END) * 100, 1) as avg_pct_of_target_still_completed
+FROM flag_28
+WHERE state = 'Completed'
+GROUP BY department, state
+ORDER BY department;
+
+Error: type "double" does not exist
+LINE 8: ...mplete < target_percentage THEN percent_complete::DOUBLE / t...
+                                                             ^
