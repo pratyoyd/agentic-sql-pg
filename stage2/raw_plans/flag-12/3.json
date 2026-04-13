@@ -8,8 +8,8 @@
       "Total Cost": 49.92,
       "Plan Rows": 405,
       "Plan Width": 30,
-      "Actual Startup Time": 0.533,
-      "Actual Total Time": 0.539,
+      "Actual Startup Time": 0.794,
+      "Actual Total Time": 0.804,
       "Actual Rows": 65,
       "Actual Loops": 1,
       "Sort Key": [
@@ -19,7 +19,7 @@
       "Sort Method": "quicksort",
       "Sort Space Used": 28,
       "Sort Space Type": "Memory",
-      "Shared Hit Blocks": 19,
+      "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -41,13 +41,13 @@
           "Total Cost": 31.36,
           "Plan Rows": 405,
           "Plan Width": 30,
-          "Actual Startup Time": 0.465,
-          "Actual Total Time": 0.483,
+          "Actual Startup Time": 0.679,
+          "Actual Total Time": 0.71,
           "Actual Rows": 65,
           "Actual Loops": 1,
           "Group Key": [
-            "assigned_to",
-            "date_trunc('month'::text, opened_at)"
+            "date_trunc('month'::text, opened_at)",
+            "assigned_to"
           ],
           "Planned Partitions": 0,
           "HashAgg Batches": 1,
@@ -75,8 +75,8 @@
               "Total Cost": 23.26,
               "Plan Rows": 405,
               "Plan Width": 22,
-              "Actual Startup Time": 0.021,
-              "Actual Total Time": 0.284,
+              "Actual Startup Time": 0.037,
+              "Actual Total Time": 0.406,
               "Actual Rows": 405,
               "Actual Loops": 1,
               "Filter": "(assignment_group = 'Hardware'::text)",
@@ -97,7 +97,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 14,
+      "Shared Hit Blocks": 7,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -108,8 +108,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.172,
+    "Planning Time": 0.288,
     "Triggers": [],
-    "Execution Time": 0.619
+    "Execution Time": 0.971
   }
 ]

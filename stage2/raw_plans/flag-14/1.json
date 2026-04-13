@@ -1,22 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 25.19,
-      "Total Cost": 29.01,
+      "Startup Cost": 29.01,
+      "Total Cost": 29.22,
       "Plan Rows": 85,
-      "Plan Width": 56,
-      "Actual Startup Time": 0.223,
-      "Actual Total Time": 0.311,
+      "Plan Width": 60,
+      "Actual Startup Time": 0.61,
+      "Actual Total Time": 0.613,
       "Actual Rows": 13,
       "Actual Loops": 1,
-      "Group Key": [
-        "(date_trunc('month'::text, opened_at))"
+      "Sort Key": [
+        "(((date_trunc('month'::text, opened_at)))::date)"
       ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 19,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -29,25 +30,28 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 25.19,
-          "Total Cost": 25.4,
+          "Startup Cost": 24.37,
+          "Total Cost": 26.29,
           "Plan Rows": 85,
-          "Plan Width": 32,
-          "Actual Startup Time": 0.195,
-          "Actual Total Time": 0.203,
-          "Actual Rows": 85,
+          "Plan Width": 60,
+          "Actual Startup Time": 0.527,
+          "Actual Total Time": 0.549,
+          "Actual Rows": 13,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(date_trunc('month'::text, opened_at))"
+          "Group Key": [
+            "date_trunc('month'::text, opened_at)"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 30,
-          "Sort Space Type": "Memory",
-          "Shared Hit Blocks": 19,
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
           "Shared Written Blocks": 0,
@@ -69,8 +73,8 @@
               "Total Cost": 22.46,
               "Plan Rows": 85,
               "Plan Width": 32,
-              "Actual Startup Time": 0.013,
-              "Actual Total Time": 0.135,
+              "Actual Startup Time": 0.034,
+              "Actual Total Time": 0.308,
               "Actual Rows": 85,
               "Actual Loops": 1,
               "Filter": "(assigned_to = 'Fred Luddy'::text)",
@@ -102,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.153,
+    "Planning Time": 0.404,
     "Triggers": [],
-    "Execution Time": 0.391
+    "Execution Time": 0.756
   }
 ]

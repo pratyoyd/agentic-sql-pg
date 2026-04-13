@@ -2,19 +2,22 @@
   {
     "Plan": {
       "Node Type": "Aggregate",
-      "Strategy": "Plain",
+      "Strategy": "Sorted",
       "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 35.27,
-      "Total Cost": 35.28,
-      "Plan Rows": 1,
-      "Plan Width": 120,
-      "Actual Startup Time": 0.693,
-      "Actual Total Time": 0.695,
-      "Actual Rows": 1,
+      "Startup Cost": 43.67,
+      "Total Cost": 74.33,
+      "Plan Rows": 339,
+      "Plan Width": 168,
+      "Actual Startup Time": 0.569,
+      "Actual Total Time": 1.493,
+      "Actual Rows": 5,
       "Actual Loops": 1,
-      "Shared Hit Blocks": 29,
+      "Group Key": [
+        "(CASE WHEN (amount < 500) THEN '1. <500'::text WHEN (amount < 1000) THEN '2. 500-999'::text WHEN (amount < 2000) THEN '3. 1000-1999'::text WHEN (amount < 5000) THEN '4. 2000-4999'::text WHEN (amount < 10000) THEN '5. 5000-9999'::text ELSE '6. 10000+'::text END)"
+      ],
+      "Shared Hit Blocks": 28,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -26,22 +29,24 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Seq Scan",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Relation Name": "flag_25",
-          "Alias": "flag_25",
-          "Startup Cost": 0.0,
-          "Total Cost": 25.0,
+          "Startup Cost": 43.67,
+          "Total Cost": 44.52,
           "Plan Rows": 342,
-          "Plan Width": 20,
-          "Actual Startup Time": 0.029,
-          "Actual Total Time": 0.238,
+          "Plan Width": 48,
+          "Actual Startup Time": 0.367,
+          "Actual Total Time": 0.402,
           "Actual Rows": 342,
           "Actual Loops": 1,
-          "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
-          "Rows Removed by Filter": 158,
+          "Sort Key": [
+            "(CASE WHEN (amount < 500) THEN '1. <500'::text WHEN (amount < 1000) THEN '2. 500-999'::text WHEN (amount < 2000) THEN '3. 1000-1999'::text WHEN (amount < 5000) THEN '4. 2000-4999'::text WHEN (amount < 10000) THEN '5. 5000-9999'::text ELSE '6. 10000+'::text END)"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 43,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -51,12 +56,42 @@
           "Local Dirtied Blocks": 0,
           "Local Written Blocks": 0,
           "Temp Read Blocks": 0,
-          "Temp Written Blocks": 0
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_25",
+              "Alias": "flag_25",
+              "Startup Cost": 0.0,
+              "Total Cost": 29.27,
+              "Plan Rows": 342,
+              "Plan Width": 48,
+              "Actual Startup Time": 0.021,
+              "Actual Total Time": 0.22,
+              "Actual Rows": 342,
+              "Actual Loops": 1,
+              "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
+              "Rows Removed by Filter": 158,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 68,
+      "Shared Hit Blocks": 29,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -67,8 +102,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.715,
+    "Planning Time": 0.376,
     "Triggers": [],
-    "Execution Time": 0.887
+    "Execution Time": 1.6
   }
 ]

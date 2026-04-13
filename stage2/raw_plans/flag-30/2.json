@@ -4,17 +4,16 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 26.4,
-      "Total Cost": 26.44,
-      "Plan Rows": 16,
-      "Plan Width": 52,
-      "Actual Startup Time": 0.247,
-      "Actual Total Time": 0.25,
-      "Actual Rows": 16,
+      "Startup Cost": 34.42,
+      "Total Cost": 34.43,
+      "Plan Rows": 4,
+      "Plan Width": 118,
+      "Actual Startup Time": 0.706,
+      "Actual Total Time": 0.709,
+      "Actual Rows": 4,
       "Actual Loops": 1,
       "Sort Key": [
-        "department",
-        "(round(avg((end_date - start_date)), 1))"
+        "(round(((100.0 * (count(*) FILTER (WHERE (category = 'Cost Reduction'::text)))::numeric) / (count(*))::numeric), 1)) DESC"
       ],
       "Sort Method": "quicksort",
       "Sort Space Used": 25,
@@ -37,17 +36,16 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 25.84,
-          "Total Cost": 26.08,
-          "Plan Rows": 16,
-          "Plan Width": 52,
-          "Actual Startup Time": 0.208,
-          "Actual Total Time": 0.222,
-          "Actual Rows": 16,
+          "Startup Cost": 34.25,
+          "Total Cost": 34.38,
+          "Plan Rows": 4,
+          "Plan Width": 118,
+          "Actual Startup Time": 0.645,
+          "Actual Total Time": 0.66,
+          "Actual Rows": 4,
           "Actual Loops": 1,
           "Group Key": [
-            "department",
-            "priority"
+            "department"
           ],
           "Planned Partitions": 0,
           "HashAgg Batches": 1,
@@ -72,15 +70,13 @@
               "Relation Name": "flag_30",
               "Alias": "flag_30",
               "Startup Cost": 0.0,
-              "Total Cost": 24.25,
-              "Plan Rows": 127,
-              "Plan Width": 20,
-              "Actual Startup Time": 0.01,
-              "Actual Total Time": 0.125,
-              "Actual Rows": 127,
+              "Total Cost": 23.0,
+              "Plan Rows": 500,
+              "Plan Width": 30,
+              "Actual Startup Time": 0.023,
+              "Actual Total Time": 0.154,
+              "Actual Rows": 500,
               "Actual Loops": 1,
-              "Filter": "(state = 'Completed'::text)",
-              "Rows Removed by Filter": 373,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -97,7 +93,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 27,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -108,8 +104,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.22,
+    "Planning Time": 0.291,
     "Triggers": [],
-    "Execution Time": 0.31
+    "Execution Time": 0.833
   }
 ]

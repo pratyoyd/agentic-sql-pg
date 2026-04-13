@@ -4,19 +4,19 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 24.81,
-      "Total Cost": 24.84,
+      "Startup Cost": 24.69,
+      "Total Cost": 24.73,
       "Plan Rows": 15,
-      "Plan Width": 232,
-      "Actual Startup Time": 0.185,
-      "Actual Total Time": 0.187,
+      "Plan Width": 106,
+      "Actual Startup Time": 0.324,
+      "Actual Total Time": 0.329,
       "Actual Rows": 18,
       "Actual Loops": 1,
       "Sort Key": [
-        "(EXTRACT(epoch FROM (processed_date - opened_at)))"
+        "((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric))"
       ],
       "Sort Method": "quicksort",
-      "Sort Space Used": 28,
+      "Sort Space Used": 26,
       "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
@@ -37,14 +37,14 @@
           "Relation Name": "flag_24",
           "Alias": "flag_24",
           "Startup Cost": 0.0,
-          "Total Cost": 24.51,
+          "Total Cost": 24.4,
           "Plan Rows": 15,
-          "Plan Width": 232,
-          "Actual Startup Time": 0.022,
-          "Actual Total Time": 0.156,
+          "Plan Width": 106,
+          "Actual Startup Time": 0.048,
+          "Actual Total Time": 0.273,
           "Actual Rows": 18,
           "Actual Loops": 1,
-          "Filter": "((processed_date IS NOT NULL) AND (department = 'Development'::text))",
+          "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL) AND (department = 'Development'::text))",
           "Rows Removed by Filter": 482,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
@@ -60,7 +60,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 51,
+      "Shared Hit Blocks": 3,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -71,8 +71,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.319,
+    "Planning Time": 0.274,
     "Triggers": [],
-    "Execution Time": 0.219
+    "Execution Time": 0.4
   }
 ]

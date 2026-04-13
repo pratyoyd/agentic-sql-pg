@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-2_rep_a",
+  "task_key": "flag-2",
+  "goal": "Analyze the trend of incident resolution times and identify potential reasons for any observed patterns.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 10,
+  "parse_failures": 0,
+  "wall_clock_seconds": 159.1,
+  "log_file": "stage2/traces/flag-2_rep_a.jsonl"
+}

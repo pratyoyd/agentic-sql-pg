@@ -10,6 +10,241 @@
   "flag-2_rep_a": {
     "task": "flag-2",
     "rep": "a",
-    "status": "running"
+    "status": "done",
+    "num_queries": 10,
+    "wall_clock_seconds": 159.1,
+    "log_path": "stage2/traces/flag-2_rep_a.jsonl"
+  },
+  "flag-3_rep_a": {
+    "task": "flag-3",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 8,
+    "wall_clock_seconds": 112.4,
+    "log_path": "stage2/traces/flag-3_rep_a.jsonl"
+  },
+  "flag-4_rep_a": {
+    "task": "flag-4",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 11,
+    "wall_clock_seconds": 147.3,
+    "log_path": "stage2/traces/flag-4_rep_a.jsonl"
+  },
+  "flag-5_rep_a": {
+    "task": "flag-5",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 16,
+    "wall_clock_seconds": 255.8,
+    "log_path": "stage2/traces/flag-5_rep_a.jsonl"
+  },
+  "flag-6_rep_a": {
+    "task": "flag-6",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 13,
+    "wall_clock_seconds": 180.4,
+    "log_path": "stage2/traces/flag-6_rep_a.jsonl"
+  },
+  "flag-7_rep_a": {
+    "task": "flag-7",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 7,
+    "wall_clock_seconds": 95.6,
+    "log_path": "stage2/traces/flag-7_rep_a.jsonl"
+  },
+  "flag-8_rep_a": {
+    "task": "flag-8",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 9,
+    "wall_clock_seconds": 105.7,
+    "log_path": "stage2/traces/flag-8_rep_a.jsonl"
+  },
+  "flag-9_rep_a": {
+    "task": "flag-9",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 18,
+    "wall_clock_seconds": 271.2,
+    "log_path": "stage2/traces/flag-9_rep_a.jsonl"
+  },
+  "flag-10_rep_a": {
+    "task": "flag-10",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 6,
+    "wall_clock_seconds": 114.4,
+    "log_path": "stage2/traces/flag-10_rep_a.jsonl"
+  },
+  "flag-11_rep_a": {
+    "task": "flag-11",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 21,
+    "wall_clock_seconds": 334.6,
+    "log_path": "stage2/traces/flag-11_rep_a.jsonl"
+  },
+  "flag-12_rep_a": {
+    "task": "flag-12",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 12,
+    "wall_clock_seconds": 159.5,
+    "log_path": "stage2/traces/flag-12_rep_a.jsonl"
+  },
+  "flag-13_rep_a": {
+    "task": "flag-13",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 16,
+    "wall_clock_seconds": 216.3,
+    "log_path": "stage2/traces/flag-13_rep_a.jsonl"
+  },
+  "flag-14_rep_a": {
+    "task": "flag-14",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 17,
+    "wall_clock_seconds": 244.4,
+    "log_path": "stage2/traces/flag-14_rep_a.jsonl"
+  },
+  "flag-15_rep_a": {
+    "task": "flag-15",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 14,
+    "wall_clock_seconds": 180.3,
+    "log_path": "stage2/traces/flag-15_rep_a.jsonl"
+  },
+  "flag-16_rep_a": {
+    "task": "flag-16",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 16,
+    "wall_clock_seconds": 242.9,
+    "log_path": "stage2/traces/flag-16_rep_a.jsonl"
+  },
+  "flag-17_rep_a": {
+    "task": "flag-17",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 17,
+    "wall_clock_seconds": 238.5,
+    "log_path": "stage2/traces/flag-17_rep_a.jsonl"
+  },
+  "flag-18_rep_a": {
+    "task": "flag-18",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 13,
+    "wall_clock_seconds": 183.6,
+    "log_path": "stage2/traces/flag-18_rep_a.jsonl"
+  },
+  "flag-19_rep_a": {
+    "task": "flag-19",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 32,
+    "wall_clock_seconds": 509.7,
+    "log_path": "stage2/traces/flag-19_rep_a.jsonl"
+  },
+  "flag-20_rep_a": {
+    "task": "flag-20",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 30,
+    "wall_clock_seconds": 454.7,
+    "log_path": "stage2/traces/flag-20_rep_a.jsonl"
+  },
+  "flag-21_rep_a": {
+    "task": "flag-21",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 21,
+    "wall_clock_seconds": 293.8,
+    "log_path": "stage2/traces/flag-21_rep_a.jsonl"
+  },
+  "flag-22_rep_a": {
+    "task": "flag-22",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 12,
+    "wall_clock_seconds": 196.2,
+    "log_path": "stage2/traces/flag-22_rep_a.jsonl"
+  },
+  "flag-23_rep_a": {
+    "task": "flag-23",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 10,
+    "wall_clock_seconds": 126.4,
+    "log_path": "stage2/traces/flag-23_rep_a.jsonl"
+  },
+  "flag-24_rep_a": {
+    "task": "flag-24",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 25,
+    "wall_clock_seconds": 535.3,
+    "log_path": "stage2/traces/flag-24_rep_a.jsonl"
+  },
+  "flag-25_rep_a": {
+    "task": "flag-25",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 16,
+    "wall_clock_seconds": 372.6,
+    "log_path": "stage2/traces/flag-25_rep_a.jsonl"
+  },
+  "flag-26_rep_a": {
+    "task": "flag-26",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 15,
+    "wall_clock_seconds": 207.4,
+    "log_path": "stage2/traces/flag-26_rep_a.jsonl"
+  },
+  "flag-27_rep_a": {
+    "task": "flag-27",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 7,
+    "wall_clock_seconds": 96.2,
+    "log_path": "stage2/traces/flag-27_rep_a.jsonl"
+  },
+  "flag-28_rep_a": {
+    "task": "flag-28",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 16,
+    "wall_clock_seconds": 224.1,
+    "log_path": "stage2/traces/flag-28_rep_a.jsonl"
+  },
+  "flag-29_rep_a": {
+    "task": "flag-29",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 13,
+    "wall_clock_seconds": 165.6,
+    "log_path": "stage2/traces/flag-29_rep_a.jsonl"
+  },
+  "flag-30_rep_a": {
+    "task": "flag-30",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 21,
+    "wall_clock_seconds": 340.5,
+    "log_path": "stage2/traces/flag-30_rep_a.jsonl"
+  },
+  "flag-31_rep_a": {
+    "task": "flag-31",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 14,
+    "wall_clock_seconds": 258.4,
+    "log_path": "stage2/traces/flag-31_rep_a.jsonl"
   }
 }

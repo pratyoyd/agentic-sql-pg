@@ -1,24 +1,24 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 45.91,
-      "Total Cost": 57.15,
-      "Plan Rows": 499,
-      "Plan Width": 30,
-      "Actual Startup Time": 0.66,
-      "Actual Total Time": 0.824,
-      "Actual Rows": 64,
+      "Startup Cost": 70.34,
+      "Total Cost": 70.84,
+      "Plan Rows": 200,
+      "Plan Width": 86,
+      "Actual Startup Time": 1.201,
+      "Actual Total Time": 1.204,
+      "Actual Rows": 5,
       "Actual Loops": 1,
-      "Group Key": [
-        "assigned_to",
-        "(date_trunc('month'::text, opened_at))"
+      "Sort Key": [
+        "(round(((((count(*))::numeric * sum((((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric)) * ((count(*)))::numeric))) - (sum(((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric))) * sum((count(*))))) / NULLIF((((count(*))::numeric * sum((((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric)) * ((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric))))) - (sum(((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric))) * sum(((EXTRACT(epoch FROM (date_trunc('month'::text, flag_4.opened_at))) / '2592000'::numeric))))), '0'::numeric)), 4)) DESC"
       ],
-      "Shared Hit Blocks": 16,
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 19,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -30,25 +30,27 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 45.91,
-          "Total Cost": 47.16,
-          "Plan Rows": 500,
-          "Plan Width": 22,
-          "Actual Startup Time": 0.651,
-          "Actual Total Time": 0.695,
-          "Actual Rows": 500,
+          "Startup Cost": 52.2,
+          "Total Cost": 62.7,
+          "Plan Rows": 200,
+          "Plan Width": 86,
+          "Actual Startup Time": 1.094,
+          "Actual Total Time": 1.13,
+          "Actual Rows": 5,
           "Actual Loops": 1,
-          "Sort Key": [
-            "assigned_to",
-            "(date_trunc('month'::text, opened_at))"
+          "Group Key": [
+            "flag_4.assigned_to"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 49,
-          "Sort Space Type": "Memory",
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -61,22 +63,28 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Aggregate",
+              "Strategy": "Hashed",
+              "Partial Mode": "Simple",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_4",
-              "Alias": "flag_4",
-              "Startup Cost": 0.0,
-              "Total Cost": 23.5,
-              "Plan Rows": 500,
-              "Plan Width": 22,
-              "Actual Startup Time": 0.012,
-              "Actual Total Time": 0.296,
-              "Actual Rows": 500,
+              "Startup Cost": 26.0,
+              "Total Cost": 35.98,
+              "Plan Rows": 499,
+              "Plan Width": 62,
+              "Actual Startup Time": 0.82,
+              "Actual Total Time": 0.922,
+              "Actual Rows": 64,
               "Actual Loops": 1,
-              "Filter": "((assigned_to IS NOT NULL) AND (assigned_to <> ''::text))",
-              "Rows Removed by Filter": 0,
+              "Group Key": [
+                "flag_4.assigned_to",
+                "date_trunc('month'::text, flag_4.opened_at)"
+              ],
+              "Planned Partitions": 0,
+              "HashAgg Batches": 1,
+              "Peak Memory Usage": 49,
+              "Disk Usage": 0,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -86,14 +94,44 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "flag_4",
+                  "Alias": "flag_4",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 22.25,
+                  "Plan Rows": 500,
+                  "Plan Width": 30,
+                  "Actual Startup Time": 0.033,
+                  "Actual Total Time": 0.4,
+                  "Actual Rows": 500,
+                  "Actual Loops": 1,
+                  "Filter": "(assigned_to IS NOT NULL)",
+                  "Rows Removed by Filter": 0,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 28,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +142,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.08,
+    "Planning Time": 0.683,
     "Triggers": [],
-    "Execution Time": 0.9
+    "Execution Time": 1.362
   }
 ]

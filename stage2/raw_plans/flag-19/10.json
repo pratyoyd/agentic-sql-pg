@@ -1,23 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 25.52,
-      "Total Cost": 26.49,
-      "Plan Rows": 43,
-      "Plan Width": 25,
-      "Actual Startup Time": 0.223,
-      "Actual Total Time": 0.253,
-      "Actual Rows": 25,
+      "Startup Cost": 29.3,
+      "Total Cost": 29.37,
+      "Plan Rows": 28,
+      "Plan Width": 69,
+      "Actual Startup Time": 1.207,
+      "Actual Total Time": 1.212,
+      "Actual Rows": 26,
       "Actual Loops": 1,
-      "Group Key": [
-        "(date_trunc('month'::text, opened_at))",
-        "state"
+      "Sort Key": [
+        "(round(((100.0 * (count(*) FILTER (WHERE (source_id IS NULL)))::numeric) / (count(*))::numeric), 2)) DESC"
       ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 26,
+      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,25 +30,28 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 25.52,
-          "Total Cost": 25.63,
-          "Plan Rows": 43,
-          "Plan Width": 17,
-          "Actual Startup Time": 0.216,
-          "Actual Total Time": 0.221,
-          "Actual Rows": 43,
+          "Startup Cost": 28.0,
+          "Total Cost": 28.63,
+          "Plan Rows": 28,
+          "Plan Width": 69,
+          "Actual Startup Time": 1.115,
+          "Actual Total Time": 1.157,
+          "Actual Rows": 26,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(date_trunc('month'::text, opened_at))",
+          "Group Key": [
+            "department",
             "state"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 26,
-          "Sort Space Type": "Memory",
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -68,15 +71,13 @@
               "Relation Name": "flag_19",
               "Alias": "flag_19",
               "Startup Cost": 0.0,
-              "Total Cost": 24.36,
-              "Plan Rows": 43,
-              "Plan Width": 17,
-              "Actual Startup Time": 0.018,
-              "Actual Total Time": 0.18,
-              "Actual Rows": 43,
+              "Total Cost": 23.0,
+              "Plan Rows": 500,
+              "Plan Width": 34,
+              "Actual Startup Time": 0.024,
+              "Actual Total Time": 0.179,
+              "Actual Rows": 500,
               "Actual Loops": 1,
-              "Filter": "(department = 'IT'::text)",
-              "Rows Removed by Filter": 457,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -93,7 +94,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 6,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +105,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.084,
+    "Planning Time": 0.358,
     "Triggers": [],
-    "Execution Time": 0.328
+    "Execution Time": 1.392
   }
 ]

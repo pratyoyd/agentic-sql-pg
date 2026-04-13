@@ -4,16 +4,16 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 51.8,
-      "Total Cost": 51.84,
+      "Startup Cost": 54.83,
+      "Total Cost": 54.87,
       "Plan Rows": 16,
-      "Plan Width": 70,
-      "Actual Startup Time": 0.611,
-      "Actual Total Time": 0.614,
+      "Plan Width": 126,
+      "Actual Startup Time": 1.041,
+      "Actual Total Time": 1.045,
       "Actual Rows": 16,
       "Actual Loops": 1,
       "Sort Key": [
-        "metric",
+        "department",
         "(round(((100.0 * (sum(CASE WHEN (state = 'Completed'::text) THEN 1 ELSE 0 END))::numeric) / (count(*))::numeric), 1)) DESC"
       ],
       "Sort Method": "quicksort",
@@ -37,17 +37,17 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 51.12,
-          "Total Cost": 51.48,
+          "Startup Cost": 53.88,
+          "Total Cost": 54.51,
           "Plan Rows": 16,
-          "Plan Width": 70,
-          "Actual Startup Time": 0.563,
-          "Actual Total Time": 0.584,
+          "Plan Width": 126,
+          "Actual Startup Time": 0.918,
+          "Actual Total Time": 0.976,
           "Actual Rows": 16,
           "Actual Loops": 1,
           "Group Key": [
-            "metric",
-            "department"
+            "department",
+            "metric"
           ],
           "Planned Partitions": 0,
           "HashAgg Batches": 1,
@@ -74,9 +74,9 @@
               "Startup Cost": 0.0,
               "Total Cost": 41.5,
               "Plan Rows": 550,
-              "Plan Width": 38,
-              "Actual Startup Time": 0.008,
-              "Actual Total Time": 0.105,
+              "Plan Width": 46,
+              "Actual Startup Time": 0.022,
+              "Actual Total Time": 0.243,
               "Actual Rows": 550,
               "Actual Loops": 1,
               "Shared Hit Blocks": 36,
@@ -95,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 4,
+      "Shared Hit Blocks": 6,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.149,
+    "Planning Time": 0.444,
     "Triggers": [],
-    "Execution Time": 0.681
+    "Execution Time": 1.172
   }
 ]

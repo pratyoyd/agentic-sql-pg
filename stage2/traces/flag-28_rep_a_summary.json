@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-28_rep_a",
+  "task_key": "flag-28",
+  "goal": "Examine and analyze elevated goal achievement rates in a certain department and to leverage these insights to improve goal management across all departments.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 16,
+  "parse_failures": 0,
+  "wall_clock_seconds": 224.1,
+  "log_file": "stage2/traces/flag-28_rep_a.jsonl"
+}

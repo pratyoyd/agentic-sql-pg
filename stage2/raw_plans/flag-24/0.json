@@ -8,8 +8,8 @@
       "Total Cost": 55.5,
       "Plan Rows": 7,
       "Plan Width": 148,
-      "Actual Startup Time": 1.908,
-      "Actual Total Time": 1.91,
+      "Actual Startup Time": 2.241,
+      "Actual Total Time": 2.244,
       "Actual Rows": 7,
       "Actual Loops": 1,
       "Sort Key": [
@@ -18,7 +18,7 @@
       "Sort Method": "quicksort",
       "Sort Space Used": 25,
       "Sort Space Type": "Memory",
-      "Shared Hit Blocks": 32,
+      "Shared Hit Blocks": 29,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -40,14 +40,14 @@
           "Total Cost": 55.38,
           "Plan Rows": 7,
           "Plan Width": 148,
-          "Actual Startup Time": 1.221,
-          "Actual Total Time": 1.841,
+          "Actual Startup Time": 1.412,
+          "Actual Total Time": 2.185,
           "Actual Rows": 7,
           "Actual Loops": 1,
           "Group Key": [
             "department"
           ],
-          "Shared Hit Blocks": 29,
+          "Shared Hit Blocks": 26,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
           "Shared Written Blocks": 0,
@@ -67,8 +67,8 @@
               "Total Cost": 38.61,
               "Plan Rows": 349,
               "Plan Width": 28,
-              "Actual Startup Time": 0.405,
-              "Actual Total Time": 0.444,
+              "Actual Startup Time": 0.419,
+              "Actual Total Time": 0.466,
               "Actual Rows": 349,
               "Actual Loops": 1,
               "Sort Key": [
@@ -77,7 +77,7 @@
               "Sort Method": "quicksort",
               "Sort Space Used": 44,
               "Sort Space Type": "Memory",
-              "Shared Hit Blocks": 21,
+              "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
               "Shared Written Blocks": 0,
@@ -100,7 +100,7 @@
                   "Plan Rows": 349,
                   "Plan Width": 28,
                   "Actual Startup Time": 0.022,
-                  "Actual Total Time": 0.205,
+                  "Actual Total Time": 0.231,
                   "Actual Rows": 349,
                   "Actual Loops": 1,
                   "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
@@ -123,7 +123,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 74,
+      "Shared Hit Blocks": 39,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -134,8 +134,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.762,
+    "Planning Time": 0.46,
     "Triggers": [],
-    "Execution Time": 2.079
+    "Execution Time": 2.391
   }
 ]

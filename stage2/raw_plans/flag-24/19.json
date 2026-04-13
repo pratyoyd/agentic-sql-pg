@@ -1,23 +1,24 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 41.65,
-      "Total Cost": 41.67,
-      "Plan Rows": 7,
-      "Plan Width": 132,
-      "Actual Startup Time": 1.601,
-      "Actual Total Time": 1.603,
-      "Actual Rows": 7,
+      "Startup Cost": 24.73,
+      "Total Cost": 25.44,
+      "Plan Rows": 15,
+      "Plan Width": 119,
+      "Actual Startup Time": 0.448,
+      "Actual Total Time": 0.484,
+      "Actual Rows": 9,
       "Actual Loops": 1,
-      "Sort Key": [
-        "((count(*) - sum(CASE WHEN (EXTRACT(microsecond FROM processed_date) = '0'::numeric) THEN 1 ELSE 0 END))) DESC"
+      "Group Key": [
+        "\"user\"",
+        "((EXTRACT(dow FROM opened_at) = ANY ('{0,6}'::numeric[])))",
+        "((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric))"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,27 +31,27 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 41.32,
-          "Total Cost": 41.55,
-          "Plan Rows": 7,
-          "Plan Width": 132,
-          "Actual Startup Time": 1.559,
-          "Actual Total Time": 1.584,
-          "Actual Rows": 7,
+          "Startup Cost": 24.73,
+          "Total Cost": 24.77,
+          "Plan Rows": 15,
+          "Plan Width": 59,
+          "Actual Startup Time": 0.414,
+          "Actual Total Time": 0.418,
+          "Actual Rows": 18,
           "Actual Loops": 1,
-          "Group Key": [
-            "department"
+          "Sort Key": [
+            "\"user\"",
+            "((EXTRACT(dow FROM opened_at) = ANY ('{0,6}'::numeric[])))",
+            "((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric))",
+            "category"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 32,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 26,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -70,15 +71,15 @@
               "Relation Name": "flag_24",
               "Alias": "flag_24",
               "Startup Cost": 0.0,
-              "Total Cost": 23.0,
-              "Plan Rows": 349,
-              "Plan Width": 28,
-              "Actual Startup Time": 0.015,
-              "Actual Total Time": 0.224,
-              "Actual Rows": 349,
+              "Total Cost": 24.44,
+              "Plan Rows": 15,
+              "Plan Width": 59,
+              "Actual Startup Time": 0.081,
+              "Actual Total Time": 0.321,
+              "Actual Rows": 18,
               "Actual Loops": 1,
-              "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
-              "Rows Removed by Filter": 151,
+              "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL) AND (department = 'Development'::text))",
+              "Rows Removed by Filter": 482,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -95,7 +96,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 3,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +107,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.232,
+    "Planning Time": 0.358,
     "Triggers": [],
-    "Execution Time": 1.687
+    "Execution Time": 0.655
   }
 ]

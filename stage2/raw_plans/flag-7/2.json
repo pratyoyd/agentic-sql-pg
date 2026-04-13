@@ -1,24 +1,25 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 40.56,
-      "Total Cost": 40.57,
-      "Plan Rows": 5,
-      "Plan Width": 117,
-      "Actual Startup Time": 1.02,
-      "Actual Total Time": 1.022,
-      "Actual Rows": 5,
+      "Startup Cost": 29.82,
+      "Total Cost": 34.52,
+      "Plan Rows": 188,
+      "Plan Width": 33,
+      "Actual Startup Time": 0.78,
+      "Actual Total Time": 0.937,
+      "Actual Rows": 78,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(count(*)) DESC"
+      "Group Key": [
+        "category",
+        "priority",
+        "(date_trunc('month'::text, opened_at))"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
-      "Shared Hit Blocks": 19,
+      "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -30,27 +31,26 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 40.38,
-          "Total Cost": 40.5,
-          "Plan Rows": 5,
-          "Plan Width": 117,
-          "Actual Startup Time": 0.976,
-          "Actual Total Time": 0.984,
-          "Actual Rows": 5,
+          "Startup Cost": 29.82,
+          "Total Cost": 30.29,
+          "Plan Rows": 188,
+          "Plan Width": 25,
+          "Actual Startup Time": 0.761,
+          "Actual Total Time": 0.789,
+          "Actual Rows": 188,
           "Actual Loops": 1,
-          "Group Key": [
-            "assigned_to"
+          "Sort Key": [
+            "category",
+            "priority",
+            "(date_trunc('month'::text, opened_at))"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 35,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -70,15 +70,15 @@
               "Relation Name": "flag_7",
               "Alias": "flag_7",
               "Startup Cost": 0.0,
-              "Total Cost": 22.25,
-              "Plan Rows": 500,
-              "Plan Width": 46,
-              "Actual Startup Time": 0.009,
-              "Actual Total Time": 0.169,
-              "Actual Rows": 500,
+              "Total Cost": 22.72,
+              "Plan Rows": 188,
+              "Plan Width": 25,
+              "Actual Startup Time": 0.04,
+              "Actual Total Time": 0.345,
+              "Actual Rows": 188,
               "Actual Loops": 1,
-              "Filter": "((assigned_to IS NOT NULL) AND (assigned_to <> ''::text))",
-              "Rows Removed by Filter": 0,
+              "Filter": "(assigned_to = 'Beth Anglin'::text)",
+              "Rows Removed by Filter": 312,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -95,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 28,
+      "Shared Hit Blocks": 24,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.282,
+    "Planning Time": 0.546,
     "Triggers": [],
-    "Execution Time": 1.077
+    "Execution Time": 1.02
   }
 ]

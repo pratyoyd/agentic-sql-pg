@@ -2,22 +2,26 @@
   {
     "Plan": {
       "Node Type": "Aggregate",
-      "Strategy": "Sorted",
+      "Strategy": "Hashed",
       "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 31.86,
-      "Total Cost": 38.8,
-      "Plan Rows": 146,
-      "Plan Width": 88,
-      "Actual Startup Time": 0.216,
-      "Actual Total Time": 0.285,
-      "Actual Rows": 11,
+      "Startup Cost": 31.66,
+      "Total Cost": 31.74,
+      "Plan Rows": 4,
+      "Plan Width": 89,
+      "Actual Startup Time": 0.63,
+      "Actual Total Time": 0.634,
+      "Actual Rows": 2,
       "Actual Loops": 1,
       "Group Key": [
-        "(date_trunc('month'::text, opened_at))"
+        "state"
       ],
-      "Shared Hit Blocks": 23,
+      "Planned Partitions": 0,
+      "HashAgg Batches": 1,
+      "Peak Memory Usage": 24,
+      "Disk Usage": 0,
+      "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -29,25 +33,23 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Seq Scan",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 31.86,
-          "Total Cost": 32.23,
-          "Plan Rows": 146,
-          "Plan Width": 21,
-          "Actual Startup Time": 0.197,
-          "Actual Total Time": 0.209,
-          "Actual Rows": 146,
+          "Relation Name": "flag_20",
+          "Alias": "flag_20",
+          "Startup Cost": 0.0,
+          "Total Cost": 27.5,
+          "Plan Rows": 111,
+          "Plan Width": 25,
+          "Actual Startup Time": 0.043,
+          "Actual Total Time": 0.348,
+          "Actual Rows": 113,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(date_trunc('month'::text, opened_at))"
-          ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 31,
-          "Sort Space Type": "Memory",
-          "Shared Hit Blocks": 23,
+          "Filter": "((state = ANY ('{Declined,Processed}'::text[])) AND (category = 'Travel'::text))",
+          "Rows Removed by Filter": 387,
+          "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
           "Shared Written Blocks": 0,
@@ -56,42 +58,12 @@
           "Local Dirtied Blocks": 0,
           "Local Written Blocks": 0,
           "Temp Read Blocks": 0,
-          "Temp Written Blocks": 0,
-          "Plans": [
-            {
-              "Node Type": "Seq Scan",
-              "Parent Relationship": "Outer",
-              "Parallel Aware": false,
-              "Async Capable": false,
-              "Relation Name": "flag_20",
-              "Alias": "flag_20",
-              "Startup Cost": 0.0,
-              "Total Cost": 26.61,
-              "Plan Rows": 146,
-              "Plan Width": 21,
-              "Actual Startup Time": 0.015,
-              "Actual Total Time": 0.143,
-              "Actual Rows": 146,
-              "Actual Loops": 1,
-              "Filter": "(category = 'Travel'::text)",
-              "Rows Removed by Filter": 354,
-              "Shared Hit Blocks": 20,
-              "Shared Read Blocks": 0,
-              "Shared Dirtied Blocks": 0,
-              "Shared Written Blocks": 0,
-              "Local Hit Blocks": 0,
-              "Local Read Blocks": 0,
-              "Local Dirtied Blocks": 0,
-              "Local Written Blocks": 0,
-              "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
-            }
-          ]
+          "Temp Written Blocks": 0
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 14,
+      "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -102,8 +74,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.132,
+    "Planning Time": 0.448,
     "Triggers": [],
-    "Execution Time": 0.351
+    "Execution Time": 0.771
   }
 ]

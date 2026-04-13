@@ -4,16 +4,16 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 29.61,
-      "Total Cost": 29.64,
+      "Startup Cost": 29.76,
+      "Total Cost": 29.79,
       "Plan Rows": 12,
-      "Plan Width": 66,
-      "Actual Startup Time": 0.276,
-      "Actual Total Time": 0.277,
+      "Plan Width": 106,
+      "Actual Startup Time": 0.382,
+      "Actual Total Time": 0.383,
       "Actual Rows": 5,
       "Actual Loops": 1,
       "Sort Key": [
-        "(round((((sum(CASE WHEN (manager = 'Ed Gompf'::text) THEN 1 ELSE 0 END))::numeric * 1.0) / (NULLIF(sum(CASE WHEN (manager = 'Mariano Maury'::text) THEN 1 ELSE 0 END), 0))::numeric), 2)) DESC"
+        "(((sum(CASE WHEN (manager = 'Ed Gompf'::text) THEN 1 ELSE 0 END))::numeric - round((((sum(CASE WHEN (manager = 'Ed Gompf'::text) THEN 1 ELSE 0 END) + sum(CASE WHEN (manager = 'Mariano Maury'::text) THEN 1 ELSE 0 END)))::numeric / 2.0), 0))) DESC"
       ],
       "Sort Method": "quicksort",
       "Sort Space Used": 25,
@@ -37,11 +37,11 @@
           "Parallel Aware": false,
           "Async Capable": false,
           "Startup Cost": 29.09,
-          "Total Cost": 29.39,
+          "Total Cost": 29.54,
           "Plan Rows": 12,
-          "Plan Width": 66,
-          "Actual Startup Time": 0.245,
-          "Actual Total Time": 0.251,
+          "Plan Width": 106,
+          "Actual Startup Time": 0.283,
+          "Actual Total Time": 0.291,
           "Actual Rows": 5,
           "Actual Loops": 1,
           "Group Key": [
@@ -73,8 +73,8 @@
               "Total Cost": 28.87,
               "Plan Rows": 18,
               "Plan Width": 32,
-              "Actual Startup Time": 0.012,
-              "Actual Total Time": 0.174,
+              "Actual Startup Time": 0.02,
+              "Actual Total Time": 0.207,
               "Actual Rows": 101,
               "Actual Loops": 1,
               "Filter": "((manager = ANY ('{\"Ed Gompf\",\"Mariano Maury\"}'::text[])) AND (department = 'IT'::text))",
@@ -95,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 13,
+      "Shared Hit Blocks": 24,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.202,
+    "Planning Time": 0.46,
     "Triggers": [],
-    "Execution Time": 0.32
+    "Execution Time": 0.46
   }
 ]

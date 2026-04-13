@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-12_rep_a",
+  "task_key": "flag-12",
+  "goal": "Find the discrepancy and imbalance in incidents assigned",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 12,
+  "parse_failures": 0,
+  "wall_clock_seconds": 159.5,
+  "log_file": "stage2/traces/flag-12_rep_a.jsonl"
+}

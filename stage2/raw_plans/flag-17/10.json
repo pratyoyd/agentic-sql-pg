@@ -4,20 +4,20 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 24.65,
-      "Total Cost": 24.69,
-      "Plan Rows": 13,
-      "Plan Width": 139,
-      "Actual Startup Time": 0.202,
-      "Actual Total Time": 0.205,
-      "Actual Rows": 13,
+      "Startup Cost": 45.63,
+      "Total Cost": 46.46,
+      "Plan Rows": 332,
+      "Plan Width": 105,
+      "Actual Startup Time": 1.826,
+      "Actual Total Time": 1.869,
+      "Actual Rows": 330,
       "Actual Loops": 1,
       "Sort Key": [
         "department",
-        "purchased_on"
+        "warranty_expiration"
       ],
       "Sort Method": "quicksort",
-      "Sort Space Used": 26,
+      "Sort Space Used": 60,
       "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
@@ -38,15 +38,15 @@
           "Relation Name": "flag_17",
           "Alias": "flag_17",
           "Startup Cost": 0.0,
-          "Total Cost": 24.41,
-          "Plan Rows": 13,
-          "Plan Width": 139,
-          "Actual Startup Time": 0.102,
-          "Actual Total Time": 0.172,
-          "Actual Rows": 13,
+          "Total Cost": 31.73,
+          "Plan Rows": 332,
+          "Plan Width": 105,
+          "Actual Startup Time": 0.036,
+          "Actual Total Time": 0.737,
+          "Actual Rows": 330,
           "Actual Loops": 1,
-          "Filter": "(model_category = ANY ('{Server,\"Web Server\"}'::text[]))",
-          "Rows Removed by Filter": 487,
+          "Filter": "(warranty_expiration < (now() + '6 mons'::interval))",
+          "Rows Removed by Filter": 170,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -61,7 +61,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 3,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -72,8 +72,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.089,
+    "Planning Time": 0.29,
     "Triggers": [],
-    "Execution Time": 0.233
+    "Execution Time": 2.023
   }
 ]

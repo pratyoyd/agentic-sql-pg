@@ -1,34 +1,17 @@
 [
   {
     "Plan": {
-      "Node Type": "Incremental Sort",
+      "Node Type": "WindowAgg",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 26.74,
-      "Total Cost": 29.39,
+      "Startup Cost": 25.74,
+      "Total Cost": 28.37,
       "Plan Rows": 42,
-      "Plan Width": 113,
-      "Actual Startup Time": 0.962,
-      "Actual Total Time": 0.965,
-      "Actual Rows": 11,
+      "Plan Width": 93,
+      "Actual Startup Time": 0.754,
+      "Actual Total Time": 0.793,
+      "Actual Rows": 6,
       "Actual Loops": 1,
-      "Sort Key": [
-        "state",
-        "(count(*)) DESC"
-      ],
-      "Presorted Key": [
-        "state"
-      ],
-      "Full-sort Groups": {
-        "Group Count": 1,
-        "Sort Methods Used": [
-          "quicksort"
-        ],
-        "Sort Space Memory": {
-          "Average Sort Space Used": 26,
-          "Peak Sort Space Used": 26
-        }
-      },
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -47,17 +30,17 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 26.06,
-          "Total Cost": 28.07,
+          "Startup Cost": 25.74,
+          "Total Cost": 26.9,
           "Plan Rows": 42,
-          "Plan Width": 113,
-          "Actual Startup Time": 0.884,
-          "Actual Total Time": 0.941,
-          "Actual Rows": 11,
+          "Plan Width": 61,
+          "Actual Startup Time": 0.704,
+          "Actual Total Time": 0.732,
+          "Actual Rows": 6,
           "Actual Loops": 1,
           "Group Key": [
-            "state",
-            "(CASE WHEN ((ci ~ '[_][A-Za-z0-9]+'::text) AND ((ci ~~ '%Asset%'::text) OR (ci ~ '[0-9]{4,}'::text))) THEN 'Formal asset ID (registered)'::text WHEN ((ci ~ '^[A-Za-z]+-[0-9]'::text) OR (ci ~ '^[A-Z]{2,4}[_-][0-9]'::text)) THEN 'Tagged asset'::text WHEN (ci ~ '^[A-Za-z]+ [A-Za-z]+ [A-Za-z0-9 ]+$'::text) THEN 'Generic model name (unregistered)'::text ELSE 'Other'::text END)"
+            "(CASE WHEN ((ci ~ '^[A-Z]{2,}-[0-9]'::text) OR (ci ~ '^[A-Za-z]+_[A-Z]{2}'::text) OR (ci ~ '^[A-Za-z]+_[0-9]'::text)) THEN 'internal-code'::text ELSE 'product-name'::text END)",
+            "state"
           ],
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
@@ -75,21 +58,20 @@
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Startup Cost": 26.06,
-              "Total Cost": 26.17,
+              "Startup Cost": 25.74,
+              "Total Cost": 25.85,
               "Plan Rows": 43,
-              "Plan Width": 66,
-              "Actual Startup Time": 0.863,
-              "Actual Total Time": 0.871,
+              "Plan Width": 53,
+              "Actual Startup Time": 0.683,
+              "Actual Total Time": 0.69,
               "Actual Rows": 43,
               "Actual Loops": 1,
               "Sort Key": [
-                "state",
-                "(CASE WHEN ((ci ~ '[_][A-Za-z0-9]+'::text) AND ((ci ~~ '%Asset%'::text) OR (ci ~ '[0-9]{4,}'::text))) THEN 'Formal asset ID (registered)'::text WHEN ((ci ~ '^[A-Za-z]+-[0-9]'::text) OR (ci ~ '^[A-Z]{2,4}[_-][0-9]'::text)) THEN 'Tagged asset'::text WHEN (ci ~ '^[A-Za-z]+ [A-Za-z]+ [A-Za-z0-9 ]+$'::text) THEN 'Generic model name (unregistered)'::text ELSE 'Other'::text END)",
-                "ci"
+                "(CASE WHEN ((ci ~ '^[A-Z]{2,}-[0-9]'::text) OR (ci ~ '^[A-Za-z]+_[A-Z]{2}'::text) OR (ci ~ '^[A-Za-z]+_[0-9]'::text)) THEN 'internal-code'::text ELSE 'product-name'::text END)",
+                "state"
               ],
               "Sort Method": "quicksort",
-              "Sort Space Used": 28,
+              "Sort Space Used": 27,
               "Sort Space Type": "Memory",
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
@@ -110,11 +92,11 @@
                   "Relation Name": "flag_19",
                   "Alias": "flag_19",
                   "Startup Cost": 0.0,
-                  "Total Cost": 24.89,
+                  "Total Cost": 24.57,
                   "Plan Rows": 43,
-                  "Plan Width": 66,
-                  "Actual Startup Time": 0.203,
-                  "Actual Total Time": 0.725,
+                  "Plan Width": 53,
+                  "Actual Startup Time": 0.219,
+                  "Actual Total Time": 0.589,
                   "Actual Rows": 43,
                   "Actual Loops": 1,
                   "Filter": "(department = 'IT'::text)",
@@ -137,7 +119,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 1,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -148,8 +130,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.22,
+    "Planning Time": 0.348,
     "Triggers": [],
-    "Execution Time": 1.032
+    "Execution Time": 0.901
   }
 ]

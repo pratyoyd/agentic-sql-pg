@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-8_rep_a",
+  "task_key": "flag-8",
+  "goal": "Analyze the imbalance of incident tickets created by human callers, focusing particularly on the caller with increasing incident reports.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 9,
+  "parse_failures": 0,
+  "wall_clock_seconds": 105.7,
+  "log_file": "stage2/traces/flag-8_rep_a.jsonl"
+}

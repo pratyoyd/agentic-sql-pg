@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-6_rep_a",
+  "task_key": "flag-6",
+  "goal": "Analyze the performance trends of human agents to identify discrepancies and propose measures to optimize resolution times across the team.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 13,
+  "parse_failures": 0,
+  "wall_clock_seconds": 180.4,
+  "log_file": "stage2/traces/flag-6_rep_a.jsonl"
+}

@@ -1,24 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 47.8,
-      "Total Cost": 47.91,
-      "Plan Rows": 45,
-      "Plan Width": 92,
-      "Actual Startup Time": 4.069,
-      "Actual Total Time": 4.072,
-      "Actual Rows": 20,
+      "Startup Cost": 40.43,
+      "Total Cost": 52.59,
+      "Plan Rows": 105,
+      "Plan Width": 113,
+      "Actual Startup Time": 3.322,
+      "Actual Total Time": 3.432,
+      "Actual Rows": 7,
       "Actual Loops": 1,
-      "Sort Key": [
-        "department",
-        "(round((((sum(CASE WHEN (state = 'Declined'::text) THEN 1 ELSE 0 END))::numeric * 100.0) / (count(*))::numeric), 2)) DESC"
+      "Group Key": [
+        "(CASE WHEN ((ci ~~* '%dell%'::text) OR (ci ~~* '%hp %'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%latitude%'::text) OR (ci ~~* '%laptop%'::text) OR (ci ~~* '%desktop%'::text) OR (ci ~~* '%optiplex%'::text)) THEN 'Hardware/IT Asset'::text WHEN ((ci ~~* '%travel%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%luggage%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%carry%'::text) OR (ci ~~* '%bus%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%boeing%'::text) OR (ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%hotel%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%garmin%'::text) OR (ci ~~* '%tumi%'::text) OR (ci ~~* '%samsonite%'::text) OR (ci ~~* '%suv%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%charger%'::text) OR (ci ~~* '%adapter%'::text) OR (ci ~~* '%headphone%'::text)) THEN 'Travel/Accessories'::text WHEN ((ci ~~* '%software%'::text) OR (ci ~~* '%system%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%cloud%'::text) OR (ci ~~* '%aws%'::text)) THEN 'Software/Systems'::text ELSE 'Other'::text END)",
+        "state"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 26,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -31,30 +30,26 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 40.48,
-          "Total Cost": 46.56,
-          "Plan Rows": 45,
-          "Plan Width": 92,
-          "Actual Startup Time": 4.007,
-          "Actual Total Time": 4.034,
-          "Actual Rows": 20,
+          "Startup Cost": 40.43,
+          "Total Cost": 40.71,
+          "Plan Rows": 111,
+          "Plan Width": 57,
+          "Actual Startup Time": 3.281,
+          "Actual Total Time": 3.297,
+          "Actual Rows": 113,
           "Actual Loops": 1,
-          "Group Key": [
-            "department",
-            "CASE WHEN ((ci ~~* '%laptop%'::text) OR (ci ~~* '%dell%'::text) OR (ci ~~* '%hp%'::text) OR (ci ~~* '%lenovo%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%notebook%'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%toshiba%'::text)) THEN 'Laptop/Computer'::text WHEN ((ci ~~* '%luggage%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%backpack%'::text) OR (ci ~~* '%briefcase%'::text)) THEN 'Luggage/Bags'::text WHEN ((ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%aircraft%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%bus%'::text)) THEN 'Air/Ground Transport'::text WHEN ((ci ~~* '%car%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%suv%'::text)) THEN 'Vehicle'::text WHEN ((ci ~~* '%phone%'::text) OR (ci ~~* '%charger%'::text) OR (ci ~~* '%adapter%'::text) OR (ci ~~* '%router%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%headphone%'::text) OR (ci ~~* '%satellite%'::text)) THEN 'Electronics/Accessories'::text WHEN ((ci ~~* '%insurance%'::text) OR (ci ~~* '%voucher%'::text) OR (ci ~~* '%booking%'::text) OR (ci ~~* '%management system%'::text) OR (ci ~~* '%passport%'::text)) THEN 'Admin/Intangible'::text ELSE 'Travel Gear/Other'::text END"
+          "Sort Key": [
+            "(CASE WHEN ((ci ~~* '%dell%'::text) OR (ci ~~* '%hp %'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%latitude%'::text) OR (ci ~~* '%laptop%'::text) OR (ci ~~* '%desktop%'::text) OR (ci ~~* '%optiplex%'::text)) THEN 'Hardware/IT Asset'::text WHEN ((ci ~~* '%travel%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%luggage%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%carry%'::text) OR (ci ~~* '%bus%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%boeing%'::text) OR (ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%hotel%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%garmin%'::text) OR (ci ~~* '%tumi%'::text) OR (ci ~~* '%samsonite%'::text) OR (ci ~~* '%suv%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%charger%'::text) OR (ci ~~* '%adapter%'::text) OR (ci ~~* '%headphone%'::text)) THEN 'Travel/Accessories'::text WHEN ((ci ~~* '%software%'::text) OR (ci ~~* '%system%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%cloud%'::text) OR (ci ~~* '%aws%'::text)) THEN 'Software/Systems'::text ELSE 'Other'::text END)",
+            "state",
+            "department"
           ],
-          "Filter": "(count(*) >= 2)",
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 40,
-          "Disk Usage": 0,
-          "Rows Removed by Filter": 8,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 32,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -74,15 +69,15 @@
               "Relation Name": "flag_20",
               "Alias": "flag_20",
               "Startup Cost": 0.0,
-              "Total Cost": 38.66,
-              "Plan Rows": 146,
-              "Plan Width": 53,
-              "Actual Startup Time": 0.072,
-              "Actual Total Time": 3.883,
-              "Actual Rows": 146,
+              "Total Cost": 36.66,
+              "Plan Rows": 111,
+              "Plan Width": 57,
+              "Actual Startup Time": 0.078,
+              "Actual Total Time": 3.049,
+              "Actual Rows": 113,
               "Actual Loops": 1,
-              "Filter": "(category = 'Travel'::text)",
-              "Rows Removed by Filter": 354,
+              "Filter": "((state = ANY ('{Declined,Processed}'::text[])) AND (category = 'Travel'::text))",
+              "Rows Removed by Filter": 387,
               "Shared Hit Blocks": 20,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -99,7 +94,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 6,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -110,8 +105,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.205,
+    "Planning Time": 0.59,
     "Triggers": [],
-    "Execution Time": 4.161
+    "Execution Time": 3.566
   }
 ]

@@ -1,22 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 27.89,
-      "Total Cost": 29.04,
-      "Plan Rows": 46,
-      "Plan Width": 48,
-      "Actual Startup Time": 0.237,
-      "Actual Total Time": 0.331,
-      "Actual Rows": 32,
+      "Startup Cost": 43.05,
+      "Total Cost": 43.32,
+      "Plan Rows": 107,
+      "Plan Width": 80,
+      "Actual Startup Time": 1.02,
+      "Actual Total Time": 1.023,
+      "Actual Rows": 5,
       "Actual Loops": 1,
-      "Group Key": [
-        "(date_trunc('day'::text, opened_at))"
+      "Sort Key": [
+        "(min((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric)))"
       ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -29,25 +30,27 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 27.89,
-          "Total Cost": 28.0,
-          "Plan Rows": 46,
-          "Plan Width": 19,
-          "Actual Startup Time": 0.225,
-          "Actual Total Time": 0.235,
-          "Actual Rows": 82,
+          "Startup Cost": 32.49,
+          "Total Cost": 39.45,
+          "Plan Rows": 107,
+          "Plan Width": 80,
+          "Actual Startup Time": 0.986,
+          "Actual Total Time": 0.993,
+          "Actual Rows": 5,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(date_trunc('day'::text, opened_at))",
-            "priority"
+          "Group Key": [
+            "CASE WHEN ((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric) < '500'::numeric) THEN '< 500h'::text WHEN ((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric) < '1000'::numeric) THEN '500-1000h'::text WHEN ((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric) < '1500'::numeric) THEN '1000-1500h'::text WHEN ((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric) < '2000'::numeric) THEN '1500-2000h'::text WHEN ((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric) < '2500'::numeric) THEN '2000-2500h'::text ELSE '2500h+'::text END"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 28,
-          "Sort Space Type": "Memory",
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -67,15 +70,15 @@
               "Relation Name": "flag_11",
               "Alias": "flag_11",
               "Startup Cost": 0.0,
-              "Total Cost": 26.61,
-              "Plan Rows": 46,
-              "Plan Width": 19,
-              "Actual Startup Time": 0.06,
-              "Actual Total Time": 0.184,
-              "Actual Rows": 82,
+              "Total Cost": 30.35,
+              "Plan Rows": 107,
+              "Plan Width": 48,
+              "Actual Startup Time": 0.148,
+              "Actual Total Time": 0.757,
+              "Actual Rows": 123,
               "Actual Loops": 1,
-              "Filter": "((opened_at >= '2023-06-15 00:00:00'::timestamp without time zone) AND (opened_at < '2023-08-15 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text))",
-              "Rows Removed by Filter": 518,
+              "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL) AND (opened_at >= '2023-07-01 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text))",
+              "Rows Removed by Filter": 477,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -92,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 6,
+      "Shared Hit Blocks": 7,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -103,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.131,
+    "Planning Time": 0.44,
     "Triggers": [],
-    "Execution Time": 0.372
+    "Execution Time": 1.157
   }
 ]

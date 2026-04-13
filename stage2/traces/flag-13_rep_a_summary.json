@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-13_rep_a",
+  "task_key": "flag-13",
+  "goal": "Investigate trends in increasing incident assignments to understand their impact on user agents.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 16,
+  "parse_failures": 0,
+  "wall_clock_seconds": 216.3,
+  "log_file": "stage2/traces/flag-13_rep_a.jsonl"
+}

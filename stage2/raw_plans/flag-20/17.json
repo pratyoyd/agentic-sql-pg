@@ -1,34 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Incremental Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 32.3,
-      "Total Cost": 47.64,
-      "Plan Rows": 143,
-      "Plan Width": 113,
-      "Actual Startup Time": 1.25,
-      "Actual Total Time": 1.252,
-      "Actual Rows": 8,
+      "Startup Cost": 45.0,
+      "Total Cost": 61.34,
+      "Plan Rows": 135,
+      "Plan Width": 81,
+      "Actual Startup Time": 6.009,
+      "Actual Total Time": 6.13,
+      "Actual Rows": 15,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
-        "(count(*)) DESC"
+      "Group Key": [
+        "(CASE WHEN ((ci ~~* '%dell%'::text) OR (ci ~~* '%hp %'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%latitude%'::text) OR (ci ~~* '%optiplex%'::text) OR (ci ~~* '%laptop%'::text) OR (ci ~~* '%desktop%'::text) OR (ci ~~* '%server%'::text) OR (ci ~~* '%printer%'::text) OR (ci ~~* '%monitor%'::text) OR (ci ~~* '%keyboard%'::text)) THEN 'Hardware (belongs in Assets)'::text WHEN ((ci ~~* '%software%'::text) OR (ci ~~* '%system%'::text) OR (ci ~~* '%aws%'::text) OR (ci ~~* '%cloud%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%virtual private%'::text) OR (ci ~~* '%management system%'::text)) THEN 'Software/Services (belongs in Services)'::text WHEN ((ci ~~* '%travel%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%luggage%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%carry%'::text) OR (ci ~~* '%bus%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%boeing%'::text) OR (ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%hotel%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%garmin%'::text) OR (ci ~~* '%tumi%'::text) OR (ci ~~* '%samsonite%'::text) OR (ci ~~* '%suv%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%corporate%'::text)) THEN 'Genuine Travel Item'::text ELSE 'Ambiguous'::text END)",
+        "state"
       ],
-      "Presorted Key": [
-        "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)"
-      ],
-      "Full-sort Groups": {
-        "Group Count": 1,
-        "Sort Methods Used": [
-          "quicksort"
-        ],
-        "Sort Space Memory": {
-          "Average Sort Space Used": 25,
-          "Peak Sort Space Used": 25
-        }
-      },
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -41,18 +30,25 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "WindowAgg",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 32.23,
-          "Total Cost": 41.2,
-          "Plan Rows": 143,
-          "Plan Width": 113,
-          "Actual Startup Time": 1.174,
-          "Actual Total Time": 1.234,
-          "Actual Rows": 8,
+          "Startup Cost": 45.0,
+          "Total Cost": 45.37,
+          "Plan Rows": 146,
+          "Plan Width": 45,
+          "Actual Startup Time": 5.978,
+          "Actual Total Time": 5.998,
+          "Actual Rows": 146,
           "Actual Loops": 1,
+          "Sort Key": [
+            "(CASE WHEN ((ci ~~* '%dell%'::text) OR (ci ~~* '%hp %'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%latitude%'::text) OR (ci ~~* '%optiplex%'::text) OR (ci ~~* '%laptop%'::text) OR (ci ~~* '%desktop%'::text) OR (ci ~~* '%server%'::text) OR (ci ~~* '%printer%'::text) OR (ci ~~* '%monitor%'::text) OR (ci ~~* '%keyboard%'::text)) THEN 'Hardware (belongs in Assets)'::text WHEN ((ci ~~* '%software%'::text) OR (ci ~~* '%system%'::text) OR (ci ~~* '%aws%'::text) OR (ci ~~* '%cloud%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%virtual private%'::text) OR (ci ~~* '%management system%'::text)) THEN 'Software/Services (belongs in Services)'::text WHEN ((ci ~~* '%travel%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%luggage%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%carry%'::text) OR (ci ~~* '%bus%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%boeing%'::text) OR (ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%hotel%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%garmin%'::text) OR (ci ~~* '%tumi%'::text) OR (ci ~~* '%samsonite%'::text) OR (ci ~~* '%suv%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%corporate%'::text)) THEN 'Genuine Travel Item'::text ELSE 'Ambiguous'::text END)",
+            "state"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 34,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -65,24 +61,22 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Aggregate",
-              "Strategy": "Sorted",
-              "Partial Mode": "Simple",
+              "Node Type": "Seq Scan",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Startup Cost": 32.23,
-              "Total Cost": 36.56,
-              "Plan Rows": 143,
-              "Plan Width": 81,
-              "Actual Startup Time": 1.109,
-              "Actual Total Time": 1.191,
-              "Actual Rows": 8,
+              "Relation Name": "flag_20",
+              "Alias": "flag_20",
+              "Startup Cost": 0.0,
+              "Total Cost": 39.76,
+              "Plan Rows": 146,
+              "Plan Width": 45,
+              "Actual Startup Time": 0.125,
+              "Actual Total Time": 5.772,
+              "Actual Rows": 146,
               "Actual Loops": 1,
-              "Group Key": [
-                "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
-                "state"
-              ],
+              "Filter": "(category = 'Travel'::text)",
+              "Rows Removed by Filter": 354,
               "Shared Hit Blocks": 20,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -92,70 +86,7 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0,
-              "Plans": [
-                {
-                  "Node Type": "Sort",
-                  "Parent Relationship": "Outer",
-                  "Parallel Aware": false,
-                  "Async Capable": false,
-                  "Startup Cost": 32.23,
-                  "Total Cost": 32.59,
-                  "Plan Rows": 146,
-                  "Plan Width": 45,
-                  "Actual Startup Time": 1.087,
-                  "Actual Total Time": 1.105,
-                  "Actual Rows": 146,
-                  "Actual Loops": 1,
-                  "Sort Key": [
-                    "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
-                    "state"
-                  ],
-                  "Sort Method": "quicksort",
-                  "Sort Space Used": 32,
-                  "Sort Space Type": "Memory",
-                  "Shared Hit Blocks": 20,
-                  "Shared Read Blocks": 0,
-                  "Shared Dirtied Blocks": 0,
-                  "Shared Written Blocks": 0,
-                  "Local Hit Blocks": 0,
-                  "Local Read Blocks": 0,
-                  "Local Dirtied Blocks": 0,
-                  "Local Written Blocks": 0,
-                  "Temp Read Blocks": 0,
-                  "Temp Written Blocks": 0,
-                  "Plans": [
-                    {
-                      "Node Type": "Seq Scan",
-                      "Parent Relationship": "Outer",
-                      "Parallel Aware": false,
-                      "Async Capable": false,
-                      "Relation Name": "flag_20",
-                      "Alias": "flag_20",
-                      "Startup Cost": 0.0,
-                      "Total Cost": 26.98,
-                      "Plan Rows": 146,
-                      "Plan Width": 45,
-                      "Actual Startup Time": 0.029,
-                      "Actual Total Time": 0.939,
-                      "Actual Rows": 146,
-                      "Actual Loops": 1,
-                      "Filter": "(category = 'Travel'::text)",
-                      "Rows Removed by Filter": 354,
-                      "Shared Hit Blocks": 20,
-                      "Shared Read Blocks": 0,
-                      "Shared Dirtied Blocks": 0,
-                      "Shared Written Blocks": 0,
-                      "Local Hit Blocks": 0,
-                      "Local Read Blocks": 0,
-                      "Local Dirtied Blocks": 0,
-                      "Local Written Blocks": 0,
-                      "Temp Read Blocks": 0,
-                      "Temp Written Blocks": 0
-                    }
-                  ]
-                }
-              ]
+              "Temp Written Blocks": 0
             }
           ]
         }
@@ -173,8 +104,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.181,
+    "Planning Time": 0.459,
     "Triggers": [],
-    "Execution Time": 1.32
+    "Execution Time": 6.265
   }
 ]

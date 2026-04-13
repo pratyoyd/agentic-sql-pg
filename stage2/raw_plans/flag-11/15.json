@@ -1,17 +1,22 @@
 [
   {
     "Plan": {
-      "Node Type": "Limit",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 28.6,
-      "Total Cost": 28.64,
-      "Plan Rows": 15,
-      "Plan Width": 89,
-      "Actual Startup Time": 0.595,
-      "Actual Total Time": 0.602,
-      "Actual Rows": 15,
+      "Startup Cost": 28.87,
+      "Total Cost": 35.29,
+      "Plan Rows": 107,
+      "Plan Width": 112,
+      "Actual Startup Time": 0.654,
+      "Actual Total Time": 0.833,
+      "Actual Rows": 7,
       "Actual Loops": 1,
+      "Group Key": [
+        "(date_trunc('month'::text, opened_at))"
+      ],
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -28,19 +33,19 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 28.6,
-          "Total Cost": 28.64,
-          "Plan Rows": 15,
-          "Plan Width": 89,
-          "Actual Startup Time": 0.594,
-          "Actual Total Time": 0.597,
-          "Actual Rows": 15,
+          "Startup Cost": 28.87,
+          "Total Cost": 29.14,
+          "Plan Rows": 107,
+          "Plan Width": 24,
+          "Actual Startup Time": 0.455,
+          "Actual Total Time": 0.47,
+          "Actual Rows": 123,
           "Actual Loops": 1,
           "Sort Key": [
-            "(count(*)) DESC"
+            "(date_trunc('month'::text, opened_at))"
           ],
           "Sort Method": "quicksort",
-          "Sort Space Used": 27,
+          "Sort Space Used": 30,
           "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
@@ -54,24 +59,22 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Aggregate",
-              "Strategy": "Sorted",
-              "Partial Mode": "Simple",
+              "Node Type": "Seq Scan",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Startup Cost": 27.17,
-              "Total Cost": 28.31,
-              "Plan Rows": 15,
-              "Plan Width": 89,
-              "Actual Startup Time": 0.401,
-              "Actual Total Time": 0.576,
-              "Actual Rows": 19,
+              "Relation Name": "flag_11",
+              "Alias": "flag_11",
+              "Startup Cost": 0.0,
+              "Total Cost": 25.27,
+              "Plan Rows": 107,
+              "Plan Width": 24,
+              "Actual Startup Time": 0.147,
+              "Actual Total Time": 0.385,
+              "Actual Rows": 123,
               "Actual Loops": 1,
-              "Group Key": [
-                "caller_id",
-                "assigned_to"
-              ],
+              "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL) AND (opened_at >= '2023-07-01 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text))",
+              "Rows Removed by Filter": 477,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -81,78 +84,14 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0,
-              "Plans": [
-                {
-                  "Node Type": "Sort",
-                  "Parent Relationship": "Outer",
-                  "Parallel Aware": false,
-                  "Async Capable": false,
-                  "Startup Cost": 27.17,
-                  "Total Cost": 27.24,
-                  "Plan Rows": 28,
-                  "Plan Width": 41,
-                  "Actual Startup Time": 0.374,
-                  "Actual Total Time": 0.384,
-                  "Actual Rows": 74,
-                  "Actual Loops": 1,
-                  "Sort Key": [
-                    "caller_id",
-                    "assigned_to",
-                    "(date_trunc('week'::text, opened_at))"
-                  ],
-                  "Sort Method": "quicksort",
-                  "Sort Space Used": 30,
-                  "Sort Space Type": "Memory",
-                  "Shared Hit Blocks": 16,
-                  "Shared Read Blocks": 0,
-                  "Shared Dirtied Blocks": 0,
-                  "Shared Written Blocks": 0,
-                  "Local Hit Blocks": 0,
-                  "Local Read Blocks": 0,
-                  "Local Dirtied Blocks": 0,
-                  "Local Written Blocks": 0,
-                  "Temp Read Blocks": 0,
-                  "Temp Written Blocks": 0,
-                  "Plans": [
-                    {
-                      "Node Type": "Seq Scan",
-                      "Parent Relationship": "Outer",
-                      "Parallel Aware": false,
-                      "Async Capable": false,
-                      "Relation Name": "flag_11",
-                      "Alias": "flag_11",
-                      "Startup Cost": 0.0,
-                      "Total Cost": 26.5,
-                      "Plan Rows": 28,
-                      "Plan Width": 41,
-                      "Actual Startup Time": 0.07,
-                      "Actual Total Time": 0.214,
-                      "Actual Rows": 74,
-                      "Actual Loops": 1,
-                      "Filter": "((opened_at >= '2023-07-01 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text) AND (location = 'Australia'::text))",
-                      "Rows Removed by Filter": 526,
-                      "Shared Hit Blocks": 16,
-                      "Shared Read Blocks": 0,
-                      "Shared Dirtied Blocks": 0,
-                      "Shared Written Blocks": 0,
-                      "Local Hit Blocks": 0,
-                      "Local Read Blocks": 0,
-                      "Local Dirtied Blocks": 0,
-                      "Local Written Blocks": 0,
-                      "Temp Read Blocks": 0,
-                      "Temp Written Blocks": 0
-                    }
-                  ]
-                }
-              ]
+              "Temp Written Blocks": 0
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 4,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -163,8 +102,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.198,
+    "Planning Time": 0.28,
     "Triggers": [],
-    "Execution Time": 0.661
+    "Execution Time": 0.94
   }
 ]

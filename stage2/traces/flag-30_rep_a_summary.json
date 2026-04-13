@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-30_rep_a",
+  "task_key": "flag-30",
+  "goal": "Investigate the factors that contribute to the swift completion of goals in the Finance department compared to others, assess the impact on overall departmental performance.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 21,
+  "parse_failures": 0,
+  "wall_clock_seconds": 340.5,
+  "log_file": "stage2/traces/flag-30_rep_a.jsonl"
+}

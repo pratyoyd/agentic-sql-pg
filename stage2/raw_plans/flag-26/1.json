@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 52.32,
+      "Total Cost": 52.85,
+      "Plan Rows": 211,
+      "Plan Width": 168,
+      "Actual Startup Time": 1.999,
+      "Actual Total Time": 2.001,
+      "Actual Rows": 4,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(round(avg(cost), 0))"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 36.79,
+          "Total Cost": 44.17,
+          "Plan Rows": 211,
+          "Plan Width": 168,
+          "Actual Startup Time": 1.958,
+          "Actual Total Time": 1.973,
+          "Actual Rows": 4,
+          "Actual Loops": 1,
+          "Group Key": [
+            "CASE WHEN (cost < 2000) THEN '< $2000'::text WHEN (cost < 3000) THEN '$2000-$3000'::text WHEN (cost < 4000) THEN '$3000-$4000'::text WHEN (cost >= 4000) THEN '>= $4000'::text ELSE NULL::text END"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_26",
+              "Alias": "flag_26",
+              "Startup Cost": 0.0,
+              "Total Cost": 26.53,
+              "Plan Rows": 228,
+              "Plan Width": 52,
+              "Actual Startup Time": 0.03,
+              "Actual Total Time": 0.511,
+              "Actual Rows": 228,
+              "Actual Loops": 1,
+              "Filter": "((purchased_on IS NOT NULL) AND (warranty_expiration IS NOT NULL) AND (model_category = 'Computer'::text))",
+              "Rows Removed by Filter": 272,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 24,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.664,
+    "Triggers": [],
+    "Execution Time": 2.121
+  }
+]

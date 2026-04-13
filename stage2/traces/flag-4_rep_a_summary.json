@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-4_rep_a",
+  "task_key": "flag-4",
+  "goal": "Identify and analyze increasing trends in the number of incidents assigned to understand the implications of these trends on workload and agent efficiency.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 11,
+  "parse_failures": 0,
+  "wall_clock_seconds": 147.3,
+  "log_file": "stage2/traces/flag-4_rep_a.jsonl"
+}

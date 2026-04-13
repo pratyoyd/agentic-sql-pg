@@ -1,23 +1,19 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Plain",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 29.56,
-      "Total Cost": 29.69,
-      "Plan Rows": 54,
-      "Plan Width": 100,
-      "Actual Startup Time": 0.314,
-      "Actual Total Time": 0.32,
-      "Actual Rows": 56,
+      "Startup Cost": 31.03,
+      "Total Cost": 31.06,
+      "Plan Rows": 1,
+      "Plan Width": 136,
+      "Actual Startup Time": 0.972,
+      "Actual Total Time": 0.974,
+      "Actual Rows": 1,
       "Actual Loops": 1,
-      "Sort Key": [
-        "amount"
-      ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 27,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -37,15 +33,15 @@
           "Relation Name": "flag_22",
           "Alias": "flag_22",
           "Startup Cost": 0.0,
-          "Total Cost": 28.0,
-          "Plan Rows": 54,
-          "Plan Width": 100,
-          "Actual Startup Time": 0.023,
-          "Actual Total Time": 0.284,
-          "Actual Rows": 56,
+          "Total Cost": 25.0,
+          "Plan Rows": 344,
+          "Plan Width": 20,
+          "Actual Startup Time": 0.03,
+          "Actual Total Time": 0.275,
+          "Actual Rows": 344,
           "Actual Loops": 1,
-          "Filter": "((processed_date IS NOT NULL) AND (amount < 800))",
-          "Rows Removed by Filter": 444,
+          "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
+          "Rows Removed by Filter": 156,
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -60,7 +56,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 12,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -71,8 +67,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.087,
+    "Planning Time": 0.395,
     "Triggers": [],
-    "Execution Time": 0.352
+    "Execution Time": 1.067
   }
 ]

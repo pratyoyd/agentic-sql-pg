@@ -7,17 +7,17 @@
       "Parallel Aware": false,
       "Async Capable": false,
       "Startup Cost": 33.75,
-      "Total Cost": 41.16,
+      "Total Cost": 44.01,
       "Plan Rows": 228,
-      "Plan Width": 64,
-      "Actual Startup Time": 0.407,
-      "Actual Total Time": 0.643,
-      "Actual Rows": 180,
+      "Plan Width": 52,
+      "Actual Startup Time": 0.548,
+      "Actual Total Time": 0.851,
+      "Actual Rows": 5,
       "Actual Loops": 1,
       "Group Key": [
-        "((warranty_expiration - purchased_on))"
+        "(date_trunc('quarter'::text, purchased_on))"
       ],
-      "Shared Hit Blocks": 23,
+      "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -36,18 +36,18 @@
           "Startup Cost": 33.75,
           "Total Cost": 34.32,
           "Plan Rows": 228,
-          "Plan Width": 20,
-          "Actual Startup Time": 0.378,
-          "Actual Total Time": 0.398,
+          "Plan Width": 28,
+          "Actual Startup Time": 0.465,
+          "Actual Total Time": 0.498,
           "Actual Rows": 228,
           "Actual Loops": 1,
           "Sort Key": [
-            "((warranty_expiration - purchased_on))"
+            "(date_trunc('quarter'::text, purchased_on))"
           ],
           "Sort Method": "quicksort",
-          "Sort Space Used": 35,
+          "Sort Space Used": 37,
           "Sort Space Type": "Memory",
-          "Shared Hit Blocks": 23,
+          "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
           "Shared Written Blocks": 0,
@@ -68,12 +68,12 @@
               "Startup Cost": 0.0,
               "Total Cost": 24.82,
               "Plan Rows": 228,
-              "Plan Width": 20,
-              "Actual Startup Time": 0.035,
-              "Actual Total Time": 0.231,
+              "Plan Width": 28,
+              "Actual Startup Time": 0.037,
+              "Actual Total Time": 0.343,
               "Actual Rows": 228,
               "Actual Loops": 1,
-              "Filter": "(model_category = 'Computer'::text)",
+              "Filter": "((purchased_on IS NOT NULL) AND (warranty_expiration IS NOT NULL) AND (model_category = 'Computer'::text))",
               "Rows Removed by Filter": 272,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
@@ -91,7 +91,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 65,
+      "Shared Hit Blocks": 7,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -102,8 +102,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.621,
+    "Planning Time": 0.484,
     "Triggers": [],
-    "Execution Time": 0.865
+    "Execution Time": 0.97
   }
 ]

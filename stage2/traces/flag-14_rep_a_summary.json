@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-14_rep_a",
+  "task_key": "flag-14",
+  "goal": "Given the user and incidents tabular data, analyze discrepancies in the performance of human agents, particularly focusing on a certain human agent, to understand the underlying causes of performance dips and devise strategies to manage workload during absence periods.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 17,
+  "parse_failures": 0,
+  "wall_clock_seconds": 244.4,
+  "log_file": "stage2/traces/flag-14_rep_a.jsonl"
+}

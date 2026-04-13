@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-20_rep_a",
+  "task_key": "flag-20",
+  "goal": "To identify and rectify the causes of high rejection rates in travel expenses to ensure that submissions  align with organizational policies.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 30,
+  "parse_failures": 0,
+  "wall_clock_seconds": 454.7,
+  "log_file": "stage2/traces/flag-20_rep_a.jsonl"
+}

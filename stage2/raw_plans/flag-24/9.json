@@ -1,23 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 38.16,
-      "Total Cost": 38.18,
-      "Plan Rows": 7,
-      "Plan Width": 124,
-      "Actual Startup Time": 0.927,
-      "Actual Total Time": 0.929,
-      "Actual Rows": 7,
+      "Startup Cost": 39.49,
+      "Total Cost": 57.81,
+      "Plan Rows": 349,
+      "Plan Width": 92,
+      "Actual Startup Time": 1.32,
+      "Actual Total Time": 1.904,
+      "Actual Rows": 14,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(round(((100.0 * (sum(CASE WHEN (EXTRACT(microsecond FROM processed_date) = '0'::numeric) THEN 1 ELSE 0 END))::numeric) / (count(*))::numeric), 1)) DESC"
+      "Group Key": [
+        "department",
+        "(CASE WHEN (EXTRACT(dow FROM opened_at) = ANY ('{0,6}'::numeric[])) THEN 'weekend'::text ELSE 'weekday'::text END)"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,27 +30,25 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 37.83,
-          "Total Cost": 38.06,
-          "Plan Rows": 7,
-          "Plan Width": 124,
-          "Actual Startup Time": 0.894,
-          "Actual Total Time": 0.912,
-          "Actual Rows": 7,
+          "Startup Cost": 39.49,
+          "Total Cost": 40.36,
+          "Plan Rows": 349,
+          "Plan Width": 60,
+          "Actual Startup Time": 0.955,
+          "Actual Total Time": 1.004,
+          "Actual Rows": 349,
           "Actual Loops": 1,
-          "Group Key": [
-            "department"
+          "Sort Key": [
+            "department",
+            "(CASE WHEN (EXTRACT(dow FROM opened_at) = ANY ('{0,6}'::numeric[])) THEN 'weekend'::text ELSE 'weekday'::text END)"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 47,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -70,11 +68,11 @@
               "Relation Name": "flag_24",
               "Alias": "flag_24",
               "Startup Cost": 0.0,
-              "Total Cost": 23.0,
+              "Total Cost": 24.75,
               "Plan Rows": 349,
-              "Plan Width": 28,
-              "Actual Startup Time": 0.011,
-              "Actual Total Time": 0.163,
+              "Plan Width": 60,
+              "Actual Startup Time": 0.043,
+              "Actual Total Time": 0.568,
               "Actual Rows": 349,
               "Actual Loops": 1,
               "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
@@ -106,8 +104,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.147,
+    "Planning Time": 0.317,
     "Triggers": [],
-    "Execution Time": 1.005
+    "Execution Time": 2.0
   }
 ]

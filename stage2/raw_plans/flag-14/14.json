@@ -4,16 +4,16 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 29.08,
-      "Total Cost": 29.1,
+      "Startup Cost": 25.79,
+      "Total Cost": 25.8,
       "Plan Rows": 5,
-      "Plan Width": 70,
-      "Actual Startup Time": 0.389,
-      "Actual Total Time": 0.391,
+      "Plan Width": 62,
+      "Actual Startup Time": 0.534,
+      "Actual Total Time": 0.537,
       "Actual Rows": 4,
       "Actual Loops": 1,
       "Sort Key": [
-        "(count(CASE WHEN (assigned_to = 'Fred Luddy'::text) THEN 1 ELSE NULL::integer END)) DESC"
+        "(count(*)) DESC"
       ],
       "Sort Method": "quicksort",
       "Sort Space Used": 25,
@@ -36,16 +36,16 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 28.91,
-          "Total Cost": 29.02,
+          "Startup Cost": 25.63,
+          "Total Cost": 25.73,
           "Plan Rows": 5,
-          "Plan Width": 70,
-          "Actual Startup Time": 0.375,
-          "Actual Total Time": 0.381,
+          "Plan Width": 62,
+          "Actual Startup Time": 0.504,
+          "Actual Total Time": 0.513,
           "Actual Rows": 4,
           "Actual Loops": 1,
           "Group Key": [
-            "closed_by"
+            "assigned_to"
           ],
           "Planned Partitions": 0,
           "HashAgg Batches": 1,
@@ -71,14 +71,14 @@
               "Alias": "flag_14",
               "Startup Cost": 0.0,
               "Total Cost": 24.75,
-              "Plan Rows": 185,
-              "Plan Width": 28,
-              "Actual Startup Time": 0.014,
-              "Actual Total Time": 0.229,
-              "Actual Rows": 195,
+              "Plan Rows": 44,
+              "Plan Width": 30,
+              "Actual Startup Time": 0.175,
+              "Actual Total Time": 0.352,
+              "Actual Rows": 58,
               "Actual Loops": 1,
-              "Filter": "((state = 'Resolved'::text) AND (closed_by = ANY ('{\"Beth Anglin\",\"Howard Johnson\",\"Luke Wilson\",\"Charlie Whitherspoon\"}'::text[])))",
-              "Rows Removed by Filter": 305,
+              "Filter": "((closed_at IS NOT NULL) AND (assigned_to <> 'Fred Luddy'::text) AND (closed_at >= '2023-06-01 00:00:00'::timestamp without time zone) AND (closed_by = 'Fred Luddy'::text))",
+              "Rows Removed by Filter": 442,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.143,
+    "Planning Time": 0.305,
     "Triggers": [],
-    "Execution Time": 0.444
+    "Execution Time": 0.653
   }
 ]

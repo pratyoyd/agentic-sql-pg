@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-21_rep_a",
+  "task_key": "flag-21",
+  "goal": "To determine how employment duration influences expense submission errors and rejections, with the aim of enhancing policy compliance and understanding among newer employees.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 21,
+  "parse_failures": 0,
+  "wall_clock_seconds": 293.8,
+  "log_file": "stage2/traces/flag-21_rep_a.jsonl"
+}

@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 33.17,
+      "Total Cost": 33.31,
+      "Plan Rows": 53,
+      "Plan Width": 64,
+      "Actual Startup Time": 2.307,
+      "Actual Total Time": 2.311,
+      "Actual Rows": 7,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(count(*)) DESC"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 16,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 29.4,
+          "Total Cost": 31.66,
+          "Plan Rows": 53,
+          "Plan Width": 64,
+          "Actual Startup Time": 2.278,
+          "Actual Total Time": 2.284,
+          "Actual Rows": 7,
+          "Actual Loops": 1,
+          "Group Key": [
+            "CASE WHEN (short_description ~~* '%printer%'::text) THEN 'Printer'::text WHEN ((short_description ~~* '%monitor%'::text) OR (short_description ~~* '%screen%'::text) OR (short_description ~~* '%display%'::text)) THEN 'Monitor/Display'::text WHEN (short_description ~~* '%keyboard%'::text) THEN 'Keyboard'::text WHEN (short_description ~~* '%mouse%'::text) THEN 'Mouse'::text WHEN (short_description ~~* '%server%'::text) THEN 'Server'::text WHEN ((short_description ~~* '%network%'::text) OR (short_description ~~* '%cable%'::text) OR (short_description ~~* '%router%'::text)) THEN 'Network Hardware'::text WHEN ((short_description ~~* '%laptop%'::text) OR (short_description ~~* '%computer%'::text) OR (short_description ~~* '%desktop%'::text)) THEN 'Computer/Laptop'::text ELSE 'Other'::text END"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_9",
+              "Alias": "flag_9",
+              "Startup Cost": 0.0,
+              "Total Cost": 28.25,
+              "Plan Rows": 54,
+              "Plan Width": 50,
+              "Actual Startup Time": 0.496,
+              "Actual Total Time": 2.155,
+              "Actual Rows": 96,
+              "Actual Loops": 1,
+              "Filter": "((category ~~* '%hardware%'::text) AND (opened_at >= '2023-07-01 00:00:00'::timestamp without time zone) AND (opened_at < '2023-09-01 00:00:00'::timestamp without time zone))",
+              "Rows Removed by Filter": 504,
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.386,
+    "Triggers": [],
+    "Execution Time": 2.462
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 28.44,
+      "Total Cost": 31.88,
+      "Plan Rows": 81,
+      "Plan Width": 58,
+      "Actual Startup Time": 0.48,
+      "Actual Total Time": 0.519,
+      "Actual Rows": 6,
+      "Actual Loops": 1,
+      "Group Key": [
+        "flag_16.model_category",
+        "(CASE WHEN (flag_16.warranty_expiration < now()) THEN '1_expired'::text WHEN (flag_16.warranty_expiration < (now() + '6 mons'::interval)) THEN '2_expiring_6mo'::text WHEN (flag_16.warranty_expiration < (now() + '1 year'::interval)) THEN '3_expiring_12mo'::text ELSE '4_covered'::text END)"
+      ],
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 28.44,
+          "Total Cost": 28.64,
+          "Plan Rows": 81,
+          "Plan Width": 46,
+          "Actual Startup Time": 0.449,
+          "Actual Total Time": 0.46,
+          "Actual Rows": 81,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "flag_16.model_category",
+            "(CASE WHEN (flag_16.warranty_expiration < now()) THEN '1_expired'::text WHEN (flag_16.warranty_expiration < (now() + '6 mons'::interval)) THEN '2_expiring_6mo'::text WHEN (flag_16.warranty_expiration < (now() + '1 year'::interval)) THEN '3_expiring_12mo'::text ELSE '4_covered'::text END)"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 29,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_16",
+              "Alias": "flag_16",
+              "Startup Cost": 0.0,
+              "Total Cost": 25.87,
+              "Plan Rows": 81,
+              "Plan Width": 46,
+              "Actual Startup Time": 0.132,
+              "Actual Total Time": 0.351,
+              "Actual Rows": 81,
+              "Actual Loops": 1,
+              "Filter": "(model_category = ANY ('{Server,\"Web Server\"}'::text[]))",
+              "Rows Removed by Filter": 419,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.447,
+    "Triggers": [],
+    "Execution Time": 0.609
+  }
+]

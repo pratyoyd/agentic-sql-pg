@@ -1,24 +1,26 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 29.27,
-      "Total Cost": 29.32,
-      "Plan Rows": 1,
-      "Plan Width": 56,
-      "Actual Startup Time": 0.354,
-      "Actual Total Time": 0.396,
-      "Actual Rows": 6,
+      "Startup Cost": 31.49,
+      "Total Cost": 31.67,
+      "Plan Rows": 71,
+      "Plan Width": 78,
+      "Actual Startup Time": 0.899,
+      "Actual Total Time": 0.91,
+      "Actual Rows": 71,
       "Actual Loops": 1,
-      "Group Key": [
-        "((EXTRACT(quarter FROM start_date))::integer)",
-        "((EXTRACT(year FROM end_date))::integer)"
+      "Sort Key": [
+        "(date_trunc('quarter'::text, (start_date)::timestamp with time zone))",
+        "(date_trunc('quarter'::text, (end_date)::timestamp with time zone))",
+        "(count(*)) DESC"
       ],
-      "Shared Hit Blocks": 18,
+      "Sort Method": "quicksort",
+      "Sort Space Used": 30,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 21,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -30,25 +32,30 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 29.27,
-          "Total Cost": 29.28,
-          "Plan Rows": 1,
-          "Plan Width": 16,
-          "Actual Startup Time": 0.328,
-          "Actual Total Time": 0.339,
-          "Actual Rows": 108,
+          "Startup Cost": 27.53,
+          "Total Cost": 29.31,
+          "Plan Rows": 71,
+          "Plan Width": 78,
+          "Actual Startup Time": 0.686,
+          "Actual Total Time": 0.778,
+          "Actual Rows": 71,
           "Actual Loops": 1,
-          "Sort Key": [
-            "((EXTRACT(quarter FROM start_date))::integer)",
-            "((EXTRACT(year FROM end_date))::integer)"
+          "Group Key": [
+            "date_trunc('quarter'::text, (start_date)::timestamp with time zone)",
+            "date_trunc('quarter'::text, (end_date)::timestamp with time zone)",
+            "metric",
+            "priority"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 29,
-          "Sort Space Type": "Memory",
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -68,14 +75,14 @@
               "Relation Name": "flag_31",
               "Alias": "flag_31",
               "Startup Cost": 0.0,
-              "Total Cost": 29.26,
-              "Plan Rows": 1,
-              "Plan Width": 16,
-              "Actual Startup Time": 0.017,
-              "Actual Total Time": 0.283,
+              "Total Cost": 26.24,
+              "Plan Rows": 74,
+              "Plan Width": 46,
+              "Actual Startup Time": 0.049,
+              "Actual Total Time": 0.493,
               "Actual Rows": 108,
               "Actual Loops": 1,
-              "Filter": "((department = 'Finance'::text) AND (category = 'Cost Reduction'::text) AND ((EXTRACT(year FROM start_date))::integer = 2022))",
+              "Filter": "((department = 'Finance'::text) AND (category = 'Cost Reduction'::text))",
               "Rows Removed by Filter": 392,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
@@ -93,7 +100,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 6,
+      "Shared Hit Blocks": 29,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +111,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.156,
+    "Planning Time": 0.943,
     "Triggers": [],
-    "Execution Time": 0.44
+    "Execution Time": 1.043
   }
 ]

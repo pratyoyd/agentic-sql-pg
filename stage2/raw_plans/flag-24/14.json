@@ -4,20 +4,20 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 24.69,
-      "Total Cost": 24.73,
+      "Startup Cost": 24.77,
+      "Total Cost": 24.81,
       "Plan Rows": 15,
-      "Plan Width": 153,
-      "Actual Startup Time": 0.269,
-      "Actual Total Time": 0.272,
+      "Plan Width": 129,
+      "Actual Startup Time": 0.347,
+      "Actual Total Time": 0.351,
       "Actual Rows": 18,
       "Actual Loops": 1,
       "Sort Key": [
-        "(round((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric), 1))",
-        "number"
+        "((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric))",
+        "amount"
       ],
       "Sort Method": "quicksort",
-      "Sort Space Used": 27,
+      "Sort Space Used": 26,
       "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
@@ -38,14 +38,14 @@
           "Relation Name": "flag_24",
           "Alias": "flag_24",
           "Startup Cost": 0.0,
-          "Total Cost": 24.4,
+          "Total Cost": 24.48,
           "Plan Rows": 15,
-          "Plan Width": 153,
-          "Actual Startup Time": 0.025,
-          "Actual Total Time": 0.183,
+          "Plan Width": 129,
+          "Actual Startup Time": 0.056,
+          "Actual Total Time": 0.286,
           "Actual Rows": 18,
           "Actual Loops": 1,
-          "Filter": "((processed_date IS NOT NULL) AND (department = 'Development'::text))",
+          "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL) AND (department = 'Development'::text))",
           "Rows Removed by Filter": 482,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
@@ -61,9 +61,9 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 8,
+      "Shared Hit Blocks": 10,
       "Shared Read Blocks": 0,
-      "Shared Dirtied Blocks": 0,
+      "Shared Dirtied Blocks": 3,
       "Shared Written Blocks": 0,
       "Local Hit Blocks": 0,
       "Local Read Blocks": 0,
@@ -72,8 +72,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.176,
+    "Planning Time": 0.369,
     "Triggers": [],
-    "Execution Time": 0.301
+    "Execution Time": 0.425
   }
 ]

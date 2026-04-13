@@ -1,23 +1,23 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 34.51,
-      "Total Cost": 34.52,
-      "Plan Rows": 7,
-      "Plan Width": 74,
-      "Actual Startup Time": 0.569,
-      "Actual Total Time": 0.571,
-      "Actual Rows": 7,
+      "Startup Cost": 25.49,
+      "Total Cost": 26.19,
+      "Plan Rows": 25,
+      "Plan Width": 72,
+      "Actual Startup Time": 0.42,
+      "Actual Total Time": 0.443,
+      "Actual Rows": 3,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(round(((100.0 * (sum(CASE WHEN (warranty_expiration < CURRENT_TIMESTAMP) THEN cost ELSE 0 END))::numeric) / (sum(cost))::numeric), 1)) DESC"
+      "Group Key": [
+        "assigned_to",
+        "department"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,27 +30,26 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 34.25,
-          "Total Cost": 34.41,
-          "Plan Rows": 7,
-          "Plan Width": 74,
-          "Actual Startup Time": 0.554,
-          "Actual Total Time": 0.561,
-          "Actual Rows": 7,
+          "Startup Cost": 25.49,
+          "Total Cost": 25.55,
+          "Plan Rows": 26,
+          "Plan Width": 38,
+          "Actual Startup Time": 0.386,
+          "Actual Total Time": 0.391,
+          "Actual Rows": 26,
           "Actual Loops": 1,
-          "Group Key": [
-            "department"
+          "Sort Key": [
+            "assigned_to",
+            "department",
+            "model_category"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 26,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -70,13 +69,15 @@
               "Relation Name": "flag_17",
               "Alias": "flag_17",
               "Startup Cost": 0.0,
-              "Total Cost": 23.0,
-              "Plan Rows": 500,
-              "Plan Width": 22,
-              "Actual Startup Time": 0.008,
-              "Actual Total Time": 0.071,
-              "Actual Rows": 500,
+              "Total Cost": 24.88,
+              "Plan Rows": 26,
+              "Plan Width": 38,
+              "Actual Startup Time": 0.048,
+              "Actual Total Time": 0.315,
+              "Actual Rows": 26,
               "Actual Loops": 1,
+              "Filter": "(assigned_to = ANY ('{\"Terrance Nimmer\",\"Reginald Lunan\",\"Stephen Seiters\"}'::text[]))",
+              "Rows Removed by Filter": 474,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -93,7 +94,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 1,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +105,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.1,
+    "Planning Time": 0.402,
     "Triggers": [],
-    "Execution Time": 0.615
+    "Execution Time": 0.528
   }
 ]

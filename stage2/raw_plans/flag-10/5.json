@@ -6,12 +6,12 @@
       "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 45.96,
-      "Total Cost": 45.97,
+      "Startup Cost": 51.16,
+      "Total Cost": 51.17,
       "Plan Rows": 1,
-      "Plan Width": 48,
-      "Actual Startup Time": 1.227,
-      "Actual Total Time": 1.228,
+      "Plan Width": 80,
+      "Actual Startup Time": 3.422,
+      "Actual Total Time": 3.424,
       "Actual Rows": 1,
       "Actual Loops": 1,
       "Shared Hit Blocks": 16,
@@ -36,8 +36,8 @@
           "Total Cost": 21.0,
           "Plan Rows": 416,
           "Plan Width": 16,
-          "Actual Startup Time": 0.009,
-          "Actual Total Time": 0.166,
+          "Actual Startup Time": 0.03,
+          "Actual Total Time": 0.305,
           "Actual Rows": 416,
           "Actual Loops": 1,
           "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL))",
@@ -56,7 +56,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 3,
+      "Shared Hit Blocks": 9,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -67,8 +67,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.112,
+    "Planning Time": 0.409,
     "Triggers": [],
-    "Execution Time": 1.264
+    "Execution Time": 3.531
   }
 ]

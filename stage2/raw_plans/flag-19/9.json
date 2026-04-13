@@ -1,17 +1,24 @@
 [
   {
     "Plan": {
-      "Node Type": "Limit",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 43.2,
-      "Total Cost": 43.26,
-      "Plan Rows": 25,
-      "Plan Width": 92,
-      "Actual Startup Time": 1.136,
-      "Actual Total Time": 1.144,
-      "Actual Rows": 25,
+      "Startup Cost": 26.14,
+      "Total Cost": 26.21,
+      "Plan Rows": 27,
+      "Plan Width": 75,
+      "Actual Startup Time": 0.376,
+      "Actual Total Time": 0.38,
+      "Actual Rows": 23,
       "Actual Loops": 1,
+      "Sort Key": [
+        "state",
+        "short_description"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 27,
+      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -24,25 +31,22 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Seq Scan",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 43.2,
-          "Total Cost": 43.88,
-          "Plan Rows": 271,
-          "Plan Width": 92,
-          "Actual Startup Time": 1.135,
-          "Actual Total Time": 1.138,
-          "Actual Rows": 25,
+          "Relation Name": "flag_19",
+          "Alias": "flag_19",
+          "Startup Cost": 0.0,
+          "Total Cost": 25.5,
+          "Plan Rows": 27,
+          "Plan Width": 75,
+          "Actual Startup Time": 0.038,
+          "Actual Total Time": 0.258,
+          "Actual Rows": 23,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(round((((sum(CASE WHEN (state = 'Declined'::text) THEN 1 ELSE 0 END))::numeric * 100.0) / (count(*))::numeric), 2)) DESC",
-            "(sum(CASE WHEN (state = 'Declined'::text) THEN 1 ELSE 0 END)) DESC"
-          ],
-          "Sort Method": "top-N heapsort",
-          "Sort Space Used": 26,
-          "Sort Space Type": "Memory",
+          "Filter": "((department = 'IT'::text) AND (category = 'Assets'::text))",
+          "Rows Removed by Filter": 477,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -52,78 +56,12 @@
           "Local Dirtied Blocks": 0,
           "Local Written Blocks": 0,
           "Temp Read Blocks": 0,
-          "Temp Written Blocks": 0,
-          "Plans": [
-            {
-              "Node Type": "Aggregate",
-              "Strategy": "Hashed",
-              "Partial Mode": "Simple",
-              "Parent Relationship": "Outer",
-              "Parallel Aware": false,
-              "Async Capable": false,
-              "Startup Cost": 28.78,
-              "Total Cost": 35.55,
-              "Plan Rows": 271,
-              "Plan Width": 92,
-              "Actual Startup Time": 0.512,
-              "Actual Total Time": 0.868,
-              "Actual Rows": 388,
-              "Actual Loops": 1,
-              "Group Key": [
-                "\"substring\"(source_id, 1, 3)",
-                "department"
-              ],
-              "Planned Partitions": 0,
-              "HashAgg Batches": 1,
-              "Peak Memory Usage": 93,
-              "Disk Usage": 0,
-              "Shared Hit Blocks": 18,
-              "Shared Read Blocks": 0,
-              "Shared Dirtied Blocks": 0,
-              "Shared Written Blocks": 0,
-              "Local Hit Blocks": 0,
-              "Local Read Blocks": 0,
-              "Local Dirtied Blocks": 0,
-              "Local Written Blocks": 0,
-              "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0,
-              "Plans": [
-                {
-                  "Node Type": "Seq Scan",
-                  "Parent Relationship": "Outer",
-                  "Parallel Aware": false,
-                  "Async Capable": false,
-                  "Relation Name": "flag_19",
-                  "Alias": "flag_19",
-                  "Startup Cost": 0.0,
-                  "Total Cost": 25.0,
-                  "Plan Rows": 302,
-                  "Plan Width": 53,
-                  "Actual Startup Time": 0.015,
-                  "Actual Total Time": 0.255,
-                  "Actual Rows": 389,
-                  "Actual Loops": 1,
-                  "Filter": "((source_id IS NOT NULL) AND (source_id <> 'NaN'::text))",
-                  "Rows Removed by Filter": 111,
-                  "Shared Hit Blocks": 18,
-                  "Shared Read Blocks": 0,
-                  "Shared Dirtied Blocks": 0,
-                  "Shared Written Blocks": 0,
-                  "Local Hit Blocks": 0,
-                  "Local Read Blocks": 0,
-                  "Local Dirtied Blocks": 0,
-                  "Local Written Blocks": 0,
-                  "Temp Read Blocks": 0,
-                  "Temp Written Blocks": 0
-                }
-              ]
-            }
-          ]
+          "Temp Written Blocks": 0
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 3,
+      "Shared Hit Blocks": 7,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -134,8 +72,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.148,
+    "Planning Time": 0.331,
     "Triggers": [],
-    "Execution Time": 1.198
+    "Execution Time": 0.505
   }
 ]

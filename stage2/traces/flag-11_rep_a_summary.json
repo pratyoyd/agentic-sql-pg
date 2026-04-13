@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-11_rep_a",
+  "task_key": "flag-11",
+  "goal": "Analyze the incident data to identify trends and underlying causes for the increasing resolution time in certain category.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 21,
+  "parse_failures": 0,
+  "wall_clock_seconds": 334.6,
+  "log_file": "stage2/traces/flag-11_rep_a.jsonl"
+}

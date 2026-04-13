@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-22_rep_a",
+  "task_key": "flag-22",
+  "goal": "To analyze and understand how the cost of an expense influences its processing time, with the aim of improving the efficiency and equity of expense report processing across all cost brackets.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 12,
+  "parse_failures": 0,
+  "wall_clock_seconds": 196.2,
+  "log_file": "stage2/traces/flag-22_rep_a.jsonl"
+}

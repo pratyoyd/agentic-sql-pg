@@ -4,19 +4,19 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 28.77,
-      "Total Cost": 28.77,
-      "Plan Rows": 2,
-      "Plan Width": 143,
-      "Actual Startup Time": 0.167,
-      "Actual Total Time": 0.169,
-      "Actual Rows": 9,
+      "Startup Cost": 65.76,
+      "Total Cost": 66.1,
+      "Plan Rows": 135,
+      "Plan Width": 144,
+      "Actual Startup Time": 5.723,
+      "Actual Total Time": 5.726,
+      "Actual Rows": 6,
       "Actual Loops": 1,
       "Sort Key": [
-        "amount"
+        "(count(*) FILTER (WHERE (state = 'Declined'::text))) DESC"
       ],
       "Sort Method": "quicksort",
-      "Sort Space Used": 26,
+      "Sort Space Used": 25,
       "Sort Space Type": "Memory",
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
@@ -30,22 +30,27 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Seq Scan",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Relation Name": "flag_20",
-          "Alias": "flag_20",
-          "Startup Cost": 0.0,
-          "Total Cost": 28.75,
-          "Plan Rows": 2,
-          "Plan Width": 143,
-          "Actual Startup Time": 0.024,
-          "Actual Total Time": 0.154,
-          "Actual Rows": 9,
+          "Startup Cost": 43.77,
+          "Total Cost": 60.98,
+          "Plan Rows": 135,
+          "Plan Width": 144,
+          "Actual Startup Time": 5.677,
+          "Actual Total Time": 5.7,
+          "Actual Rows": 6,
           "Actual Loops": 1,
-          "Filter": "((amount < 1000) AND (category = 'Travel'::text) AND (state = 'Declined'::text))",
-          "Rows Removed by Filter": 491,
+          "Group Key": [
+            "CASE WHEN ((ci ~~* '%dell%'::text) OR (ci ~~* '%hp %'::text) OR (ci ~~* '%laptop%'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%headphone%'::text) OR (ci ~~* '%bose%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%virtual private%'::text) OR (ci ~~* '%satellite phone%'::text) OR (ci ~~* '%passport controller%'::text) OR (ci ~~* '%charger%'::text) OR (ci ~~* '%adapter%'::text)) THEN 'Non-Travel IT/Electronics'::text WHEN ((ci ~~* '%suitcase%'::text) OR (ci ~~* '%luggage%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%carry%'::text) OR (ci ~~* '%tumi%'::text) OR (ci ~~* '%samsonite%'::text) OR (ci ~~* '%briefcase%'::text)) THEN 'Luggage/Bags'::text WHEN ((ci ~~* '%bus%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%boeing%'::text) OR (ci ~~* '%suv%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%airline%'::text) OR (ci ~~* '%corporate%'::text)) THEN 'Corporate Transport'::text WHEN (ci ~~* '%travel%'::text) THEN 'Travel-labeled CI'::text WHEN ((ci ~~* '%gps%'::text) OR (ci ~~* '%garmin%'::text) OR (ci ~~* '%navigator%'::text) OR (ci ~~* '%positioning%'::text)) THEN 'GPS/Navigation'::text WHEN ((ci ~~* '%kit%'::text) OR (ci ~~* '%equipment%'::text)) THEN 'Equipment Kits'::text WHEN ((ci ~~* '%system%'::text) OR (ci ~~* '%software%'::text) OR (ci ~~* '%management%'::text)) THEN 'Software/Systems'::text ELSE 'Other'::text END"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -55,7 +60,37 @@
           "Local Dirtied Blocks": 0,
           "Local Written Blocks": 0,
           "Temp Read Blocks": 0,
-          "Temp Written Blocks": 0
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_20",
+              "Alias": "flag_20",
+              "Startup Cost": 0.0,
+              "Total Cost": 39.76,
+              "Plan Rows": 146,
+              "Plan Width": 45,
+              "Actual Startup Time": 0.119,
+              "Actual Total Time": 5.429,
+              "Actual Rows": 146,
+              "Actual Loops": 1,
+              "Filter": "(category = 'Travel'::text)",
+              "Rows Removed by Filter": 354,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
         }
       ]
     },
@@ -71,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.084,
+    "Planning Time": 0.637,
     "Triggers": [],
-    "Execution Time": 0.192
+    "Execution Time": 5.9
   }
 ]

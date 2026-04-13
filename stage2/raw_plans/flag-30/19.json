@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 42.8,
+      "Total Cost": 42.81,
+      "Plan Rows": 4,
+      "Plan Width": 230,
+      "Actual Startup Time": 0.94,
+      "Actual Total Time": 0.943,
+      "Actual Rows": 4,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(round((avg(target_percentage) FILTER (WHERE (state = 'In Progress'::text)) - avg(target_percentage) FILTER (WHERE (state = 'Completed'::text))), 1)) DESC"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 42.57,
+          "Total Cost": 42.76,
+          "Plan Rows": 4,
+          "Plan Width": 230,
+          "Actual Startup Time": 0.898,
+          "Actual Total Time": 0.917,
+          "Actual Rows": 4,
+          "Actual Loops": 1,
+          "Group Key": [
+            "department"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_30",
+              "Alias": "flag_30",
+              "Startup Cost": 0.0,
+              "Total Cost": 24.25,
+              "Plan Rows": 431,
+              "Plan Width": 33,
+              "Actual Startup Time": 0.048,
+              "Actual Total Time": 0.351,
+              "Actual Rows": 431,
+              "Actual Loops": 1,
+              "Filter": "(state = ANY ('{Completed,\"In Progress\"}'::text[]))",
+              "Rows Removed by Filter": 69,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.411,
+    "Triggers": [],
+    "Execution Time": 1.075
+  }
+]

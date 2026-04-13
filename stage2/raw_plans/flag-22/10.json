@@ -1,22 +1,17 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Limit",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 42.93,
-      "Total Cost": 77.09,
-      "Plan Rows": 338,
-      "Plan Width": 168,
-      "Actual Startup Time": 0.585,
-      "Actual Total Time": 1.925,
-      "Actual Rows": 5,
+      "Startup Cost": 57.93,
+      "Total Cost": 58.05,
+      "Plan Rows": 50,
+      "Plan Width": 20,
+      "Actual Startup Time": 2.414,
+      "Actual Total Time": 2.433,
+      "Actual Rows": 50,
       "Actual Loops": 1,
-      "Group Key": [
-        "(CASE WHEN (amount < 500) THEN 'A. <$500'::text WHEN (amount < 1000) THEN 'B. $500-$1K'::text WHEN (amount < 2000) THEN 'C. $1K-$2K'::text WHEN (amount < 4000) THEN 'D. $2K-$4K'::text ELSE 'E. $4K+'::text END)"
-      ],
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -33,19 +28,19 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 42.93,
-          "Total Cost": 43.79,
+          "Startup Cost": 57.93,
+          "Total Cost": 58.79,
           "Plan Rows": 344,
-          "Plan Width": 52,
-          "Actual Startup Time": 0.393,
-          "Actual Total Time": 0.429,
-          "Actual Rows": 344,
+          "Plan Width": 20,
+          "Actual Startup Time": 2.41,
+          "Actual Total Time": 2.418,
+          "Actual Rows": 50,
           "Actual Loops": 1,
           "Sort Key": [
-            "(CASE WHEN (amount < 500) THEN 'A. <$500'::text WHEN (amount < 1000) THEN 'B. $500-$1K'::text WHEN (amount < 2000) THEN 'C. $1K-$2K'::text WHEN (amount < 4000) THEN 'D. $2K-$4K'::text ELSE 'E. $4K+'::text END)"
+            "amount"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 43,
+          "Sort Method": "top-N heapsort",
+          "Sort Space Used": 30,
           "Sort Space Type": "Memory",
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
@@ -66,14 +61,14 @@
               "Relation Name": "flag_22",
               "Alias": "flag_22",
               "Startup Cost": 0.0,
-              "Total Cost": 28.44,
+              "Total Cost": 46.5,
               "Plan Rows": 344,
-              "Plan Width": 52,
-              "Actual Startup Time": 0.013,
-              "Actual Total Time": 0.232,
+              "Plan Width": 20,
+              "Actual Startup Time": 0.084,
+              "Actual Total Time": 2.203,
               "Actual Rows": 344,
               "Actual Loops": 1,
-              "Filter": "(processed_date IS NOT NULL)",
+              "Filter": "((processed_date IS NOT NULL) AND (opened_at IS NOT NULL))",
               "Rows Removed by Filter": 156,
               "Shared Hit Blocks": 20,
               "Shared Read Blocks": 0,
@@ -91,7 +86,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 6,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -102,8 +97,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.156,
+    "Planning Time": 0.367,
     "Triggers": [],
-    "Execution Time": 1.978
+    "Execution Time": 2.511
   }
 ]

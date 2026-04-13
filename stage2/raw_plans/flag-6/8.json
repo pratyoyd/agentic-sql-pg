@@ -1,22 +1,24 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 24.59,
-      "Total Cost": 26.3,
-      "Plan Rows": 38,
+      "Startup Cost": 25.99,
+      "Total Cost": 26.09,
+      "Plan Rows": 39,
       "Plan Width": 56,
-      "Actual Startup Time": 0.229,
-      "Actual Total Time": 0.321,
-      "Actual Rows": 27,
+      "Actual Startup Time": 0.433,
+      "Actual Total Time": 0.437,
+      "Actual Rows": 11,
       "Actual Loops": 1,
-      "Group Key": [
-        "(date_trunc('week'::text, closed_at))"
+      "Sort Key": [
+        "(date_trunc('quarter'::text, opened_at))",
+        "(round(avg((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric)), 2)) DESC"
       ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -29,24 +31,28 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 24.59,
-          "Total Cost": 24.69,
-          "Plan Rows": 38,
-          "Plan Width": 24,
-          "Actual Startup Time": 0.212,
-          "Actual Total Time": 0.217,
-          "Actual Rows": 35,
+          "Startup Cost": 24.28,
+          "Total Cost": 24.96,
+          "Plan Rows": 39,
+          "Plan Width": 56,
+          "Actual Startup Time": 0.377,
+          "Actual Total Time": 0.396,
+          "Actual Rows": 11,
           "Actual Loops": 1,
-          "Sort Key": [
-            "(date_trunc('week'::text, closed_at))"
+          "Group Key": [
+            "date_trunc('quarter'::text, opened_at)",
+            "assignment_group"
           ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 26,
-          "Sort Space Type": "Memory",
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -66,14 +72,14 @@
               "Relation Name": "flag_6",
               "Alias": "flag_6",
               "Startup Cost": 0.0,
-              "Total Cost": 23.59,
-              "Plan Rows": 38,
-              "Plan Width": 24,
-              "Actual Startup Time": 0.02,
-              "Actual Total Time": 0.195,
+              "Total Cost": 23.6,
+              "Plan Rows": 39,
+              "Plan Width": 32,
+              "Actual Startup Time": 0.045,
+              "Actual Total Time": 0.268,
               "Actual Rows": 35,
               "Actual Loops": 1,
-              "Filter": "((closed_at IS NOT NULL) AND (state = 'Closed'::text) AND (assigned_to = 'Fred Luddy'::text))",
+              "Filter": "((state = 'Closed'::text) AND (assigned_to = 'Fred Luddy'::text))",
               "Rows Removed by Filter": 465,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
@@ -91,7 +97,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 0,
+      "Shared Hit Blocks": 5,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -102,8 +108,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.127,
+    "Planning Time": 0.409,
     "Triggers": [],
-    "Execution Time": 0.367
+    "Execution Time": 0.563
   }
 ]

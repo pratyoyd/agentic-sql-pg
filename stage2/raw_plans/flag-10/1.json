@@ -1,25 +1,24 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 54.7,
+      "Startup Cost": 40.14,
       "Total Cost": 55.74,
       "Plan Rows": 416,
       "Plan Width": 56,
-      "Actual Startup Time": 0.807,
-      "Actual Total Time": 0.812,
+      "Actual Startup Time": 1.038,
+      "Actual Total Time": 1.731,
       "Actual Rows": 48,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(date_trunc('month'::text, opened_at))",
-        "(count(*)) DESC"
+      "Group Key": [
+        "category",
+        "(date_trunc('month'::text, opened_at))"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 27,
-      "Sort Space Type": "Memory",
-      "Shared Hit Blocks": 19,
+      "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -31,28 +30,25 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 29.32,
-          "Total Cost": 36.6,
+          "Startup Cost": 40.14,
+          "Total Cost": 41.18,
           "Plan Rows": 416,
-          "Plan Width": 56,
-          "Actual Startup Time": 0.706,
-          "Actual Total Time": 0.752,
-          "Actual Rows": 48,
+          "Plan Width": 32,
+          "Actual Startup Time": 0.988,
+          "Actual Total Time": 1.047,
+          "Actual Rows": 416,
           "Actual Loops": 1,
-          "Group Key": [
-            "date_trunc('month'::text, opened_at)",
-            "category"
+          "Sort Key": [
+            "category",
+            "(date_trunc('month'::text, opened_at))"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 61,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 49,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -75,8 +71,8 @@
               "Total Cost": 22.04,
               "Plan Rows": 416,
               "Plan Width": 32,
-              "Actual Startup Time": 0.015,
-              "Actual Total Time": 0.268,
+              "Actual Startup Time": 0.036,
+              "Actual Total Time": 0.427,
               "Actual Rows": 416,
               "Actual Loops": 1,
               "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL))",
@@ -97,7 +93,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 26,
+      "Shared Hit Blocks": 23,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -108,8 +104,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.175,
+    "Planning Time": 0.462,
     "Triggers": [],
-    "Execution Time": 0.877
+    "Execution Time": 1.855
   }
 ]

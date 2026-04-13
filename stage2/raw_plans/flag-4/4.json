@@ -1,23 +1,34 @@
 [
   {
     "Plan": {
-      "Node Type": "Aggregate",
-      "Strategy": "Sorted",
-      "Partial Mode": "Simple",
+      "Node Type": "Incremental Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 31.12,
-      "Total Cost": 39.18,
-      "Plan Rows": 215,
-      "Plan Width": 62,
-      "Actual Startup Time": 0.407,
-      "Actual Total Time": 0.619,
-      "Actual Rows": 26,
+      "Startup Cost": 24.89,
+      "Total Cost": 26.08,
+      "Plan Rows": 25,
+      "Plan Width": 63,
+      "Actual Startup Time": 0.591,
+      "Actual Total Time": 0.595,
+      "Actual Rows": 10,
       "Actual Loops": 1,
-      "Group Key": [
+      "Sort Key": [
         "assigned_to",
-        "(date_trunc('month'::text, opened_at))"
+        "(count(*)) DESC"
       ],
+      "Presorted Key": [
+        "assigned_to"
+      ],
+      "Full-sort Groups": {
+        "Group Count": 1,
+        "Sort Methods Used": [
+          "quicksort"
+        ],
+        "Sort Space Memory": {
+          "Average Sort Space Used": 25,
+          "Peak Sort Space Used": 25
+        }
+      },
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,25 +41,18 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Sort",
+          "Node Type": "WindowAgg",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 31.12,
-          "Total Cost": 31.65,
-          "Plan Rows": 215,
-          "Plan Width": 38,
-          "Actual Startup Time": 0.384,
-          "Actual Total Time": 0.404,
-          "Actual Rows": 215,
+          "Startup Cost": 24.69,
+          "Total Cost": 25.38,
+          "Plan Rows": 25,
+          "Plan Width": 63,
+          "Actual Startup Time": 0.532,
+          "Actual Total Time": 0.56,
+          "Actual Rows": 10,
           "Actual Loops": 1,
-          "Sort Key": [
-            "assigned_to",
-            "(date_trunc('month'::text, opened_at))"
-          ],
-          "Sort Method": "quicksort",
-          "Sort Space Used": 39,
-          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -61,22 +65,24 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Sort",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_4",
-              "Alias": "flag_4",
-              "Startup Cost": 0.0,
-              "Total Cost": 22.79,
-              "Plan Rows": 215,
-              "Plan Width": 38,
-              "Actual Startup Time": 0.014,
-              "Actual Total Time": 0.22,
-              "Actual Rows": 215,
+              "Startup Cost": 24.69,
+              "Total Cost": 24.76,
+              "Plan Rows": 25,
+              "Plan Width": 31,
+              "Actual Startup Time": 0.492,
+              "Actual Total Time": 0.495,
+              "Actual Rows": 10,
               "Actual Loops": 1,
-              "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL) AND (assigned_to = ANY ('{\"Charlie Whitherspoon\",\"Fred Luddy\"}'::text[])))",
-              "Rows Removed by Filter": 285,
+              "Sort Key": [
+                "assigned_to"
+              ],
+              "Sort Method": "quicksort",
+              "Sort Space Used": 25,
+              "Sort Space Type": "Memory",
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -86,14 +92,80 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Aggregate",
+                  "Strategy": "Hashed",
+                  "Partial Mode": "Simple",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 23.86,
+                  "Total Cost": 24.11,
+                  "Plan Rows": 25,
+                  "Plan Width": 31,
+                  "Actual Startup Time": 0.435,
+                  "Actual Total Time": 0.442,
+                  "Actual Rows": 10,
+                  "Actual Loops": 1,
+                  "Group Key": [
+                    "assigned_to",
+                    "category"
+                  ],
+                  "Planned Partitions": 0,
+                  "HashAgg Batches": 1,
+                  "Peak Memory Usage": 24,
+                  "Disk Usage": 0,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Relation Name": "flag_4",
+                      "Alias": "flag_4",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 22.25,
+                      "Plan Rows": 215,
+                      "Plan Width": 23,
+                      "Actual Startup Time": 0.026,
+                      "Actual Total Time": 0.262,
+                      "Actual Rows": 215,
+                      "Actual Loops": 1,
+                      "Filter": "(assigned_to = ANY ('{\"Charlie Whitherspoon\",\"Fred Luddy\"}'::text[]))",
+                      "Rows Removed by Filter": 285,
+                      "Shared Hit Blocks": 16,
+                      "Shared Read Blocks": 0,
+                      "Shared Dirtied Blocks": 0,
+                      "Shared Written Blocks": 0,
+                      "Local Hit Blocks": 0,
+                      "Local Read Blocks": 0,
+                      "Local Dirtied Blocks": 0,
+                      "Local Written Blocks": 0,
+                      "Temp Read Blocks": 0,
+                      "Temp Written Blocks": 0
+                    }
+                  ]
+                }
+              ]
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 3,
+      "Shared Hit Blocks": 24,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +176,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.124,
+    "Planning Time": 0.55,
     "Triggers": [],
-    "Execution Time": 0.655
+    "Execution Time": 0.712
   }
 ]

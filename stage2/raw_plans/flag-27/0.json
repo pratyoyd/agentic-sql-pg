@@ -8,8 +8,8 @@
       "Total Cost": 29.37,
       "Plan Rows": 38,
       "Plan Width": 22,
-      "Actual Startup Time": 0.334,
-      "Actual Total Time": 0.336,
+      "Actual Startup Time": 0.284,
+      "Actual Total Time": 0.286,
       "Actual Rows": 3,
       "Actual Loops": 1,
       "Sort Key": [
@@ -40,8 +40,8 @@
           "Total Cost": 28.28,
           "Plan Rows": 38,
           "Plan Width": 22,
-          "Actual Startup Time": 0.286,
-          "Actual Total Time": 0.288,
+          "Actual Startup Time": 0.243,
+          "Actual Total Time": 0.246,
           "Actual Rows": 3,
           "Actual Loops": 1,
           "Group Key": [
@@ -73,8 +73,8 @@
               "Total Cost": 27.39,
               "Plan Rows": 103,
               "Plan Width": 14,
-              "Actual Startup Time": 0.028,
-              "Actual Total Time": 0.228,
+              "Actual Startup Time": 0.021,
+              "Actual Total Time": 0.19,
               "Actual Rows": 103,
               "Actual Loops": 1,
               "Filter": "(department = 'IT'::text)",
@@ -95,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 50,
+      "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.48,
+    "Planning Time": 0.252,
     "Triggers": [],
-    "Execution Time": 0.554
+    "Execution Time": 0.364
   }
 ]

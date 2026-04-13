@@ -4,12 +4,12 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 49.26,
-      "Total Cost": 49.31,
+      "Startup Cost": 52.11,
+      "Total Cost": 52.16,
       "Plan Rows": 20,
-      "Plan Width": 63,
-      "Actual Startup Time": 0.585,
-      "Actual Total Time": 0.588,
+      "Plan Width": 103,
+      "Actual Startup Time": 0.961,
+      "Actual Total Time": 0.965,
       "Actual Rows": 20,
       "Actual Loops": 1,
       "Sort Key": [
@@ -19,7 +19,7 @@
       "Sort Method": "quicksort",
       "Sort Space Used": 26,
       "Sort Space Type": "Memory",
-      "Shared Hit Blocks": 39,
+      "Shared Hit Blocks": 36,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -37,12 +37,12 @@
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 48.38,
-          "Total Cost": 48.83,
+          "Startup Cost": 51.12,
+          "Total Cost": 51.67,
           "Plan Rows": 20,
-          "Plan Width": 63,
-          "Actual Startup Time": 0.462,
-          "Actual Total Time": 0.483,
+          "Plan Width": 103,
+          "Actual Startup Time": 0.813,
+          "Actual Total Time": 0.865,
           "Actual Rows": 20,
           "Actual Loops": 1,
           "Group Key": [
@@ -74,9 +74,9 @@
               "Startup Cost": 0.0,
               "Total Cost": 41.5,
               "Plan Rows": 550,
-              "Plan Width": 33,
-              "Actual Startup Time": 0.006,
-              "Actual Total Time": 0.092,
+              "Plan Width": 41,
+              "Actual Startup Time": 0.02,
+              "Actual Total Time": 0.236,
               "Actual Rows": 550,
               "Actual Loops": 1,
               "Shared Hit Blocks": 36,
@@ -95,7 +95,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 27,
+      "Shared Hit Blocks": 52,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +106,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.221,
+    "Planning Time": 0.665,
     "Triggers": [],
-    "Execution Time": 0.639
+    "Execution Time": 1.119
   }
 ]

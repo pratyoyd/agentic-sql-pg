@@ -1,4 +1,4 @@
-SQL: SELECT 
+1SQL: SELECT
     EXTRACT(QUARTER FROM start_date)::INTEGER as quarter,
     AVG((end_date - start_date)) as avg_duration,
     AVG((DATE '2022-12-31' - start_date)) as avg_days_to_year_end,

@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-23_rep_a",
+  "task_key": "flag-23",
+  "goal": "To detect and investigate instances of repeated identical expense claims by individual users, determining whether these repetitions are fraudulent or due to misunderstandings of the expense policy.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 10,
+  "parse_failures": 0,
+  "wall_clock_seconds": 126.4,
+  "log_file": "stage2/traces/flag-23_rep_a.jsonl"
+}

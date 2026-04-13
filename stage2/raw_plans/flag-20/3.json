@@ -1,23 +1,17 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Limit",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 31.12,
-      "Total Cost": 31.14,
-      "Plan Rows": 4,
-      "Plan Width": 65,
-      "Actual Startup Time": 2.16,
-      "Actual Total Time": 2.161,
-      "Actual Rows": 4,
+      "Startup Cost": 35.07,
+      "Total Cost": 35.12,
+      "Plan Rows": 20,
+      "Plan Width": 69,
+      "Actual Startup Time": 0.742,
+      "Actual Total Time": 0.751,
+      "Actual Rows": 20,
       "Actual Loops": 1,
-      "Sort Key": [
-        "state"
-      ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 20,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,27 +24,24 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 31.0,
-          "Total Cost": 31.09,
-          "Plan Rows": 4,
-          "Plan Width": 65,
-          "Actual Startup Time": 2.147,
-          "Actual Total Time": 2.151,
-          "Actual Rows": 4,
+          "Startup Cost": 35.07,
+          "Total Cost": 35.41,
+          "Plan Rows": 135,
+          "Plan Width": 69,
+          "Actual Startup Time": 0.738,
+          "Actual Total Time": 0.742,
+          "Actual Rows": 20,
           "Actual Loops": 1,
-          "Group Key": [
-            "state"
+          "Sort Key": [
+            "(count(*) FILTER (WHERE (state = 'Declined'::text))) DESC"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
+          "Sort Method": "top-N heapsort",
+          "Sort Space Used": 27,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 20,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -63,22 +54,27 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Aggregate",
+              "Strategy": "Hashed",
+              "Partial Mode": "Simple",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_20",
-              "Alias": "flag_20",
-              "Startup Cost": 0.0,
-              "Total Cost": 26.25,
-              "Plan Rows": 146,
-              "Plan Width": 51,
-              "Actual Startup Time": 0.01,
-              "Actual Total Time": 0.115,
-              "Actual Rows": 146,
+              "Startup Cost": 28.44,
+              "Total Cost": 31.48,
+              "Plan Rows": 135,
+              "Plan Width": 69,
+              "Actual Startup Time": 0.457,
+              "Actual Total Time": 0.633,
+              "Actual Rows": 126,
               "Actual Loops": 1,
-              "Filter": "(category = 'Travel'::text)",
-              "Rows Removed by Filter": 354,
+              "Group Key": [
+                "ci"
+              ],
+              "Planned Partitions": 0,
+              "HashAgg Batches": 1,
+              "Peak Memory Usage": 64,
+              "Disk Usage": 0,
               "Shared Hit Blocks": 20,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -88,7 +84,37 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "flag_20",
+                  "Alias": "flag_20",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 26.25,
+                  "Plan Rows": 146,
+                  "Plan Width": 30,
+                  "Actual Startup Time": 0.036,
+                  "Actual Total Time": 0.23,
+                  "Actual Rows": 146,
+                  "Actual Loops": 1,
+                  "Filter": "(category = 'Travel'::text)",
+                  "Rows Removed by Filter": 354,
+                  "Shared Hit Blocks": 20,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
             }
           ]
         }
@@ -106,8 +132,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.114,
+    "Planning Time": 0.297,
     "Triggers": [],
-    "Execution Time": 2.204
+    "Execution Time": 0.882
   }
 ]

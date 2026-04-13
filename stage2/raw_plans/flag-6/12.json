@@ -4,17 +4,16 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 32.73,
-      "Total Cost": 32.78,
-      "Plan Rows": 20,
-      "Plan Width": 62,
-      "Actual Startup Time": 1.116,
-      "Actual Total Time": 1.119,
-      "Actual Rows": 13,
+      "Startup Cost": 71.83,
+      "Total Cost": 71.85,
+      "Plan Rows": 5,
+      "Plan Width": 134,
+      "Actual Startup Time": 3.119,
+      "Actual Total Time": 3.122,
+      "Actual Rows": 5,
       "Actual Loops": 1,
       "Sort Key": [
-        "assigned_to",
-        "state"
+        "(round(avg((EXTRACT(epoch FROM (closed_at - opened_at)) / '3600'::numeric)) FILTER (WHERE (EXTRACT(epoch FROM (closed_at - opened_at)) >= '0'::numeric)), 2)) DESC NULLS LAST"
       ],
       "Sort Method": "quicksort",
       "Sort Space Used": 25,
@@ -32,27 +31,22 @@
       "Plans": [
         {
           "Node Type": "Aggregate",
-          "Strategy": "Hashed",
+          "Strategy": "Sorted",
           "Partial Mode": "Simple",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 32.0,
-          "Total Cost": 32.3,
-          "Plan Rows": 20,
-          "Plan Width": 62,
-          "Actual Startup Time": 1.073,
-          "Actual Total Time": 1.091,
-          "Actual Rows": 13,
+          "Startup Cost": 43.58,
+          "Total Cost": 71.78,
+          "Plan Rows": 5,
+          "Plan Width": 134,
+          "Actual Startup Time": 1.276,
+          "Actual Total Time": 3.094,
+          "Actual Rows": 5,
           "Actual Loops": 1,
           "Group Key": [
-            "assigned_to",
-            "state"
+            "assigned_to"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -65,22 +59,24 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Sort",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_6",
-              "Alias": "flag_6",
-              "Startup Cost": 0.0,
-              "Total Cost": 21.0,
-              "Plan Rows": 489,
-              "Plan Width": 30,
-              "Actual Startup Time": 0.013,
-              "Actual Total Time": 0.195,
-              "Actual Rows": 489,
+              "Startup Cost": 43.58,
+              "Total Cost": 44.75,
+              "Plan Rows": 467,
+              "Plan Width": 38,
+              "Actual Startup Time": 0.704,
+              "Actual Total Time": 0.78,
+              "Actual Rows": 478,
               "Actual Loops": 1,
-              "Filter": "(assigned_to IS NOT NULL)",
-              "Rows Removed by Filter": 11,
+              "Sort Key": [
+                "assigned_to"
+              ],
+              "Sort Method": "quicksort",
+              "Sort Space Used": 57,
+              "Sort Space Type": "Memory",
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -90,14 +86,44 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "flag_6",
+                  "Alias": "flag_6",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 22.88,
+                  "Plan Rows": 467,
+                  "Plan Width": 38,
+                  "Actual Startup Time": 0.041,
+                  "Actual Total Time": 0.382,
+                  "Actual Rows": 478,
+                  "Actual Loops": 1,
+                  "Filter": "((opened_at IS NOT NULL) AND (closed_at IS NOT NULL) AND (state = ANY ('{Closed,Resolved,\"In Progress\"}'::text[])))",
+                  "Rows Removed by Filter": 22,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 1,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -108,8 +134,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.131,
+    "Planning Time": 0.406,
     "Triggers": [],
-    "Execution Time": 1.175
+    "Execution Time": 3.273
   }
 ]

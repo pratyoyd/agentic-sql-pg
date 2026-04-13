@@ -1,0 +1,111 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 28.03,
+      "Total Cost": 31.88,
+      "Plan Rows": 81,
+      "Plan Width": 62,
+      "Actual Startup Time": 0.62,
+      "Actual Total Time": 0.679,
+      "Actual Rows": 6,
+      "Actual Loops": 1,
+      "Group Key": [
+        "model_category",
+        "((round(((EXTRACT(epoch FROM (warranty_expiration - purchased_on)) / '86400'::numeric) / 365.25), 0))::integer)"
+      ],
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 28.03,
+          "Total Cost": 28.24,
+          "Plan Rows": 81,
+          "Plan Width": 18,
+          "Actual Startup Time": 0.589,
+          "Actual Total Time": 0.6,
+          "Actual Rows": 81,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "model_category",
+            "((round(((EXTRACT(epoch FROM (warranty_expiration - purchased_on)) / '86400'::numeric) / 365.25), 0))::integer)"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 28,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_16",
+              "Alias": "flag_16",
+              "Startup Cost": 0.0,
+              "Total Cost": 25.46,
+              "Plan Rows": 81,
+              "Plan Width": 18,
+              "Actual Startup Time": 0.14,
+              "Actual Total Time": 0.482,
+              "Actual Rows": 81,
+              "Actual Loops": 1,
+              "Filter": "(model_category = ANY ('{Server,\"Web Server\"}'::text[]))",
+              "Rows Removed by Filter": 419,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.387,
+    "Triggers": [],
+    "Execution Time": 0.778
+  }
+]

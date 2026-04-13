@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-5_rep_a",
+  "task_key": "flag-5",
+  "goal": "Analyze the trends in the dataset to identify factors that influence the time to resolution, particularly in certain category.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 16,
+  "parse_failures": 0,
+  "wall_clock_seconds": 255.8,
+  "log_file": "stage2/traces/flag-5_rep_a.jsonl"
+}

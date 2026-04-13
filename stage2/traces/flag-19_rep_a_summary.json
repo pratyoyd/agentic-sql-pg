@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-19_rep_a",
+  "task_key": "flag-19",
+  "goal": "To uncover and address the reasons behind the varying rates of expense rejections across departments to improve overall financial management within the organization.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 32,
+  "parse_failures": 0,
+  "wall_clock_seconds": 509.7,
+  "log_file": "stage2/traces/flag-19_rep_a.jsonl"
+}

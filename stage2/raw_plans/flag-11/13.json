@@ -1,23 +1,22 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 26.86,
-      "Total Cost": 26.87,
-      "Plan Rows": 4,
-      "Plan Width": 43,
-      "Actual Startup Time": 0.224,
-      "Actual Total Time": 0.226,
-      "Actual Rows": 4,
+      "Startup Cost": 26.73,
+      "Total Cost": 29.2,
+      "Plan Rows": 55,
+      "Plan Width": 52,
+      "Actual Startup Time": 0.422,
+      "Actual Total Time": 0.521,
+      "Actual Rows": 30,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(count(*)) DESC"
+      "Group Key": [
+        "((closed_at)::date)"
       ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -30,27 +29,24 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 26.78,
-          "Total Cost": 26.82,
-          "Plan Rows": 4,
-          "Plan Width": 43,
-          "Actual Startup Time": 0.214,
-          "Actual Total Time": 0.216,
-          "Actual Rows": 4,
+          "Startup Cost": 26.73,
+          "Total Cost": 26.86,
+          "Plan Rows": 55,
+          "Plan Width": 20,
+          "Actual Startup Time": 0.384,
+          "Actual Total Time": 0.39,
+          "Actual Rows": 33,
           "Actual Loops": 1,
-          "Group Key": [
-            "caller_id"
+          "Sort Key": [
+            "((closed_at)::date)"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
+          "Sort Method": "quicksort",
+          "Sort Space Used": 26,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -70,15 +66,15 @@
               "Relation Name": "flag_11",
               "Alias": "flag_11",
               "Startup Cost": 0.0,
-              "Total Cost": 26.5,
-              "Plan Rows": 28,
-              "Plan Width": 27,
-              "Actual Startup Time": 0.061,
-              "Actual Total Time": 0.164,
-              "Actual Rows": 74,
+              "Total Cost": 25.14,
+              "Plan Rows": 55,
+              "Plan Width": 20,
+              "Actual Startup Time": 0.181,
+              "Actual Total Time": 0.353,
+              "Actual Rows": 33,
               "Actual Loops": 1,
-              "Filter": "((opened_at >= '2023-07-01 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text) AND (location = 'Australia'::text))",
-              "Rows Removed by Filter": 526,
+              "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL) AND (opened_at >= '2023-09-01 00:00:00'::timestamp without time zone) AND (category = 'Hardware'::text))",
+              "Rows Removed by Filter": 567,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -95,7 +91,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 4,
+      "Shared Hit Blocks": 0,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -106,8 +102,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.153,
+    "Planning Time": 0.288,
     "Triggers": [],
-    "Execution Time": 0.272
+    "Execution Time": 0.625
   }
 ]

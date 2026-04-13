@@ -1,24 +1,17 @@
 [
   {
     "Plan": {
-      "Node Type": "Sort",
+      "Node Type": "Limit",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 37.19,
-      "Total Cost": 37.63,
-      "Plan Rows": 177,
-      "Plan Width": 86,
-      "Actual Startup Time": 0.486,
-      "Actual Total Time": 0.488,
-      "Actual Rows": 10,
+      "Startup Cost": 33.14,
+      "Total Cost": 33.18,
+      "Plan Rows": 15,
+      "Plan Width": 95,
+      "Actual Startup Time": 0.725,
+      "Actual Total Time": 0.73,
+      "Actual Rows": 15,
       "Actual Loops": 1,
-      "Sort Key": [
-        "(CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END)",
-        "(count(*)) DESC"
-      ],
-      "Sort Method": "quicksort",
-      "Sort Space Used": 25,
-      "Sort Space Type": "Memory",
       "Shared Hit Blocks": 16,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
@@ -31,28 +24,24 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "Sort",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
-          "Startup Cost": 27.48,
-          "Total Cost": 30.58,
-          "Plan Rows": 177,
-          "Plan Width": 86,
-          "Actual Startup Time": 0.458,
-          "Actual Total Time": 0.471,
-          "Actual Rows": 10,
+          "Startup Cost": 33.14,
+          "Total Cost": 33.47,
+          "Plan Rows": 132,
+          "Plan Width": 95,
+          "Actual Startup Time": 0.723,
+          "Actual Total Time": 0.725,
+          "Actual Rows": 15,
           "Actual Loops": 1,
-          "Group Key": [
-            "CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END",
-            "assigned_to"
+          "Sort Key": [
+            "(count(*) FILTER (WHERE (opened_at >= '2023-07-01 00:00:00'::timestamp without time zone))) DESC"
           ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 40,
-          "Disk Usage": 0,
+          "Sort Method": "top-N heapsort",
+          "Sort Space Used": 27,
+          "Sort Space Type": "Memory",
           "Shared Hit Blocks": 16,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -65,22 +54,27 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Aggregate",
+              "Strategy": "Hashed",
+              "Partial Mode": "Simple",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_11",
-              "Alias": "flag_11",
-              "Startup Cost": 0.0,
-              "Total Cost": 23.94,
-              "Plan Rows": 177,
-              "Plan Width": 62,
-              "Actual Startup Time": 0.013,
-              "Actual Total Time": 0.191,
-              "Actual Rows": 177,
+              "Startup Cost": 27.93,
+              "Total Cost": 29.9,
+              "Plan Rows": 132,
+              "Plan Width": 95,
+              "Actual Startup Time": 0.556,
+              "Actual Total Time": 0.652,
+              "Actual Rows": 86,
               "Actual Loops": 1,
-              "Filter": "((closed_at IS NOT NULL) AND (category = 'Hardware'::text))",
-              "Rows Removed by Filter": 423,
+              "Group Key": [
+                "short_description"
+              ],
+              "Planned Partitions": 0,
+              "HashAgg Batches": 1,
+              "Peak Memory Usage": 96,
+              "Disk Usage": 0,
               "Shared Hit Blocks": 16,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -90,14 +84,44 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "flag_11",
+                  "Alias": "flag_11",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.5,
+                  "Plan Rows": 177,
+                  "Plan Width": 55,
+                  "Actual Startup Time": 0.025,
+                  "Actual Total Time": 0.248,
+                  "Actual Rows": 177,
+                  "Actual Loops": 1,
+                  "Filter": "((closed_at IS NOT NULL) AND (opened_at IS NOT NULL) AND (category = 'Hardware'::text))",
+                  "Rows Removed by Filter": 423,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 3,
+      "Shared Hit Blocks": 7,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -108,8 +132,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.14,
+    "Planning Time": 0.428,
     "Triggers": [],
-    "Execution Time": 0.533
+    "Execution Time": 0.828
   }
 ]

@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-10_rep_a",
+  "task_key": "flag-10",
+  "goal": "Identify trends and underlying factors or correlations contributing to the increase in TTR.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 6,
+  "parse_failures": 0,
+  "wall_clock_seconds": 114.4,
+  "log_file": "stage2/traces/flag-10_rep_a.jsonl"
+}

@@ -4,12 +4,12 @@
       "Node Type": "Sort",
       "Parallel Aware": false,
       "Async Capable": false,
-      "Startup Cost": 30.7,
-      "Total Cost": 30.72,
+      "Startup Cost": 30.95,
+      "Total Cost": 30.97,
       "Plan Rows": 7,
-      "Plan Width": 66,
-      "Actual Startup Time": 0.523,
-      "Actual Total Time": 0.525,
+      "Plan Width": 130,
+      "Actual Startup Time": 0.503,
+      "Actual Total Time": 0.506,
       "Actual Rows": 7,
       "Actual Loops": 1,
       "Sort Key": [
@@ -30,27 +30,18 @@
       "Temp Written Blocks": 0,
       "Plans": [
         {
-          "Node Type": "Aggregate",
-          "Strategy": "Hashed",
-          "Partial Mode": "Simple",
+          "Node Type": "WindowAgg",
           "Parent Relationship": "Outer",
           "Parallel Aware": false,
           "Async Capable": false,
           "Startup Cost": 30.5,
-          "Total Cost": 30.6,
+          "Total Cost": 30.85,
           "Plan Rows": 7,
-          "Plan Width": 66,
-          "Actual Startup Time": 0.453,
-          "Actual Total Time": 0.461,
+          "Plan Width": 130,
+          "Actual Startup Time": 0.455,
+          "Actual Total Time": 0.472,
           "Actual Rows": 7,
           "Actual Loops": 1,
-          "Group Key": [
-            "department"
-          ],
-          "Planned Partitions": 0,
-          "HashAgg Batches": 1,
-          "Peak Memory Usage": 24,
-          "Disk Usage": 0,
           "Shared Hit Blocks": 18,
           "Shared Read Blocks": 0,
           "Shared Dirtied Blocks": 0,
@@ -63,20 +54,27 @@
           "Temp Written Blocks": 0,
           "Plans": [
             {
-              "Node Type": "Seq Scan",
+              "Node Type": "Aggregate",
+              "Strategy": "Hashed",
+              "Partial Mode": "Simple",
               "Parent Relationship": "Outer",
               "Parallel Aware": false,
               "Async Capable": false,
-              "Relation Name": "flag_17",
-              "Alias": "flag_17",
-              "Startup Cost": 0.0,
-              "Total Cost": 23.0,
-              "Plan Rows": 500,
-              "Plan Width": 14,
-              "Actual Startup Time": 0.028,
-              "Actual Total Time": 0.148,
-              "Actual Rows": 500,
+              "Startup Cost": 30.5,
+              "Total Cost": 30.59,
+              "Plan Rows": 7,
+              "Plan Width": 66,
+              "Actual Startup Time": 0.406,
+              "Actual Total Time": 0.414,
+              "Actual Rows": 7,
               "Actual Loops": 1,
+              "Group Key": [
+                "department"
+              ],
+              "Planned Partitions": 0,
+              "HashAgg Batches": 1,
+              "Peak Memory Usage": 24,
+              "Disk Usage": 0,
               "Shared Hit Blocks": 18,
               "Shared Read Blocks": 0,
               "Shared Dirtied Blocks": 0,
@@ -86,14 +84,42 @@
               "Local Dirtied Blocks": 0,
               "Local Written Blocks": 0,
               "Temp Read Blocks": 0,
-              "Temp Written Blocks": 0
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Relation Name": "flag_17",
+                  "Alias": "flag_17",
+                  "Startup Cost": 0.0,
+                  "Total Cost": 23.0,
+                  "Plan Rows": 500,
+                  "Plan Width": 14,
+                  "Actual Startup Time": 0.018,
+                  "Actual Total Time": 0.109,
+                  "Actual Rows": 500,
+                  "Actual Loops": 1,
+                  "Shared Hit Blocks": 18,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0
+                }
+              ]
             }
           ]
         }
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 68,
+      "Shared Hit Blocks": 36,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -104,8 +130,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.72,
+    "Planning Time": 0.349,
     "Triggers": [],
-    "Execution Time": 0.796
+    "Execution Time": 0.682
   }
 ]

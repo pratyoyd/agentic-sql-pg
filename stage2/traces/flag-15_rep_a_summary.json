@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-15_rep_a",
+  "task_key": "flag-15",
+  "goal": "Utilize incident and user data to analyze  the distribution of incident assignments among agents to identify imbalances, especially during leave periods.",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 14,
+  "parse_failures": 0,
+  "wall_clock_seconds": 180.3,
+  "log_file": "stage2/traces/flag-15_rep_a.jsonl"
+}

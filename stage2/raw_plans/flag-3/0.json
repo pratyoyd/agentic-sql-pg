@@ -8,8 +8,8 @@
       "Total Cost": 34.98,
       "Plan Rows": 5,
       "Plan Width": 83,
-      "Actual Startup Time": 0.729,
-      "Actual Total Time": 0.732,
+      "Actual Startup Time": 0.593,
+      "Actual Total Time": 0.597,
       "Actual Rows": 5,
       "Actual Loops": 1,
       "Shared Hit Blocks": 19,
@@ -32,8 +32,8 @@
           "Total Cost": 34.98,
           "Plan Rows": 5,
           "Plan Width": 83,
-          "Actual Startup Time": 0.726,
-          "Actual Total Time": 0.728,
+          "Actual Startup Time": 0.59,
+          "Actual Total Time": 0.592,
           "Actual Rows": 5,
           "Actual Loops": 1,
           "Sort Key": [
@@ -62,8 +62,8 @@
               "Total Cost": 34.91,
               "Plan Rows": 5,
               "Plan Width": 83,
-              "Actual Startup Time": 0.647,
-              "Actual Total Time": 0.656,
+              "Actual Startup Time": 0.549,
+              "Actual Total Time": 0.558,
               "Actual Rows": 5,
               "Actual Loops": 1,
               "Shared Hit Blocks": 16,
@@ -88,8 +88,8 @@
                   "Total Cost": 34.8,
                   "Plan Rows": 5,
                   "Plan Width": 51,
-                  "Actual Startup Time": 0.605,
-                  "Actual Total Time": 0.609,
+                  "Actual Startup Time": 0.505,
+                  "Actual Total Time": 0.508,
                   "Actual Rows": 5,
                   "Actual Loops": 1,
                   "Group Key": [
@@ -121,8 +121,8 @@
                       "Total Cost": 22.25,
                       "Plan Rows": 500,
                       "Plan Width": 27,
-                      "Actual Startup Time": 0.025,
-                      "Actual Total Time": 0.243,
+                      "Actual Startup Time": 0.02,
+                      "Actual Total Time": 0.179,
                       "Actual Rows": 500,
                       "Actual Loops": 1,
                       "Filter": "((assigned_to IS NOT NULL) AND (assigned_to <> ''::text))",
@@ -147,7 +147,7 @@
       ]
     },
     "Planning": {
-      "Shared Hit Blocks": 56,
+      "Shared Hit Blocks": 18,
       "Shared Read Blocks": 0,
       "Shared Dirtied Blocks": 0,
       "Shared Written Blocks": 0,
@@ -158,8 +158,8 @@
       "Temp Read Blocks": 0,
       "Temp Written Blocks": 0
     },
-    "Planning Time": 0.835,
+    "Planning Time": 0.303,
     "Triggers": [],
-    "Execution Time": 1.041
+    "Execution Time": 0.711
   }
 ]
