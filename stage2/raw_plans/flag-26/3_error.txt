@@ -1,0 +1,15 @@
+SQL: SELECT 
+    department,
+    COUNT(*) AS count,
+    ROUND((AVG(cost))::numeric, 0) AS avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on)))::numeric, 0) AS avg_warranty_days,
+    SUM(CASE WHEN cost >= 4000 THEN 1 ELSE 0 END) AS high_cost_count,
+    SUM(CASE WHEN (warranty_expiration - purchased_on) < 200 THEN 1 ELSE 0 END) AS short_warranty_count
+FROM flag_26
+WHERE model_category = 'Computer'
+GROUP BY department
+ORDER BY avg_cost DESC
+
+Error: cannot cast type interval to numeric
+LINE 5: ... ROUND((AVG((warranty_expiration - purchased_on)))::numeric,...
+                                                             ^

@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 51.82,
+      "Total Cost": 51.83,
+      "Plan Rows": 4,
+      "Plan Width": 176,
+      "Actual Startup Time": 2.353,
+      "Actual Total Time": 2.355,
+      "Actual Rows": 4,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(round(avg(((EXTRACT(epoch FROM (processed_date - opened_at)) / 86400.0) - ((amount)::numeric / 260.0))), 3)) DESC"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 20,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 51.66,
+          "Total Cost": 51.78,
+          "Plan Rows": 4,
+          "Plan Width": 176,
+          "Actual Startup Time": 2.312,
+          "Actual Total Time": 2.342,
+          "Actual Rows": 4,
+          "Actual Loops": 1,
+          "Group Key": [
+            "category"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 24,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 20,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_22",
+              "Alias": "flag_22",
+              "Startup Cost": 0.0,
+              "Total Cost": 25.0,
+              "Plan Rows": 344,
+              "Plan Width": 28,
+              "Actual Startup Time": 0.013,
+              "Actual Total Time": 0.153,
+              "Actual Rows": 344,
+              "Actual Loops": 1,
+              "Filter": "(processed_date IS NOT NULL)",
+              "Rows Removed by Filter": 156,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.169,
+    "Triggers": [],
+    "Execution Time": 2.432
+  }
+]

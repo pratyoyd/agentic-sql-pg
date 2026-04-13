@@ -1,0 +1,23 @@
+SQL: SELECT 
+    CASE 
+        WHEN (a.warranty_expiration - a.purchased_on) < 365 THEN '<1yr warranty'
+        WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN '1-2yr warranty'
+        WHEN (a.warranty_expiration - a.purchased_on) < 1095 THEN '2-3yr warranty'
+        ELSE '3+yr warranty'
+    END AS warranty_tier,
+    CASE WHEN (a.purchased_on - u.start_date) < -30 THEN 'Pre-hire (>1mo)' ELSE 'Around hire' END AS timing_group,
+    COUNT(*) AS assets,
+    ROUND((AVG((a.purchased_on - u.start_date)))::numeric, 0) AS avg_days_rel_to_hire,
+    ROUND((AVG(a.cost))::numeric, 0) AS avg_cost,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) AS expired,
+    ROUND((SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) * 100.0 / COUNT(*))::numeric, 1) AS pct_expired,
+    ROUND((AVG((a.warranty_expiration - u.start_date)))::numeric, 0) AS avg_warranty_days_from_hire
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+GROUP BY 1, 2
+ORDER BY warranty_tier, timing_group
+
+Error: operator does not exist: interval < integer
+LINE 3: ...    WHEN (a.warranty_expiration - a.purchased_on) < 365 THEN...
+                                                             ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

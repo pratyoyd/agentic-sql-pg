@@ -1,0 +1,22 @@
+SQL: SELECT 
+    asset_tag,
+    display_name,
+    model_category,
+    department,
+    cost,
+    ROUND(((warranty_expiration - purchased_on) / 365.0)::numeric, 2) as warranty_years,
+    warranty_expiration::DATE as warranty_expires,
+    CASE 
+        WHEN warranty_expiration < CURRENT_TIMESTAMP THEN 'EXPIRED'
+        WHEN warranty_expiration < CURRENT_TIMESTAMP + INTERVAL '6 months' THEN 'Expiring <6mo'
+        ELSE 'Active'
+    END as warranty_status,
+    ROUND((cost / ((warranty_expiration - purchased_on) / 365.0))::numeric, 0) as cost_per_warranty_year
+FROM flag_16
+WHERE cost >= 5000
+ORDER BY cost DESC, warranty_years ASC
+LIMIT 20
+
+Error: cannot cast type interval to numeric
+LINE 7: ...UND(((warranty_expiration - purchased_on) / 365.0)::numeric,...
+                                                             ^

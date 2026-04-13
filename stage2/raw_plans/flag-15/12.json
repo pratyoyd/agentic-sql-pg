@@ -1,0 +1,181 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Incremental Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 49.11,
+      "Total Cost": 100.29,
+      "Plan Rows": 500,
+      "Plan Width": 87,
+      "Actual Startup Time": 1.466,
+      "Actual Total Time": 1.469,
+      "Actual Rows": 9,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(CASE WHEN (opened_at < '2023-06-01 00:00:00'::timestamp without time zone) THEN 'Pre-leave'::text WHEN (opened_at <= '2023-08-28 00:00:00'::timestamp without time zone) THEN 'Leave season'::text ELSE 'Post-leave'::text END)",
+        "(count(*)) DESC"
+      ],
+      "Presorted Key": [
+        "(CASE WHEN (opened_at < '2023-06-01 00:00:00'::timestamp without time zone) THEN 'Pre-leave'::text WHEN (opened_at <= '2023-08-28 00:00:00'::timestamp without time zone) THEN 'Leave season'::text ELSE 'Post-leave'::text END)"
+      ],
+      "Full-sort Groups": {
+        "Group Count": 1,
+        "Sort Methods Used": [
+          "quicksort"
+        ],
+        "Sort Space Memory": {
+          "Average Sort Space Used": 25,
+          "Peak Sort Space Used": 25
+        }
+      },
+      "Shared Hit Blocks": 16,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "WindowAgg",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 49.04,
+          "Total Cost": 77.79,
+          "Plan Rows": 500,
+          "Plan Width": 87,
+          "Actual Startup Time": 1.232,
+          "Actual Total Time": 1.45,
+          "Actual Rows": 9,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Aggregate",
+              "Strategy": "Sorted",
+              "Partial Mode": "Simple",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 49.04,
+              "Total Cost": 62.79,
+              "Plan Rows": 500,
+              "Plan Width": 55,
+              "Actual Startup Time": 1.136,
+              "Actual Total Time": 1.39,
+              "Actual Rows": 9,
+              "Actual Loops": 1,
+              "Group Key": [
+                "(CASE WHEN (opened_at < '2023-06-01 00:00:00'::timestamp without time zone) THEN 'Pre-leave'::text WHEN (opened_at <= '2023-08-28 00:00:00'::timestamp without time zone) THEN 'Leave season'::text ELSE 'Post-leave'::text END)",
+                "sys_updated_by"
+              ],
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Sort",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 49.04,
+                  "Total Cost": 50.29,
+                  "Plan Rows": 500,
+                  "Plan Width": 52,
+                  "Actual Startup Time": 1.103,
+                  "Actual Total Time": 1.158,
+                  "Actual Rows": 500,
+                  "Actual Loops": 1,
+                  "Sort Key": [
+                    "(CASE WHEN (opened_at < '2023-06-01 00:00:00'::timestamp without time zone) THEN 'Pre-leave'::text WHEN (opened_at <= '2023-08-28 00:00:00'::timestamp without time zone) THEN 'Leave season'::text ELSE 'Post-leave'::text END)",
+                    "sys_updated_by",
+                    "assigned_to"
+                  ],
+                  "Sort Method": "quicksort",
+                  "Sort Space Used": 53,
+                  "Sort Space Type": "Memory",
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Relation Name": "flag_15",
+                      "Alias": "flag_15",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 26.62,
+                      "Plan Rows": 500,
+                      "Plan Width": 52,
+                      "Actual Startup Time": 0.016,
+                      "Actual Total Time": 0.322,
+                      "Actual Rows": 500,
+                      "Actual Loops": 1,
+                      "Filter": "(assigned_to = ANY ('{\"Luke Wilson\",\"Beth Anglin\",\"Charlie Whitherspoon\",\"Howard Johnson\",\"Fred Luddy\"}'::text[]))",
+                      "Rows Removed by Filter": 0,
+                      "Shared Hit Blocks": 16,
+                      "Shared Read Blocks": 0,
+                      "Shared Dirtied Blocks": 0,
+                      "Shared Written Blocks": 0,
+                      "Local Hit Blocks": 0,
+                      "Local Read Blocks": 0,
+                      "Local Dirtied Blocks": 0,
+                      "Local Written Blocks": 0,
+                      "Temp Read Blocks": 0,
+                      "Temp Written Blocks": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 3,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.21,
+    "Triggers": [],
+    "Execution Time": 1.529
+  }
+]

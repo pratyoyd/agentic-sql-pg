@@ -1,0 +1,21 @@
+SQL: SELECT 
+    CASE 
+        WHEN (warranty_expiration - purchased_on) = 90 THEN '90-day floor (high-cost)'
+        WHEN cost < 2000 THEN 'Low-cost (< $2K)'
+        WHEN cost < 3000 THEN 'Mid-cost ($2K-3K)'
+        WHEN cost < 4000 THEN 'Upper-mid ($3K-4K)'
+        ELSE 'High-cost > $4K (non-floor)'
+    END AS segment,
+    COUNT(*) AS count,
+    ROUND((AVG(cost))::numeric, 0) AS avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on)))::numeric, 0) AS avg_warranty_days,
+    ROUND((AVG(cost * 1.0 / (warranty_expiration - purchased_on)))::numeric, 2) AS cost_per_warranty_day,
+    ROUND((AVG(cost) / AVG((warranty_expiration' - purchased_on)) * 365)::numeric, 0) AS annualized_cost_of_warranty
+FROM flag_26
+WHERE model_category = 'Computer'
+GROUP BY segment
+ORDER BY cost_per_warranty_day DESC
+
+Error: syntax error at or near "Computer"
+LINE 15: WHERE model_category = 'Computer'
+                                 ^

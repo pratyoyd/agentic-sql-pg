@@ -1,0 +1,15 @@
+SQL: SELECT 
+    ROUND(((a.warranty_expiration - a.purchased_on) / 365.0)::numeric, 1) AS warranty_years_rounded,
+    COUNT(*) AS assets,
+    ROUND((AVG((a.purchased_on - u.start_date)))::numeric, 0) AS avg_days_before_hire,
+    ROUND((AVG(a.cost))::numeric, 0) AS avg_cost,
+    a.model_category,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) AS expired
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+GROUP BY 1, 5
+ORDER BY model_category, warranty_years_rounded
+
+Error: cannot cast type interval to numeric
+LINE 2: ...((a.warranty_expiration - a.purchased_on) / 365.0)::numeric,...
+                                                             ^

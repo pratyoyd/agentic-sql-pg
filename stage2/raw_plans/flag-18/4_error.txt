@@ -1,0 +1,18 @@
+SQL: SELECT 
+    a.model_category,
+    CASE WHEN (a.purchased_on - u.start_date) < -30 THEN 'Pre-hire (>1mo)' ELSE 'Around hire' END AS timing_group,
+    COUNT(*) AS assets,
+    ROUND((AVG(a.cost))::numeric, 0) AS avg_cost,
+    SUM(a.cost) AS total_cost,
+    ROUND((AVG((a.warranty_expiration - a.purchased_on)))::numeric, 0) AS avg_warranty_days,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) AS already_expired,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN a.cost ELSE 0 END) AS expired_asset_value
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+GROUP BY 1, 2
+ORDER BY model_category, timing_group
+
+Error: operator does not exist: interval < integer
+LINE 3:     CASE WHEN (a.purchased_on - u.start_date) < -30 THEN 'Pr...
+                                                      ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

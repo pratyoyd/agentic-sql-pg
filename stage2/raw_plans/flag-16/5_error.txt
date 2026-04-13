@@ -1,0 +1,41 @@
+SQL: WITH category_norms AS (
+    SELECT 
+        model_category,
+        AVG((warranty_expiration - purchased_on) / 365.0) as cat_avg_warranty,
+        AVG(cost) as cat_avg_cost
+    FROM flag_16
+    GROUP BY model_category
+),
+asset_scores AS (
+    SELECT 
+        f.asset_tag,
+        f.display_name,
+        f.model_category,
+        f.department,
+        f.cost,
+        ROUND(((f.warranty_expiration - f.purchased_on) / 365.0)::numeric, 2) as warranty_years,
+        ROUND((c.cat_avg_warranty)::numeric, 2) as cat_avg_warranty,
+        ROUND((c.cat_avg_cost)::numeric, 0) as cat_avg_cost,
+        -- Misalignment: cost above avg but warranty below avg
+        ROUND(((f.cost - c.cat_avg_cost) / c.cat_avg_cost * 100)::numeric, 1) as cost_pct_above_avg,
+        ROUND((((f.warranty_expiration - f.purchased_on) / 365.0 - c.cat_avg_warranty) / c.cat_avg_warranty * 100)::numeric, 1) as warranty_pct_vs_avg
+    FROM flag_16 f
+    JOIN category_norms c ON f.model_category = c.model_category
+)
+SELECT 
+    model_category,
+    department,
+    COUNT(*) as misaligned_count,
+    ROUND((AVG(cost))::numeric, 0) as avg_cost,
+    ROUND((AVG(warranty_years))::numeric, 2) as avg_warranty_years,
+    ROUND((AVG(cost_pct_above_avg))::numeric, 1) as avg_cost_pct_above_cat,
+    ROUND((AVG(warranty_pct_vs_avg))::numeric, 1) as avg_warranty_pct_vs_cat,
+    SUM(cost) as total_misaligned_cost
+FROM asset_scores
+WHERE cost_pct_above_avg > 10 AND warranty_pct_vs_avg < -10
+GROUP BY model_category, department
+ORDER BY total_misaligned_cost DESC
+
+Error: cannot cast type interval to numeric
+LINE 16: ...((f.warranty_expiration - f.purchased_on) / 365.0)::numeric,...
+                                                              ^

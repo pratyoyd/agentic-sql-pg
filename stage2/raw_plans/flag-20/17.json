@@ -1,0 +1,180 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Incremental Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 32.3,
+      "Total Cost": 47.64,
+      "Plan Rows": 143,
+      "Plan Width": 113,
+      "Actual Startup Time": 1.25,
+      "Actual Total Time": 1.252,
+      "Actual Rows": 8,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
+        "(count(*)) DESC"
+      ],
+      "Presorted Key": [
+        "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)"
+      ],
+      "Full-sort Groups": {
+        "Group Count": 1,
+        "Sort Methods Used": [
+          "quicksort"
+        ],
+        "Sort Space Memory": {
+          "Average Sort Space Used": 25,
+          "Peak Sort Space Used": 25
+        }
+      },
+      "Shared Hit Blocks": 20,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "WindowAgg",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 32.23,
+          "Total Cost": 41.2,
+          "Plan Rows": 143,
+          "Plan Width": 113,
+          "Actual Startup Time": 1.174,
+          "Actual Total Time": 1.234,
+          "Actual Rows": 8,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 20,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Aggregate",
+              "Strategy": "Sorted",
+              "Partial Mode": "Simple",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 32.23,
+              "Total Cost": 36.56,
+              "Plan Rows": 143,
+              "Plan Width": 81,
+              "Actual Startup Time": 1.109,
+              "Actual Total Time": 1.191,
+              "Actual Rows": 8,
+              "Actual Loops": 1,
+              "Group Key": [
+                "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
+                "state"
+              ],
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Sort",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 32.23,
+                  "Total Cost": 32.59,
+                  "Plan Rows": 146,
+                  "Plan Width": 45,
+                  "Actual Startup Time": 1.087,
+                  "Actual Total Time": 1.105,
+                  "Actual Rows": 146,
+                  "Actual Loops": 1,
+                  "Sort Key": [
+                    "(CASE WHEN ((short_description ~~* '%automatically generated%'::text) OR (short_description ~~* '%auto%generated%'::text)) THEN 'Auto-generated'::text ELSE 'Manual'::text END)",
+                    "state"
+                  ],
+                  "Sort Method": "quicksort",
+                  "Sort Space Used": 32,
+                  "Sort Space Type": "Memory",
+                  "Shared Hit Blocks": 20,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Relation Name": "flag_20",
+                      "Alias": "flag_20",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 26.98,
+                      "Plan Rows": 146,
+                      "Plan Width": 45,
+                      "Actual Startup Time": 0.029,
+                      "Actual Total Time": 0.939,
+                      "Actual Rows": 146,
+                      "Actual Loops": 1,
+                      "Filter": "(category = 'Travel'::text)",
+                      "Rows Removed by Filter": 354,
+                      "Shared Hit Blocks": 20,
+                      "Shared Read Blocks": 0,
+                      "Shared Dirtied Blocks": 0,
+                      "Shared Written Blocks": 0,
+                      "Local Hit Blocks": 0,
+                      "Local Read Blocks": 0,
+                      "Local Dirtied Blocks": 0,
+                      "Local Written Blocks": 0,
+                      "Temp Read Blocks": 0,
+                      "Temp Written Blocks": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.181,
+    "Triggers": [],
+    "Execution Time": 1.32
+  }
+]

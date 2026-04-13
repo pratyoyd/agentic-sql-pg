@@ -1,0 +1,18 @@
+SQL: SELECT 
+    user,
+    COUNT(*) as exact_24hr_approvals,
+    SUM(amount) as total_rubber_stamped
+FROM flag_23
+WHERE state = 'Processed'
+  AND processed_date IS NOT NULL
+  AND EXTRACT('hour' FROM opened_at) = EXTRACT('hour' FROM processed_date)
+  AND EXTRACT('minute' FROM opened_at) = EXTRACT('minute' FROM processed_date)
+  AND (processed_date - opened_at) = 1
+GROUP BY user
+ORDER BY exact_24hr_approvals DESC
+LIMIT 20
+
+Error: operator does not exist: interval = integer
+LINE 10:   AND (processed_date - opened_at) = 1
+                                            ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

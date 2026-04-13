@@ -1,0 +1,18 @@
+SQL: SELECT 
+    model_category,
+    department,
+    COUNT(*) as asset_count,
+    SUM(cost) as total_cost,
+    SUM(CASE WHEN warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) as already_expired,
+    SUM(CASE WHEN warranty_expiration BETWEEN CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP + INTERVAL '1 year' THEN 1 ELSE 0 END) as expiring_within_1yr,
+    SUM(CASE WHEN warranty_expiration < CURRENT_TIMESTAMP THEN cost ELSE 0 END) as expired_cost_exposure,
+    SUM(CASE WHEN warranty_expiration BETWEEN CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP + INTERVAL '1 year' THEN cost ELSE 0 END) as at_risk_cost_1yr
+FROM flag_16
+GROUP BY model_category, department
+HAVING SUM(CASE WHEN warranty_expiration < CURRENT_TIMESTAMP + INTERVAL '1 year' THEN 1 ELSE 0 END) > 0
+ORDER BY (expired_cost_exposure + at_risk_cost_1yr) DESC
+LIMIT 20
+
+Error: column "expired_cost_exposure" does not exist
+LINE 13: ORDER BY (expired_cost_exposure + at_risk_cost_1yr) DESC
+                   ^

@@ -1,0 +1,19 @@
+SQL: SELECT 
+    CASE 
+        WHEN cost < 1000 THEN '< $1K'
+        WHEN cost < 2000 THEN '$1K-2K'
+        WHEN cost < 3000 THEN '$2K-3K'
+        WHEN cost < 4000 THEN '$3K-4K'
+        WHEN cost < 5000 THEN '$4K-5K'
+        ELSE '$5K+'
+    END AS cost_bucket,
+    model_category,
+    COUNT(*) AS count,
+    ROUND((AVG((warranty_expiration - purchased_on)))::numeric, 0) AS avg_warranty_days
+FROM flag_26
+GROUP BY cost_bucket, model_category
+ORDER BY model_category, avg_warranty_days DESC
+
+Error: cannot cast type interval to numeric
+LINE 12: ... ROUND((AVG((warranty_expiration - purchased_on)))::numeric,...
+                                                              ^

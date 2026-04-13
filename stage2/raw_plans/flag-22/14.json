@@ -1,0 +1,109 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 40.35,
+      "Total Cost": 67.01,
+      "Plan Rows": 344,
+      "Plan Width": 144,
+      "Actual Startup Time": 0.531,
+      "Actual Total Time": 1.635,
+      "Actual Rows": 15,
+      "Actual Loops": 1,
+      "Group Key": [
+        "(date_trunc('month'::text, opened_at))"
+      ],
+      "Shared Hit Blocks": 23,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 40.35,
+          "Total Cost": 41.21,
+          "Plan Rows": 344,
+          "Plan Width": 28,
+          "Actual Startup Time": 0.458,
+          "Actual Total Time": 0.499,
+          "Actual Rows": 344,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "(date_trunc('month'::text, opened_at))"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 43,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 23,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_22",
+              "Alias": "flag_22",
+              "Startup Cost": 0.0,
+              "Total Cost": 25.86,
+              "Plan Rows": 344,
+              "Plan Width": 28,
+              "Actual Startup Time": 0.017,
+              "Actual Total Time": 0.288,
+              "Actual Rows": 344,
+              "Actual Loops": 1,
+              "Filter": "(processed_date IS NOT NULL)",
+              "Rows Removed by Filter": 156,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 11,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.18,
+    "Triggers": [],
+    "Execution Time": 1.724
+  }
+]

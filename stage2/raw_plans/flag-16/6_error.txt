@@ -1,0 +1,16 @@
+SQL: SELECT 
+    EXTRACT(YEAR FROM purchased_on)::INTEGER as purchase_year,
+    model_category,
+    COUNT(*) as asset_count,
+    ROUND((AVG(cost))::numeric, 0) as avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on) / 365.0))::numeric, 2) as avg_warranty_years,
+    SUM(CASE WHEN (warranty_expiration - purchased_on) / 365.0 < 1.5 THEN 1 ELSE 0 END) as short_warranty_count,
+    ROUND((100.0 * SUM(CASE WHEN (warranty_expiration - purchased_on) / 365.0 < 1.5 THEN 1 ELSE 0 END) / COUNT(*))::numeric, 1) as short_warranty_pct
+FROM flag_16
+WHERE model_category IN ('Server', 'Web Server', 'Computer')
+GROUP BY purchase_year, model_category
+ORDER BY purchase_year, model_category
+
+Error: cannot cast type interval to numeric
+LINE 6: ...AVG((warranty_expiration - purchased_on) / 365.0))::numeric,...
+                                                             ^

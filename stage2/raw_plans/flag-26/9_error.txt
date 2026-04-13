@@ -1,0 +1,14 @@
+SQL: SELECT 
+    cost,
+    (warranty_expiration - purchased_on) AS warranty_days,
+    ROUND((1003 - 0.1825 * cost)::numeric, 0) AS predicted_days,
+    (warranty_expiration - purchased_on) - ROUND((1003 - 0.1825 * cost)::numeric, 0) AS residual
+FROM flag_26
+WHERE model_category = 'Computer'
+ORDER BY cost DESC
+LIMIT 40
+
+Error: operator does not exist: interval - numeric
+LINE 5:     (warranty_expiration - purchased_on) - ROUND((1003 - 0.1...
+                                                 ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

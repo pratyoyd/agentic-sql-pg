@@ -1,0 +1,22 @@
+SQL: SELECT 
+    assigned_to,
+    priority,
+    COUNT(*) AS incidents,
+    ROUND((AVG(EXTRACT(EPOCH FROM closed_at - opened_at))/3600)::numeric, 2) AS avg_hrs,
+    COUNT(CASE WHEN priority = '1 - Critical' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 24 THEN 1 END) AS critical_breach,
+    COUNT(CASE WHEN priority = '2 - High' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 72 THEN 1 END) AS high_breach,
+    COUNT(CASE WHEN priority = '3 - Moderate' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 168 THEN 1 END) AS moderate_breach,
+    ROUND((100.0 * COUNT(CASE WHEN 
+        (priority = '1 - Critical' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 24) OR
+        (priority = '2 - High' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 72) OR
+        (priority = '3 - Moderate' AND EXTRACT(EPOCH FROM closed_at - opened_at)/3600 > 168)
+    END) / COUNT(*))::numeric, 1) AS pct_breached
+FROM flag_6
+WHERE state = 'Closed' AND closed_at IS NOT NULL AND opened_at IS NOT NULL
+    AND EXTRACT(EPOCH FROM closed_at - opened_at) > 0
+GROUP BY assigned_to, priority
+ORDER BY assigned_to, priority
+
+Error: syntax error at or near "END"
+LINE 13:     END) / COUNT(*))::numeric, 1) AS pct_breached
+             ^

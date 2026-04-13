@@ -1,0 +1,27 @@
+SQL: SELECT 
+    assignment_group,
+    ROUND((AVG(CASE WHEN DATE_TRUNC('month', opened_at) <= '2023-06-01' 
+              THEN 1.0 ELSE NULL END))::numeric, 0) AS h1_avg_incidents,
+    MAX(CASE WHEN DATE_TRUNC('month', opened_at) = '2024-01-01' THEN monthly_load END) AS jan24_load,
+    MAX(CASE WHEN DATE_TRUNC('month', opened_at) = '2024-01-01' THEN incidents_per_agent END) AS jan24_per_agent,
+    MAX(incidents_per_agent) AS peak_per_agent,
+    SUM(total) AS grand_total,
+    ROUND((SUM(open_count) * 100.0 / SUM(total))::numeric, 1) AS overall_open_rate
+FROM (
+    SELECT 
+        assignment_group,
+        DATE_TRUNC('month', opened_at) AS month,
+        COUNT(*) AS total,
+        COUNT(DISTINCT assigned_to) AS agent_count,
+        ROUND((COUNT(*) * 1.0 / NULLIF(COUNT(DISTINCT assigned_to), 0))::numeric, 1) AS incidents_per_agent,
+        COUNT(CASE WHEN state != 'Closed' THEN 1 END) AS open_count,
+        COUNT(*) AS monthly_load
+    FROM flag_13
+    GROUP BY assignment_group, month
+) sub
+GROUP BY assignment_group
+ORDER BY grand_total DESC
+
+Error: column "opened_at" does not exist
+LINE 3:     ROUND((AVG(CASE WHEN DATE_TRUNC('month', opened_at) <= '...
+                                                     ^

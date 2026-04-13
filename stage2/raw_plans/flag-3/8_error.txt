@@ -1,0 +1,31 @@
+SQL: WITH group_totals AS (
+    SELECT 
+        assignment_group,
+        assigned_to,
+        COUNT(*) as incidents,
+        SUM(COUNT(*)) OVER (PARTITION BY assignment_group) as group_total,
+        COUNT(DISTINCT assigned_to) OVER (PARTITION BY assignment_group) as agent_count
+    FROM flag_3
+    WHERE assigned_to IS NOT NULL AND assigned_to != ''
+    GROUP BY assignment_group, assigned_to
+),
+fair_share AS (
+    SELECT *,
+        ROUND((group_total * 1.0 / agent_count)::numeric, 0) as fair_share_per_agent,
+        incidents - ROUND((group_total * 1.0 / agent_count)::numeric, 0) as surplus_vs_fair
+    FROM group_totals
+)
+SELECT 
+    assignment_group,
+    assigned_to,
+    incidents,
+    fair_share_per_agent,
+    surplus_vs_fair,
+    ROUND((incidents * 100.0 / group_total)::numeric, 1) as current_pct,
+    ROUND((100.0 / agent_count)::numeric, 1) as fair_pct
+FROM fair_share
+ORDER BY assignment_group, incidents DESC
+
+Error: DISTINCT is not implemented for window functions
+LINE 7:         COUNT(DISTINCT assigned_to) OVER (PARTITION BY assig...
+                ^

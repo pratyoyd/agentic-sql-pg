@@ -1,0 +1,16 @@
+SQL: SELECT 
+    start_date,
+    end_date,
+    (end_date - start_date) as actual_duration,
+    ROUND(163 + 0.6 * EXTRACT('dayofyear' FROM start_date)) as formula_duration,
+    (end_date - start_date) - ROUND(163 + 0.6 * EXTRACT('dayofyear' FROM start_date)) as residual,
+    (start_date - DATE_TRUNC('year'), end_date) as days_from_jan1_to_end
+FROM flag_31
+WHERE department = 'Finance' AND category = 'Cost Reduction' AND EXTRACT(YEAR FROM start_date)::INTEGER = 2022
+ORDER BY start_date
+LIMIT 20
+
+Error: function date_trunc(unknown) does not exist
+LINE 7:     (start_date - DATE_TRUNC('year'), end_date) as days_from...
+                          ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

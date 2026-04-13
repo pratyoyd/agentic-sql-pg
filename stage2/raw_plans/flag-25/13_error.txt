@@ -1,0 +1,42 @@
+SQL: WITH params AS (
+    SELECT 
+        REGR_SLOPE((processed_date - opened_at), amount) as slope,
+        REGR_INTERCEPT((processed_date - opened_at), amount) as intercept
+    FROM flag_25
+    WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+),
+residuals AS (
+    SELECT 
+        f.amount,
+        f.department,
+        f.category,
+        (f.processed_date - f.opened_at) as actual_days,
+        ROUND((p.intercept + p.slope * f.amount)::numeric, 2) as predicted_days,
+        ROUND(((f.processed_date - f.opened_at) - (p.intercept + p.slope * f.amount))::numeric, 2) as residual,
+        CASE 
+            WHEN amount < 500 THEN '1. <$500'
+            WHEN amount < 1500 THEN '2. $500-1499'
+            WHEN amount < 3000 THEN '3. $1500-2999'
+            WHEN amount < 5000 THEN '4. $3000-4999'
+            ELSE '5. $5000+'
+        END as cost_bracket
+    FROM flag_25 f, params p
+    WHERE f.processed_date IS NOT NULL AND f.opened_at IS NOT NULL
+)
+SELECT 
+    cost_bracket,
+    COUNT(*) as n,
+    ROUND((AVG(ABS(residual)))::numeric, 3) as avg_abs_residual,
+    ROUND((STDDEV(residual))::numeric, 3) as stddev_residual,
+    SUM(CASE WHEN residual > 2 THEN 1 ELSE 0 END) as slow_outliers,
+    SUM(CASE WHEN residual < -2 THEN 1 ELSE 0 END) as fast_outliers,
+    ROUND((AVG(actual_days))::numeric, 2) as avg_actual_days,
+    ROUND((AVG(predicted_days))::numeric, 2) as avg_predicted_days
+FROM residuals
+GROUP BY cost_bracket
+ORDER BY cost_bracket
+
+Error: function regr_slope(interval, integer) does not exist
+LINE 3:         REGR_SLOPE((processed_date - opened_at), amount) as ...
+                ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

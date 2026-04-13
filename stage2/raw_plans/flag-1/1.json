@@ -1,0 +1,241 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Incremental Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 26.84,
+      "Total Cost": 28.24,
+      "Plan Rows": 25,
+      "Plan Width": 95,
+      "Actual Startup Time": 1.044,
+      "Actual Total Time": 1.051,
+      "Actual Rows": 25,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "category",
+        "(count(*)) DESC"
+      ],
+      "Presorted Key": [
+        "category"
+      ],
+      "Full-sort Groups": {
+        "Group Count": 1,
+        "Sort Methods Used": [
+          "quicksort"
+        ],
+        "Sort Space Memory": {
+          "Average Sort Space Used": 26,
+          "Peak Sort Space Used": 26
+        }
+      },
+      "Shared Hit Blocks": 16,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "WindowAgg",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 26.6,
+          "Total Cost": 27.54,
+          "Plan Rows": 25,
+          "Plan Width": 95,
+          "Actual Startup Time": 0.903,
+          "Actual Total Time": 0.993,
+          "Actual Rows": 25,
+          "Actual Loops": 1,
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Sort",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 26.6,
+              "Total Cost": 26.66,
+              "Plan Rows": 25,
+              "Plan Width": 63,
+              "Actual Startup Time": 0.88,
+              "Actual Total Time": 0.886,
+              "Actual Rows": 25,
+              "Actual Loops": 1,
+              "Sort Key": [
+                "category"
+              ],
+              "Sort Method": "quicksort",
+              "Sort Space Used": 26,
+              "Sort Space Type": "Memory",
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "WindowAgg",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 25.58,
+                  "Total Cost": 26.02,
+                  "Plan Rows": 25,
+                  "Plan Width": 63,
+                  "Actual Startup Time": 0.786,
+                  "Actual Total Time": 0.826,
+                  "Actual Rows": 25,
+                  "Actual Loops": 1,
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Sort",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Startup Cost": 25.58,
+                      "Total Cost": 25.64,
+                      "Plan Rows": 25,
+                      "Plan Width": 31,
+                      "Actual Startup Time": 0.757,
+                      "Actual Total Time": 0.763,
+                      "Actual Rows": 25,
+                      "Actual Loops": 1,
+                      "Sort Key": [
+                        "assigned_to"
+                      ],
+                      "Sort Method": "quicksort",
+                      "Sort Space Used": 26,
+                      "Sort Space Type": "Memory",
+                      "Shared Hit Blocks": 16,
+                      "Shared Read Blocks": 0,
+                      "Shared Dirtied Blocks": 0,
+                      "Shared Written Blocks": 0,
+                      "Local Hit Blocks": 0,
+                      "Local Read Blocks": 0,
+                      "Local Dirtied Blocks": 0,
+                      "Local Written Blocks": 0,
+                      "Temp Read Blocks": 0,
+                      "Temp Written Blocks": 0,
+                      "Plans": [
+                        {
+                          "Node Type": "Aggregate",
+                          "Strategy": "Hashed",
+                          "Partial Mode": "Simple",
+                          "Parent Relationship": "Outer",
+                          "Parallel Aware": false,
+                          "Async Capable": false,
+                          "Startup Cost": 24.75,
+                          "Total Cost": 25.0,
+                          "Plan Rows": 25,
+                          "Plan Width": 31,
+                          "Actual Startup Time": 0.687,
+                          "Actual Total Time": 0.699,
+                          "Actual Rows": 25,
+                          "Actual Loops": 1,
+                          "Group Key": [
+                            "assigned_to",
+                            "category"
+                          ],
+                          "Planned Partitions": 0,
+                          "HashAgg Batches": 1,
+                          "Peak Memory Usage": 24,
+                          "Disk Usage": 0,
+                          "Shared Hit Blocks": 16,
+                          "Shared Read Blocks": 0,
+                          "Shared Dirtied Blocks": 0,
+                          "Shared Written Blocks": 0,
+                          "Local Hit Blocks": 0,
+                          "Local Read Blocks": 0,
+                          "Local Dirtied Blocks": 0,
+                          "Local Written Blocks": 0,
+                          "Temp Read Blocks": 0,
+                          "Temp Written Blocks": 0,
+                          "Plans": [
+                            {
+                              "Node Type": "Seq Scan",
+                              "Parent Relationship": "Outer",
+                              "Parallel Aware": false,
+                              "Async Capable": false,
+                              "Relation Name": "flag_1",
+                              "Alias": "flag_1",
+                              "Startup Cost": 0.0,
+                              "Total Cost": 21.0,
+                              "Plan Rows": 500,
+                              "Plan Width": 23,
+                              "Actual Startup Time": 0.046,
+                              "Actual Total Time": 0.321,
+                              "Actual Rows": 500,
+                              "Actual Loops": 1,
+                              "Filter": "((category IS NOT NULL) AND (assigned_to IS NOT NULL))",
+                              "Rows Removed by Filter": 0,
+                              "Shared Hit Blocks": 16,
+                              "Shared Read Blocks": 0,
+                              "Shared Dirtied Blocks": 0,
+                              "Shared Written Blocks": 0,
+                              "Local Hit Blocks": 0,
+                              "Local Read Blocks": 0,
+                              "Local Dirtied Blocks": 0,
+                              "Local Written Blocks": 0,
+                              "Temp Read Blocks": 0,
+                              "Temp Written Blocks": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 32,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.603,
+    "Triggers": [],
+    "Execution Time": 1.195
+  }
+]

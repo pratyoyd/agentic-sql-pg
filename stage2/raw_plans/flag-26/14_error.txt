@@ -1,0 +1,14 @@
+SQL: SELECT 
+    model_category,
+    ROUND((AVG(cost))::numeric, 0) AS avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on)))::numeric, 0) AS avg_warranty_days,
+    ROUND((AVG(cost * 1.0 / (warranty_expiration - purchased_on)))::numeric, 2) AS cost_per_warranty_day,
+    ROUND((CORR(cost, (warranty_expiration - purchased_on)))::numeric, 3) AS cost_warranty_correlation,
+    SUM(CASE WHEN (warranty_expiration - purchased_on) < 180 THEN 1 ELSE 0 END) AS assets_under_180d_warranty
+FROM flag_26
+GROUP BY model_category
+ORDER BY cost_per_warranty_day DESC
+
+Error: cannot cast type interval to numeric
+LINE 4: ... ROUND((AVG((warranty_expiration - purchased_on)))::numeric,...
+                                                             ^

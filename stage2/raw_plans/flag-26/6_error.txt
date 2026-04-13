@@ -1,0 +1,14 @@
+SQL: SELECT 
+    ROUND(cost / 500.0) * 500 AS cost_rounded,
+    COUNT(*) AS count,
+    ROUND((AVG((warranty_expiration - purchased_on)))::numeric, 0) AS avg_warranty_days,
+    MIN((warranty_expiration - purchased_on)) AS min_warranty_days,
+    MAX((warranty_expiration - purchased_on)) AS max_warranty_days
+FROM flag_26
+WHERE model_category = 'Computer'
+GROUP BY cost_rounded
+ORDER BY cost_rounded
+
+Error: cannot cast type interval to numeric
+LINE 4: ... ROUND((AVG((warranty_expiration - purchased_on)))::numeric,...
+                                                             ^

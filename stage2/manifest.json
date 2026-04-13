@@ -1,0 +1,15 @@
+{
+  "flag-1_rep_a": {
+    "task": "flag-1",
+    "rep": "a",
+    "status": "done",
+    "num_queries": 9,
+    "wall_clock_seconds": 120.2,
+    "log_path": "stage2/traces/flag-1_rep_a.jsonl"
+  },
+  "flag-2_rep_a": {
+    "task": "flag-2",
+    "rep": "a",
+    "status": "running"
+  }
+}

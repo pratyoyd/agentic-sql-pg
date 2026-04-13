@@ -1,0 +1,14 @@
+SQL: SELECT 
+    CASE WHEN amount < 1000 THEN 'Under 1000' ELSE '1000+' END as amt_group,
+    state,
+    COUNT(*) as count,
+    ROUND((AVG(amount))::numeric, 0) as avg_amount,
+    STRING_AGG(DISTINCT ci, '; ' ORDER BY ci LIMIT 5) as sample_cis
+FROM flag_20
+WHERE category = 'Travel' AND state IN ('Declined', 'Processed')
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+Error: syntax error at or near "LIMIT"
+LINE 6:     STRING_AGG(DISTINCT ci, '; ' ORDER BY ci LIMIT 5) as sam...
+                                                     ^

@@ -1,0 +1,17 @@
+SQL: SELECT 
+    CASE 
+        WHEN amount < 1000 THEN '1. <$1K'
+        WHEN amount < 2500 THEN '2. $1K-$2.5K'
+        WHEN amount < 5000 THEN '3. $2.5K-$5K'
+        ELSE '4. $5K+'
+    END AS cost_bracket,
+    state,
+    COUNT(*) AS count,
+    ROUND((100.0 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY cost_bracket))::numeric, 1) AS pct_of_bracket
+FROM flag_22
+GROUP BY cost_bracket, state
+ORDER BY cost_bracket, state
+
+Error: column "cost_bracket" does not exist
+LINE 10: ...0.0 * COUNT(*) / SUM(COUNT(*)) OVER (PARTITION BY cost_brack...
+                                                              ^

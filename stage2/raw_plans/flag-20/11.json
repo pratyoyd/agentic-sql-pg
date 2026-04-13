@@ -1,0 +1,111 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 36.97,
+      "Total Cost": 48.59,
+      "Plan Rows": 145,
+      "Plan Width": 92,
+      "Actual Startup Time": 0.338,
+      "Actual Total Time": 0.422,
+      "Actual Rows": 8,
+      "Actual Loops": 1,
+      "Group Key": [
+        "(width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10))",
+        "((((((width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10) - 1) * 1000))::text || '-'::text) || ((width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10) * 1000))::text))"
+      ],
+      "Shared Hit Blocks": 23,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 36.97,
+          "Total Cost": 37.34,
+          "Plan Rows": 146,
+          "Plan Width": 45,
+          "Actual Startup Time": 0.318,
+          "Actual Total Time": 0.333,
+          "Actual Rows": 146,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "(width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10))",
+            "((((((width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10) - 1) * 1000))::text || '-'::text) || ((width_bucket((amount)::double precision, '0'::double precision, '10000'::double precision, 10) * 1000))::text))"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 31,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 23,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_20",
+              "Alias": "flag_20",
+              "Startup Cost": 0.0,
+              "Total Cost": 31.72,
+              "Plan Rows": 146,
+              "Plan Width": 45,
+              "Actual Startup Time": 0.017,
+              "Actual Total Time": 0.239,
+              "Actual Rows": 146,
+              "Actual Loops": 1,
+              "Filter": "(category = 'Travel'::text)",
+              "Rows Removed by Filter": 354,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 27,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.37,
+    "Triggers": [],
+    "Execution Time": 0.492
+  }
+]

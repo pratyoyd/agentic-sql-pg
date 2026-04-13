@@ -1,0 +1,16 @@
+SQL: SELECT 
+    assigned_to,
+    category,
+    COUNT(CASE WHEN DATE_TRUNC('month', opened_at) <= '2023-06-01' THEN 1 END) AS h1_count,
+    COUNT(CASE WHEN DATE_TRUNC('month', opened_at) BETWEEN '2023-07-01' AND '2023-12-31' THEN 1 END) AS h2_count,
+    COUNT(CASE WHEN DATE_TRUNC('month', opened_at) BETWEEN '2023-07-01' AND '2023-12-31' THEN 1 END) -
+    COUNT(CASE WHEN DATE_TRUNC('month', opened_at) <= '2023-06-01' THEN 1 END) AS delta
+FROM flag_4
+WHERE assigned_to IN ('Charlie Whitherspoon', 'Fred Luddy')
+GROUP BY assigned_to, category
+HAVING h1_count > 0 OR h2_count > 0
+ORDER BY assigned_to, delta DESC
+
+Error: column "h1_count" does not exist
+LINE 11: HAVING h1_count > 0 OR h2_count > 0
+                ^

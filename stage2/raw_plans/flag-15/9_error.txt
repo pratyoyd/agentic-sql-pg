@@ -1,0 +1,46 @@
+SQL: WITH agent_leave AS (
+    SELECT 'Charlie Whitherspoon' as agent, DATE '2023-06-14' as leave_start, DATE '2023-07-19' as leave_end
+    UNION ALL
+    SELECT 'Fred Luddy', DATE '2023-07-13', DATE '2023-08-28'
+    UNION ALL
+    SELECT 'Howard Johnson', DATE '2023-06-01', DATE '2023-06-28'
+),
+pre_leave AS (
+    SELECT 
+        l.agent,
+        COUNT(i.number) as incidents_pre,
+        (l.leave_start - l.leave_start - INTERVAL '28 days') as pre_days
+    FROM agent_leave l
+    LEFT JOIN flag_15 i 
+        ON i.assigned_to = l.agent
+        AND i.opened_at >= l.leave_start - INTERVAL '28 days'
+        AND i.opened_at < l.leave_start
+    GROUP BY l.agent, l.leave_start
+),
+post_leave AS (
+    SELECT 
+        l.agent,
+        COUNT(i.number) as incidents_post,
+        (l.leave_end + INTERVAL '28 days' - l.leave_end) as post_days
+    FROM agent_leave l
+    LEFT JOIN flag_15 i 
+        ON i.assigned_to = l.agent
+        AND i.opened_at > l.leave_end
+        AND i.opened_at <= l.leave_end + INTERVAL '28 days'
+    GROUP BY l.agent, l.leave_end
+)
+SELECT 
+    pre.agent,
+    pre.incidents_pre,
+    ROUND((pre.incidents_pre / 28.0)::numeric, 3) as daily_rate_pre_leave,
+    post.incidents_post,
+    ROUND((post.incidents_post / 28.0)::numeric, 3) as daily_rate_post_return,
+    ROUND(((post.incidents_post - pre.incidents_pre) * 100.0 / NULLIF(pre.incidents_pre, 0))::numeric, 1) as pct_change
+FROM pre_leave pre
+JOIN post_leave post USING (agent)
+ORDER BY pct_change
+
+Error: operator does not exist: integer - interval
+LINE 12:         (l.leave_start - l.leave_start - INTERVAL '28 days')...
+                                                ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

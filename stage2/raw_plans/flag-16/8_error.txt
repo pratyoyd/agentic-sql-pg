@@ -1,0 +1,13 @@
+SQL: SELECT 
+    ROUND((CORR(cost, (warranty_expiration - purchased_on) / 365.0))::numeric, 4) as cost_warranty_correlation,
+    COUNT(*) as total_assets,
+    SUM(CASE WHEN warranty_expiration < CURRENT_TIMESTAMP THEN cost ELSE 0 END) as total_expired_cost,
+    SUM(CASE WHEN warranty_expiration BETWEEN CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP + INTERVAL '1 year' THEN cost ELSE 0 END) as expiring_1yr_cost,
+    SUM(cost) as total_portfolio_cost,
+    ROUND((100.0 * SUM(CASE WHEN warranty_expiration < CURRENT_TIMESTAMP THEN cost ELSE 0 END) / SUM(cost))::numeric, 1) as pct_portfolio_expired
+FROM flag_16
+
+Error: function corr(integer, interval) does not exist
+LINE 2:     ROUND((CORR(cost, (warranty_expiration - purchased_on) /...
+                   ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

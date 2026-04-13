@@ -1,0 +1,20 @@
+SQL: SELECT 
+    CASE 
+        WHEN (processed_date - opened_at) = 0 THEN 'Same day'
+        WHEN (processed_date - opened_at) = 1 THEN '1 day'
+        WHEN (processed_date - opened_at) <= 3 THEN '2-3 days'
+        WHEN (processed_date - opened_at) <= 7 THEN '4-7 days'
+        ELSE '8+ days'
+    END as processing_speed,
+    COUNT(*) as claim_count,
+    SUM(amount) as total_amount,
+    MIN(number) as example_claim
+FROM flag_23
+WHERE user = 'Mamie Mcintee' AND state = 'Processed'
+GROUP BY processing_speed
+ORDER BY MIN((processed_date - opened_at))
+
+Error: operator does not exist: interval = integer
+LINE 3:         WHEN (processed_date - opened_at) = 0 THEN 'Same day...
+                                                  ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

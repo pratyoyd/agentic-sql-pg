@@ -1,0 +1,25 @@
+SQL: SELECT 
+    CASE 
+        WHEN months_employed < 6 THEN '0-6 months'
+        WHEN months_employed < 12 THEN '6-12 months'
+        WHEN months_employed < 24 THEN '1-2 years'
+        WHEN months_employed < 48 THEN '2-4 years'
+        ELSE '4+ years'
+    END AS tenure_bucket,
+    COUNT(*) AS total_expenses,
+    SUM(CASE WHEN f.state = 'Declined' THEN 1 ELSE 0 END) AS declined,
+    ROUND((100.0 * SUM(CASE WHEN f.state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*))::numeric, 2) AS decline_rate_pct,
+    ROUND((AVG(f.amount))::numeric, 2) AS avg_amount
+FROM flag_21 f
+JOIN flag_21_sysuser u ON f.user = u.name
+WHERE u.start_date IS NOT NULL
+CROSS JOIN (
+    SELECT (EXTRACT(YEAR FROM f2.opened_at) * 12 + EXTRACT(MONTH FROM f2.opened_at) - EXTRACT(YEAR FROM u2.start_date) * 12 - EXTRACT(MONTH FROM u2.start_date)) AS months_employed
+    FROM flag_21 f2 JOIN flag_21_sysuser u2 ON f2.user = u2.name
+    WHERE u2.start_date IS NOT NULL
+) dummy -- placeholder, rewriting properly below
+LIMIT 1
+
+Error: syntax error at or near "CROSS"
+LINE 16: CROSS JOIN (
+         ^

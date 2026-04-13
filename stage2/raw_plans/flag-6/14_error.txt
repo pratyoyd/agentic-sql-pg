@@ -1,0 +1,14 @@
+SQL: SELECT 
+    category,
+    assigned_to,
+    COUNT(*) AS total,
+    ROUND((AVG(EXTRACT(EPOCH FROM closed_at - opened_at))/3600)::numeric, 2) AS avg_resolution_hrs
+FROM flag_6
+WHERE state = 'Closed' AND EXTRACT(EPOCH FROM closed_at - opened_at) > 0
+GROUP BY category, assigned_to
+PIVOT ON assigned_to IN ('Fred Luddy', 'Beth Anglin', 'Charlie Whitherspoon', 'Howard Johnson', 'Luke Wilson')
+ORDER BY category
+
+Error: syntax error at or near "PIVOT"
+LINE 9: PIVOT ON assigned_to IN ('Fred Luddy', 'Beth Anglin', 'Charl...
+        ^

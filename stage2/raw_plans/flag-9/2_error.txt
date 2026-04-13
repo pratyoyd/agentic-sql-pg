@@ -1,0 +1,15 @@
+SQL: SELECT 
+    DATE_TRUNC('day', opened_at) as day,
+    COUNT(*) as incidents,
+    STRING_AGG(DISTINCT short_description ORDER BY short_description) as descriptions
+FROM flag_9
+WHERE category = 'Hardware'
+  AND opened_at BETWEEN '2023-07-01' AND '2023-08-31'
+GROUP BY day
+ORDER BY incidents DESC
+LIMIT 15
+
+Error: function string_agg(text) does not exist
+LINE 4:     STRING_AGG(DISTINCT short_description ORDER BY short_des...
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

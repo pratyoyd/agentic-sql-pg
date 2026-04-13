@@ -1,0 +1,12 @@
+SQL: SELECT 
+    EXTRACT(QUARTER FROM start_date)::INTEGER as quarter,
+    AVG((end_date - start_date)) as avg_duration,
+    AVG((DATE '2022-12-31' - start_date)) as avg_days_to_year_end,
+    AVG(EXTRACT('dayofyear' FROM end_date)) as avg_end_doy,
+    AVG(EXTRACT('dayofyear' FROM start_date)) as avg_start_doy
+FROM flag_31
+WHERE department = 'Finance' AND category = 'Cost Reduction' AND EXTRACT(YEAR FROM start_date)::INTEGER = 2022
+GROUP BY EXTRACT(QUARTER FROM start_date)::INTEGER
+ORDER BY quarter
+
+Error: unit "dayofyear" not recognized for type date

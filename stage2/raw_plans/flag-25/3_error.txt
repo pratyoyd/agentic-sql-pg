@@ -1,0 +1,14 @@
+SQL: SELECT 
+    category,
+    COUNT(*) as count,
+    ROUND((AVG(amount))::numeric, 0) as avg_amount,
+    ROUND((AVG((processed_date - opened_at)))::numeric, 2) as avg_days,
+    ROUND((CORR(amount, (processed_date - opened_at)))::numeric, 4) as corr_amount_days
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+GROUP BY 1
+ORDER BY avg_days ASC
+
+Error: cannot cast type interval to numeric
+LINE 5:     ROUND((AVG((processed_date - opened_at)))::numeric, 2) a...
+                                                     ^

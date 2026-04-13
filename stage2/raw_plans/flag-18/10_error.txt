@@ -1,0 +1,18 @@
+SQL: SELECT 
+    a.model_category,
+    a.display_name,
+    COUNT(*) AS assigned_expired_assets,
+    SUM(a.cost) AS total_value_at_risk,
+    ROUND((AVG((CURRENT_TIMESTAMP - a.warranty_expiration)))::numeric, 0) AS avg_days_past_expiry,
+    ROUND((AVG((a.purchased_on - u.start_date)))::numeric, 0) AS avg_days_purchased_before_hire,
+    ROUND((AVG((a.warranty_expiration - a.purchased_on)))::numeric, 0) AS avg_warranty_duration_days
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+WHERE a.warranty_expiration < CURRENT_TIMESTAMP
+GROUP BY 1, 2
+ORDER BY total_value_at_risk DESC
+LIMIT 15
+
+Error: cannot cast type interval to numeric
+LINE 6: ...(AVG((CURRENT_TIMESTAMP - a.warranty_expiration)))::numeric,...
+                                                             ^

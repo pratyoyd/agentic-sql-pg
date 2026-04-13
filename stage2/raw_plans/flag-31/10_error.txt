@@ -1,0 +1,12 @@
+SQL: SELECT 
+    EXTRACT('dayofyear' FROM start_date) as start_doy,
+    (end_date - start_date) as duration,
+    EXTRACT(QUARTER FROM start_date)::INTEGER as quarter,
+    owner,
+    state
+FROM flag_31
+WHERE department = 'Finance' AND category = 'Cost Reduction' AND EXTRACT(YEAR FROM start_date)::INTEGER = 2022
+ORDER BY start_doy
+LIMIT 30
+
+Error: unit "dayofyear" not recognized for type date

@@ -1,0 +1,21 @@
+SQL: SELECT 
+    CASE 
+        WHEN cost < 500 THEN '1. <$500'
+        WHEN cost < 1500 THEN '2. $500-1500'
+        WHEN cost < 3000 THEN '3. $1500-3000'
+        WHEN cost < 5000 THEN '4. $3000-5000'
+        WHEN cost < 8000 THEN '5. $5000-8000'
+        ELSE '6. $8000+'
+    END as cost_bucket,
+    COUNT(*) as asset_count,
+    ROUND((AVG(cost))::numeric, 0) as avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on) / 365.0))::numeric, 2) as avg_warranty_years,
+    ROUND((STDDEV((warranty_expiration - purchased_on) / 365.0))::numeric, 2) as stddev_warranty_years,
+    STRING_AGG(DISTINCT model_category, ', ' ORDER BY model_category) as categories
+FROM flag_16
+GROUP BY cost_bucket
+ORDER BY cost_bucket
+
+Error: cannot cast type interval to numeric
+LINE 12: ...AVG((warranty_expiration - purchased_on) / 365.0))::numeric,...
+                                                              ^

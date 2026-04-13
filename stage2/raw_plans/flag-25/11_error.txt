@@ -1,0 +1,27 @@
+SQL: WITH params AS (
+    SELECT 
+        REGR_SLOPE((processed_date - opened_at), amount) as slope,
+        REGR_INTERCEPT((processed_date - opened_at), amount) as intercept
+    FROM flag_25
+    WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+),
+predictions AS (
+    SELECT 
+        f.amount,
+        (f.processed_date - f.opened_at) as actual_days,
+        ROUND(p.intercept + p.slope * f.amount) as predicted_days_rounded,
+        (p.intercept + p.slope * f.amount) as predicted_days_raw
+    FROM flag_25 f, params p
+    WHERE f.processed_date IS NOT NULL AND f.opened_at IS NOT NULL
+)
+SELECT 
+    COUNT(*) as total,
+    SUM(CASE WHEN actual_days = predicted_days_rounded THEN 1 ELSE 0 END) as exact_matches,
+    SUM(CASE WHEN ABS(actual_days - predicted_days_rounded) <= 1 THEN 1 ELSE 0 END) as within_1_day,
+    ROUND((100.0 * SUM(CASE WHEN actual_days = predicted_days_rounded THEN 1 ELSE 0 END) / COUNT(*))::numeric, 2) as exact_match_pct
+FROM predictions
+
+Error: function regr_slope(interval, integer) does not exist
+LINE 3:         REGR_SLOPE((processed_date - opened_at), amount) as ...
+                ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

@@ -1,0 +1,17 @@
+SQL: SELECT 
+    number,
+    opened_at,
+    processed_date,
+    (processed_date - opened_at) as days_to_process,
+    ci,
+    short_description
+FROM flag_23
+WHERE user = 'Mamie Mcintee' 
+  AND state = 'Processed'
+  AND (processed_date - opened_at) <= 1
+ORDER BY days_to_process, opened_at
+
+Error: operator does not exist: interval <= integer
+LINE 11:   AND (processed_date - opened_at) <= 1
+                                            ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

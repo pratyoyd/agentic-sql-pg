@@ -1,0 +1,17 @@
+SQL: SELECT 
+    REGR_SLOPE((processed_date - opened_at), amount) as slope,
+    REGR_INTERCEPT((processed_date - opened_at), amount) as intercept,
+    REGR_R2((processed_date - opened_at), amount) as r_squared,
+    -- Check residuals to spot any step-function pattern
+    ROUND((AVG(ABS(
+        (processed_date - opened_at) - 
+        (REGR_INTERCEPT((processed_date - opened_at), amount) OVER () + 
+         REGR_SLOPE((processed_date - opened_at), amount) OVER () * amount)
+    )))::numeric, 4) as avg_abs_residual
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+
+Error: function regr_slope(interval, integer) does not exist
+LINE 2:     REGR_SLOPE((processed_date - opened_at), amount) as slop...
+            ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

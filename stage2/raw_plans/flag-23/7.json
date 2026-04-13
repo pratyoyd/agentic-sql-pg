@@ -1,0 +1,79 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 35.01,
+      "Total Cost": 35.02,
+      "Plan Rows": 1,
+      "Plan Width": 132,
+      "Actual Startup Time": 0.39,
+      "Actual Total Time": 0.393,
+      "Actual Rows": 8,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "\"user\"",
+        "opened_at"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 26,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 20,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Seq Scan",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Relation Name": "flag_23",
+          "Alias": "f",
+          "Startup Cost": 0.0,
+          "Total Cost": 35.0,
+          "Plan Rows": 1,
+          "Plan Width": 132,
+          "Actual Startup Time": 0.053,
+          "Actual Total Time": 0.349,
+          "Actual Rows": 8,
+          "Actual Loops": 1,
+          "Filter": "(((\"user\" = 'Misty Ericksen'::text) AND (ci = 'Dell PowerEdge R740'::text)) OR ((\"user\" = 'Ramon Amaral'::text) AND (ci = 'Dell Latitude 7490'::text)) OR ((\"user\" = 'Jimmie Kertzman'::text) AND (ci = 'Dell Latitude 7490'::text)) OR ((\"user\" = 'Petra Mcnichol'::text) AND (ci = 'Dell Latitude 7490'::text)))",
+          "Rows Removed by Filter": 492,
+          "Shared Hit Blocks": 20,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 3,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.222,
+    "Triggers": [],
+    "Execution Time": 0.428
+  }
+]

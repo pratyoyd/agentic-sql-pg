@@ -1,0 +1,16 @@
+SQL: SELECT 
+    department,
+    category,
+    state,
+    COUNT(*) as n,
+    SUM(CASE WHEN end_date < DATE '2023-01-01' THEN 1 ELSE 0 END) as overdue,
+    ROUND((100.0 * SUM(CASE WHEN end_date < DATE '2023-01-01' THEN 1 ELSE 0 END) / COUNT(*))::numeric, 1) as pct_overdue,
+    ROUND((AVG(CASE WHEN end_date < DATE '2023-01-01' THEN DATE '2023-01-01' - end_date END))::numeric, 1) as avg_days_overdue
+FROM flag_30
+WHERE state = 'In Progress'
+GROUP BY department, category
+ORDER BY pct_overdue DESC;
+
+Error: column "flag_30.state" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 4:     state,
+            ^

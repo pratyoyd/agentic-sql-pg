@@ -1,0 +1,16 @@
+SQL: SELECT 
+    a.department,
+    COUNT(*) AS total_assets,
+    SUM(CASE WHEN (a.purchased_on - u.start_date) < -30 THEN 1 ELSE 0 END) AS purchased_before_start,
+    ROUND((AVG((a.warranty_expiration - a.purchased_on)))::numeric, 0) AS avg_warranty_duration_days,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) AS already_expired,
+    SUM(CASE WHEN a.warranty_expiration BETWEEN CURRENT_TIMESTAMP AND CURRENT_TIMESTAMP + INTERVAL '180 days' THEN 1 ELSE 0 END) AS expiring_in_180d
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+GROUP BY a.department
+ORDER BY already_expired DESC, expiring_in_180d DESC
+
+Error: operator does not exist: interval < integer
+LINE 4:     SUM(CASE WHEN (a.purchased_on - u.start_date) < -30 THEN...
+                                                          ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

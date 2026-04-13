@@ -1,0 +1,23 @@
+SQL: SELECT 
+    CASE 
+        WHEN amount < 500 THEN '1. <$500'
+        WHEN amount < 1500 THEN '2. $500-1499'
+        WHEN amount < 3000 THEN '3. $1500-2999'
+        WHEN amount < 5000 THEN '4. $3000-4999'
+        ELSE '5. $5000+'
+    END as cost_bracket,
+    COUNT(*) as count,
+    ROUND((AVG(amount))::numeric, 0) as avg_amount,
+    ROUND((AVG((processed_date - opened_at)))::numeric, 2) as avg_days,
+    ROUND((STDDEV((processed_date - opened_at)))::numeric, 2) as stddev_days,
+    MIN((processed_date - opened_at)) as min_days,
+    MAX((processed_date - opened_at)) as max_days,
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY (processed_date - opened_at)) as median_days
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+GROUP BY 1
+ORDER BY 1
+
+Error: cannot cast type interval to numeric
+LINE 11:     ROUND((AVG((processed_date - opened_at)))::numeric, 2) a...
+                                                      ^

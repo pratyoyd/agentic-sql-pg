@@ -1,0 +1,17 @@
+SQL: SELECT 
+    DATE_TRUNC('month', opened_at) as month,
+    CASE 
+        WHEN amount < 1500 THEN 'Low (<$1500)'
+        WHEN amount < 5000 THEN 'Mid ($1500-4999)'
+        ELSE 'High ($5000+)'
+    END as cost_bracket,
+    COUNT(*) as count,
+    ROUND((AVG((processed_date - opened_at)))::numeric, 2) as avg_days
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+GROUP BY 1, 2
+ORDER BY 1, 2
+
+Error: cannot cast type interval to numeric
+LINE 9:     ROUND((AVG((processed_date - opened_at)))::numeric, 2) a...
+                                                     ^

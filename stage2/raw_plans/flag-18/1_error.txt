@@ -1,0 +1,27 @@
+SQL: SELECT 
+    CASE 
+        WHEN days_diff BETWEEN -7 AND 7 THEN 'Within 1 week of start'
+        WHEN days_diff BETWEEN -30 AND -8 THEN '1-4 weeks before start'
+        WHEN days_diff BETWEEN 8 AND 30 THEN '1-4 weeks after start'
+        WHEN days_diff < -30 THEN 'More than 1 month before start'
+        ELSE 'More than 1 month after start'
+    END AS procurement_timing,
+    COUNT(*) AS asset_count,
+    ROUND((AVG(warranty_days))::numeric, 0) AS avg_warranty_days_from_start,
+    ROUND((AVG(cost))::numeric, 0) AS avg_cost,
+    COUNT(*) * 100.0 / SUM(COUNT(*)) OVER () AS pct
+FROM (
+    SELECT 
+        (a.purchased_on - u.start_date) AS days_diff,
+        (a.warranty_expiration - u.start_date) AS warranty_days,
+        a.cost
+    FROM flag_18 a
+    JOIN flag_18_sysuser u ON a.assigned_to = u.name
+)
+GROUP BY 1
+ORDER BY asset_count DESC
+
+Error: operator does not exist: interval >= integer
+LINE 3:         WHEN days_diff BETWEEN -7 AND 7 THEN 'Within 1 week ...
+                               ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

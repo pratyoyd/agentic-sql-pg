@@ -1,0 +1,16 @@
+SQL: SELECT 
+    model_category,
+    COUNT(*) as asset_count,
+    ROUND((AVG(cost))::numeric, 0) as avg_cost,
+    ROUND((MIN(cost))::numeric, 0) as min_cost,
+    ROUND((MAX(cost))::numeric, 0) as max_cost,
+    ROUND((AVG((warranty_expiration - purchased_on) / 365.0))::numeric, 2) as avg_warranty_years,
+    MIN((warranty_expiration - purchased_on) / 365.0) as min_warranty_years,
+    MAX((warranty_expiration - purchased_on) / 365.0) as max_warranty_years
+FROM flag_16
+GROUP BY model_category
+ORDER BY avg_cost DESC
+
+Error: cannot cast type interval to numeric
+LINE 7: ...AVG((warranty_expiration - purchased_on) / 365.0))::numeric,...
+                                                             ^

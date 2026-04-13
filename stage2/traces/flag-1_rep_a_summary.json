@@ -1,0 +1,10 @@
+{
+  "session_id": "flag-1_rep_a",
+  "task_key": "flag-1",
+  "goal": "Find the discrepancy and imbalance in distribution of incidents assigned across categories",
+  "model": "claude-code-cli-sonnet",
+  "num_queries": 9,
+  "parse_failures": 0,
+  "wall_clock_seconds": 120.2,
+  "log_file": "stage2/traces/flag-1_rep_a.jsonl"
+}

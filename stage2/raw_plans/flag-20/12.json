@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 42.37,
+      "Total Cost": 42.73,
+      "Plan Rows": 145,
+      "Plan Width": 92,
+      "Actual Startup Time": 0.296,
+      "Actual Total Time": 0.298,
+      "Actual Rows": 8,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(min(amount))"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 20,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 31.36,
+          "Total Cost": 37.16,
+          "Plan Rows": 145,
+          "Plan Width": 92,
+          "Actual Startup Time": 0.272,
+          "Actual Total Time": 0.284,
+          "Actual Rows": 8,
+          "Actual Loops": 1,
+          "Group Key": [
+            "CASE WHEN (amount < 1000) THEN '0-1000'::text WHEN (amount < 2000) THEN '1000-2000'::text WHEN (amount < 3000) THEN '2000-3000'::text WHEN (amount < 4000) THEN '3000-4000'::text WHEN (amount < 5000) THEN '4000-5000'::text WHEN (amount < 6000) THEN '5000-6000'::text WHEN (amount < 7000) THEN '6000-7000'::text ELSE '7000+'::text END"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 20,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_20",
+              "Alias": "flag_20",
+              "Startup Cost": 0.0,
+              "Total Cost": 28.8,
+              "Plan Rows": 146,
+              "Plan Width": 45,
+              "Actual Startup Time": 0.017,
+              "Actual Total Time": 0.175,
+              "Actual Rows": 146,
+              "Actual Loops": 1,
+              "Filter": "(category = 'Travel'::text)",
+              "Rows Removed by Filter": 354,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.142,
+    "Triggers": [],
+    "Execution Time": 0.364
+  }
+]

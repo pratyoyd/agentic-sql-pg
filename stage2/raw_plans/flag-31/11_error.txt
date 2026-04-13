@@ -1,0 +1,9 @@
+SQL: SELECT 
+    CORR(EXTRACT('dayofyear' FROM start_date), (end_date - start_date)) as correlation,
+    REGR_SLOPE((end_date - start_date), EXTRACT('dayofyear' FROM start_date)) as slope,
+    REGR_INTERCEPT((end_date - start_date), EXTRACT('dayofyear' FROM start_date)) as intercept,
+    REGR_R2((end_date - start_date), EXTRACT('dayofyear' FROM start_date)) as r_squared
+FROM flag_31
+WHERE department = 'Finance' AND category = 'Cost Reduction' AND EXTRACT(YEAR FROM start_date)::INTEGER = 2022
+
+Error: unit "dayofyear" not recognized for type date

@@ -1,0 +1,20 @@
+SQL: SELECT 
+    a.department,
+    SUM(CASE WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN a.cost ELSE 0 END) AS cost_in_expired_short_warranties,
+    SUM(CASE WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN 1 ELSE 0 END) AS short_warranty_asset_count,
+    ROUND((AVG(CASE WHEN (a.warranty_expiration - a.purchased_on) >= 730 
+                   AND (a.warranty_expiration - a.purchased_on) < 1095 THEN a.cost END))::numeric, 0) AS avg_cost_2_3yr,
+    ROUND((AVG(CASE WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN a.cost END))::numeric, 0) AS avg_cost_1_2yr,
+    ROUND((AVG(CASE WHEN (a.warranty_expiration - a.purchased_on) >= 730 
+                   AND (a.warranty_expiration - a.purchased_on) < 1095 THEN a.cost END) 
+          - AVG(CASE WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN a.cost END))::numeric, 0) AS avg_cost_uplift_per_asset,
+    SUM(CASE WHEN (a.warranty_expiration - a.purchased_on) < 730 AND a.warranty_expiration < CURRENT_TIMESTAMP THEN a.cost ELSE 0 END) AS expired_asset_value_at_risk
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+GROUP BY a.department
+ORDER BY expired_asset_value_at_risk DESC
+
+Error: operator does not exist: interval < integer
+LINE 3: ...ASE WHEN (a.warranty_expiration - a.purchased_on) < 730 THEN...
+                                                             ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

@@ -1,0 +1,30 @@
+SQL: SELECT 
+    CASE 
+        WHEN opened_at < '2023-06-01' OR opened_at > '2023-08-28' THEN 'Normal period'
+        WHEN opened_at BETWEEN '2023-07-13' AND '2023-07-19' THEN 'Peak: Charlie+Fred both on leave'
+        WHEN opened_at BETWEEN '2023-06-14' AND '2023-07-12' THEN 'Charlie on leave'
+        WHEN opened_at BETWEEN '2023-07-20' AND '2023-08-28' THEN 'Fred on leave'
+        ELSE 'Howard on leave only'
+    END as period,
+    assigned_to,
+    COUNT(*) as incidents,
+    ROUND((AVG(EXTRACT(EPOCH FROM closed_at - opened_at) / 3600.0))::numeric, 1) as avg_resolution_hrs,
+    ROUND((PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY EXTRACT(EPOCH FROM closed_at - opened_at) / 3600.0))::numeric, 1) as median_resolution_hrs
+FROM flag_15
+WHERE assigned_to IN ('Luke Wilson', 'Beth Anglin')
+  AND closed_at IS NOT NULL
+  AND state IN ('Closed', 'Resolved')
+GROUP BY 1, 2
+ORDER BY 
+    CASE period
+        WHEN 'Normal period' THEN 1
+        WHEN 'Howard on leave only' THEN 2
+        WHEN 'Charlie on leave' THEN 3
+        WHEN 'Peak: Charlie+Fred both on leave' THEN 4
+        WHEN 'Fred on leave' THEN 5
+    END,
+    assigned_to
+
+Error: column "period" does not exist
+LINE 19:     CASE period
+                  ^

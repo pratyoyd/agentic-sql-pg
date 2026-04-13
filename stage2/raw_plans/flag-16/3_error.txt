@@ -1,0 +1,17 @@
+SQL: SELECT 
+    department,
+    model_category,
+    COUNT(*) as asset_count,
+    ROUND((AVG(cost))::numeric, 0) as avg_cost,
+    ROUND((AVG((warranty_expiration - purchased_on) / 365.0))::numeric, 2) as avg_warranty_years,
+    ROUND((AVG(cost) / AVG((warranty_expiration - purchased_on) / 365.0))::numeric, 0) as cost_per_warranty_year,
+    SUM(cost) as total_cost_exposure
+FROM flag_16
+GROUP BY department, model_category
+HAVING COUNT(*) >= 3
+ORDER BY cost_per_warranty_year DESC
+LIMIT 20
+
+Error: cannot cast type interval to numeric
+LINE 6: ...AVG((warranty_expiration - purchased_on) / 365.0))::numeric,...
+                                                             ^

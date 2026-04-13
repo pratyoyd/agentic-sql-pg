@@ -1,0 +1,16 @@
+SQL: SELECT 
+    ROUND(((a.purchased_on - u.start_date) / 30.0)::numeric, 0) AS months_before_hire_neg,
+    COUNT(*) AS assets,
+    ROUND((AVG((a.warranty_expiration - a.purchased_on)))::numeric, 0) AS avg_warranty_duration_days,
+    ROUND((AVG((a.warranty_expiration - u.start_date)))::numeric, 0) AS avg_warranty_remaining_at_hire,
+    SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) AS now_expired,
+    ROUND((SUM(CASE WHEN a.warranty_expiration < CURRENT_TIMESTAMP THEN 1 ELSE 0 END) * 100.0 / COUNT(*))::numeric, 1) AS pct_expired
+FROM flag_18 a
+JOIN flag_18_sysuser u ON a.assigned_to = u.name
+WHERE (a.purchased_on - u.start_date) < 0
+GROUP BY 1
+ORDER BY months_before_hire_neg
+
+Error: cannot cast type interval to numeric
+LINE 2:     ROUND(((a.purchased_on - u.start_date) / 30.0)::numeric,...
+                                                          ^

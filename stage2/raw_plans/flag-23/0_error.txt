@@ -1,0 +1,20 @@
+SQL: SELECT 
+    user,
+    amount,
+    category,
+    short_description,
+    COUNT(*) as repeat_count,
+    MIN(opened_at) as first_claim,
+    MAX(opened_at) as last_claim,
+    (MAX(opened_at - MIN(opened_at))) as days_span,
+    ARRAY_AGG(state) as states,
+    ARRAY_AGG(number) as claim_numbers
+FROM flag_23
+GROUP BY user, amount, category, short_description
+HAVING COUNT(*) > 1
+ORDER BY repeat_count DESC, amount DESC
+LIMIT 30
+
+Error: aggregate function calls cannot be nested
+LINE 9:     (MAX(opened_at - MIN(opened_at))) as days_span,
+                             ^

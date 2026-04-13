@@ -1,0 +1,15 @@
+SQL: SELECT 
+    MIN(cost) AS min_cost_at_90_floor,
+    MAX(cost) AS max_cost_at_90_floor,
+    COUNT(*) AS count_at_90_days,
+    (SELECT COUNT(*) FROM flag_26 WHERE model_category = 'Computer') AS total_computers,
+    ROUND((COUNT(*) * 100.0 / (SELECT COUNT(*) FROM flag_26 WHERE model_category = 'Computer'))::numeric, 1) AS pct_at_floor,
+    ROUND((SUM(cost - (SELECT ROUND(AVG(cost),0) FROM flag_26 WHERE model_category = 'Computer' AND (warranty_expiration - purchased_on) > 90)))::numeric, 0) AS total_excess_cost_vs_avg
+FROM flag_26
+WHERE model_category = 'Computer'
+    AND (warranty_expiration - purchased_on) = 90
+
+Error: operator does not exist: interval > integer
+LINE 7: ...omputer' AND (warranty_expiration - purchased_on) > 90)))::n...
+                                                             ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

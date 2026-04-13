@@ -1,0 +1,14 @@
+SQL: SELECT 
+    amount,
+    (processed_date - opened_at) as processing_days,
+    ROUND((amount / (processed_date - opened_at))::numeric, 2) as amount_per_day,
+    ROUND(((processed_date - opened_at) / amount::FLOAT * 1000)::numeric, 4) as days_per_1000_dollars
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+ORDER BY amount ASC
+LIMIT 30
+
+Error: operator does not exist: integer / interval
+LINE 4:     ROUND((amount / (processed_date - opened_at))::numeric, ...
+                          ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

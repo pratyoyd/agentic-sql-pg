@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 25.03,
+      "Total Cost": 25.86,
+      "Plan Rows": 15,
+      "Plan Width": 104,
+      "Actual Startup Time": 0.233,
+      "Actual Total Time": 0.251,
+      "Actual Rows": 13,
+      "Actual Loops": 1,
+      "Group Key": [
+        "(round((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric), 1))",
+        "(EXTRACT(dow FROM opened_at))",
+        "(CASE EXTRACT(dow FROM opened_at) WHEN '0'::numeric THEN 'Sunday'::text WHEN '1'::numeric THEN 'Monday'::text WHEN '2'::numeric THEN 'Tuesday'::text WHEN '3'::numeric THEN 'Wednesday'::text WHEN '4'::numeric THEN 'Thursday'::text WHEN '5'::numeric THEN 'Friday'::text WHEN '6'::numeric THEN 'Saturday'::text ELSE NULL::text END)"
+      ],
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 25.03,
+          "Total Cost": 25.07,
+          "Plan Rows": 15,
+          "Plan Width": 96,
+          "Actual Startup Time": 0.224,
+          "Actual Total Time": 0.227,
+          "Actual Rows": 18,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "(round((EXTRACT(epoch FROM (processed_date - opened_at)) / '3600'::numeric), 1))",
+            "(EXTRACT(dow FROM opened_at))",
+            "(CASE EXTRACT(dow FROM opened_at) WHEN '0'::numeric THEN 'Sunday'::text WHEN '1'::numeric THEN 'Monday'::text WHEN '2'::numeric THEN 'Tuesday'::text WHEN '3'::numeric THEN 'Wednesday'::text WHEN '4'::numeric THEN 'Thursday'::text WHEN '5'::numeric THEN 'Friday'::text WHEN '6'::numeric THEN 'Saturday'::text ELSE NULL::text END)"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 25,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_24",
+              "Alias": "flag_24",
+              "Startup Cost": 0.0,
+              "Total Cost": 24.74,
+              "Plan Rows": 15,
+              "Plan Width": 96,
+              "Actual Startup Time": 0.029,
+              "Actual Total Time": 0.194,
+              "Actual Rows": 18,
+              "Actual Loops": 1,
+              "Filter": "((processed_date IS NOT NULL) AND (department = 'Development'::text))",
+              "Rows Removed by Filter": 482,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.151,
+    "Triggers": [],
+    "Execution Time": 0.296
+  }
+]

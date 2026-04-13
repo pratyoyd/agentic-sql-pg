@@ -1,0 +1,180 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Limit",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 30.58,
+      "Total Cost": 32.6,
+      "Plan Rows": 30,
+      "Plan Width": 79,
+      "Actual Startup Time": 1.08,
+      "Actual Total Time": 1.089,
+      "Actual Rows": 30,
+      "Actual Loops": 1,
+      "Shared Hit Blocks": 16,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Incremental Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 30.58,
+          "Total Cost": 42.5,
+          "Plan Rows": 177,
+          "Plan Width": 79,
+          "Actual Startup Time": 1.079,
+          "Actual Total Time": 1.083,
+          "Actual Rows": 30,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "(CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END)",
+            "(count(*)) DESC"
+          ],
+          "Presorted Key": [
+            "(CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END)"
+          ],
+          "Full-sort Groups": {
+            "Group Count": 1,
+            "Sort Methods Used": [
+              "quicksort"
+            ],
+            "Sort Space Memory": {
+              "Average Sort Space Used": 29,
+              "Peak Sort Space Used": 29
+            }
+          },
+          "Shared Hit Blocks": 16,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Aggregate",
+              "Strategy": "Sorted",
+              "Partial Mode": "Simple",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Startup Cost": 30.55,
+              "Total Cost": 34.53,
+              "Plan Rows": 177,
+              "Plan Width": 79,
+              "Actual Startup Time": 1.013,
+              "Actual Total Time": 1.052,
+              "Actual Rows": 40,
+              "Actual Loops": 1,
+              "Group Key": [
+                "(CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END)",
+                "short_description"
+              ],
+              "Shared Hit Blocks": 16,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0,
+              "Plans": [
+                {
+                  "Node Type": "Sort",
+                  "Parent Relationship": "Outer",
+                  "Parallel Aware": false,
+                  "Async Capable": false,
+                  "Startup Cost": 30.55,
+                  "Total Cost": 30.99,
+                  "Plan Rows": 177,
+                  "Plan Width": 71,
+                  "Actual Startup Time": 1.006,
+                  "Actual Total Time": 1.012,
+                  "Actual Rows": 56,
+                  "Actual Loops": 1,
+                  "Sort Key": [
+                    "(CASE WHEN (opened_at < '2023-07-01 00:00:00'::timestamp without time zone) THEN 'before_july'::text ELSE 'july_onward'::text END)",
+                    "short_description"
+                  ],
+                  "Sort Method": "quicksort",
+                  "Sort Space Used": 38,
+                  "Sort Space Type": "Memory",
+                  "Shared Hit Blocks": 16,
+                  "Shared Read Blocks": 0,
+                  "Shared Dirtied Blocks": 0,
+                  "Shared Written Blocks": 0,
+                  "Local Hit Blocks": 0,
+                  "Local Read Blocks": 0,
+                  "Local Dirtied Blocks": 0,
+                  "Local Written Blocks": 0,
+                  "Temp Read Blocks": 0,
+                  "Temp Written Blocks": 0,
+                  "Plans": [
+                    {
+                      "Node Type": "Seq Scan",
+                      "Parent Relationship": "Outer",
+                      "Parallel Aware": false,
+                      "Async Capable": false,
+                      "Relation Name": "flag_11",
+                      "Alias": "flag_11",
+                      "Startup Cost": 0.0,
+                      "Total Cost": 23.94,
+                      "Plan Rows": 177,
+                      "Plan Width": 71,
+                      "Actual Startup Time": 0.012,
+                      "Actual Total Time": 0.18,
+                      "Actual Rows": 177,
+                      "Actual Loops": 1,
+                      "Filter": "(category = 'Hardware'::text)",
+                      "Rows Removed by Filter": 423,
+                      "Shared Hit Blocks": 16,
+                      "Shared Read Blocks": 0,
+                      "Shared Dirtied Blocks": 0,
+                      "Shared Written Blocks": 0,
+                      "Local Hit Blocks": 0,
+                      "Local Read Blocks": 0,
+                      "Local Dirtied Blocks": 0,
+                      "Local Written Blocks": 0,
+                      "Temp Read Blocks": 0,
+                      "Temp Written Blocks": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.095,
+    "Triggers": [],
+    "Execution Time": 1.125
+  }
+]

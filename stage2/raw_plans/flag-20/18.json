@@ -1,0 +1,113 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 63.99,
+      "Total Cost": 64.33,
+      "Plan Rows": 135,
+      "Plan Width": 120,
+      "Actual Startup Time": 4.997,
+      "Actual Total Time": 4.999,
+      "Actual Rows": 8,
+      "Actual Loops": 1,
+      "Sort Key": [
+        "(round((((sum(CASE WHEN (state = 'Declined'::text) THEN 1 ELSE 0 END))::numeric * 100.0) / (count(*))::numeric), 2)) DESC"
+      ],
+      "Sort Method": "quicksort",
+      "Sort Space Used": 25,
+      "Sort Space Type": "Memory",
+      "Shared Hit Blocks": 20,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Aggregate",
+          "Strategy": "Hashed",
+          "Partial Mode": "Simple",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 42.68,
+          "Total Cost": 59.21,
+          "Plan Rows": 135,
+          "Plan Width": 120,
+          "Actual Startup Time": 4.961,
+          "Actual Total Time": 4.981,
+          "Actual Rows": 8,
+          "Actual Loops": 1,
+          "Group Key": [
+            "CASE WHEN ((ci ~~* '%laptop%'::text) OR (ci ~~* '%dell%'::text) OR (ci ~~* '%hp%'::text) OR (ci ~~* '%lenovo%'::text) OR (ci ~~* '%thinkpad%'::text) OR (ci ~~* '%notebook%'::text) OR (ci ~~* '%elitebook%'::text) OR (ci ~~* '%toshiba%'::text)) THEN 'Laptop/Computer'::text WHEN ((ci ~~* '%luggage%'::text) OR (ci ~~* '%suitcase%'::text) OR (ci ~~* '%bag%'::text) OR (ci ~~* '%backpack%'::text) OR (ci ~~* '%briefcase%'::text)) THEN 'Luggage/Bags'::text WHEN ((ci ~~* '%airline%'::text) OR (ci ~~* '%flight%'::text) OR (ci ~~* '%aircraft%'::text) OR (ci ~~* '%jet%'::text) OR (ci ~~* '%bus%'::text)) THEN 'Air/Ground Transport'::text WHEN ((ci ~~* '%car%'::text) OR (ci ~~* '%vehicle%'::text) OR (ci ~~* '%suv%'::text)) THEN 'Vehicle'::text WHEN ((ci ~~* '%phone%'::text) OR (ci ~~* '%charger%'::text) OR (ci ~~* '%adapter%'::text) OR (ci ~~* '%router%'::text) OR (ci ~~* '%gps%'::text) OR (ci ~~* '%vpn%'::text) OR (ci ~~* '%headphone%'::text) OR (ci ~~* '%satellite%'::text)) THEN 'Electronics/Accessories'::text WHEN ((ci ~~* '%kit%'::text) OR (ci ~~* '%travel kit%'::text) OR (ci ~~* '%travel equipment%'::text) OR (ci ~~* '%travel accessories%'::text)) THEN 'Travel Kits/Equipment'::text WHEN ((ci ~~* '%insurance%'::text) OR (ci ~~* '%voucher%'::text) OR (ci ~~* '%booking%'::text) OR (ci ~~* '%management system%'::text) OR (ci ~~* '%passport%'::text)) THEN 'Admin/Intangible'::text ELSE 'Other'::text END"
+          ],
+          "Planned Partitions": 0,
+          "HashAgg Batches": 1,
+          "Peak Memory Usage": 40,
+          "Disk Usage": 0,
+          "Shared Hit Blocks": 20,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_20",
+              "Alias": "flag_20",
+              "Startup Cost": 0.0,
+              "Total Cost": 40.12,
+              "Plan Rows": 146,
+              "Plan Width": 45,
+              "Actual Startup Time": 0.087,
+              "Actual Total Time": 4.808,
+              "Actual Rows": 146,
+              "Actual Loops": 1,
+              "Filter": "(category = 'Travel'::text)",
+              "Rows Removed by Filter": 354,
+              "Shared Hit Blocks": 20,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.267,
+    "Triggers": [],
+    "Execution Time": 5.1
+  }
+]

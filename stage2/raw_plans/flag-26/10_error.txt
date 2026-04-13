@@ -1,0 +1,18 @@
+SQL: SELECT 
+    cost,
+    (warranty_expiration - purchased_on) AS warranty_days,
+    ROUND((1003 - 0.1825 * cost)::numeric, 0) AS predicted_days,
+    CASE 
+        WHEN (warranty_expiration - purchased_on) = ROUND((1003 - 0.1825 * cost)::numeric, 0) THEN 'on_formula'
+        WHEN (warranty_expiration - purchased_on) > ROUND((1003 - 0.1825 * cost)::numeric, 0) THEN 'above_formula'
+        ELSE 'below_formula'
+    END AS status
+FROM flag_26
+WHERE model_category = 'Computer'
+    AND cost > 4000
+ORDER BY cost
+
+Error: operator does not exist: interval = numeric
+LINE 6:         WHEN (warranty_expiration - purchased_on) = ROUND((1...
+                                                          ^
+HINT:  No operator matches the given name and argument types. You might need to add explicit type casts.

@@ -1,0 +1,15 @@
+SQL: SELECT 
+    ROUND((AVG((processed_date - opened_at)))::numeric, 4) as avg_days,
+    ROUND((CORR(amount, (processed_date - opened_at)))::numeric, 6) as corr_linear,
+    ROUND((CORR(LN(amount), (processed_date - opened_at)))::numeric, 6) as corr_log,
+    ROUND((CORR(SQRT(amount), (processed_date - opened_at)))::numeric, 6) as corr_sqrt,
+    ROUND((CORR(1.0/amount, (processed_date - opened_at)))::numeric, 6) as corr_inverse,
+    -- Check if days = a - b*log(amount) fits
+    REGR_SLOPE((processed_date - opened_at), LN(amount)) as slope_log,
+    REGR_INTERCEPT((processed_date - opened_at), LN(amount)) as intercept_log
+FROM flag_25
+WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+
+Error: cannot cast type interval to numeric
+LINE 2:     ROUND((AVG((processed_date - opened_at)))::numeric, 4) a...
+                                                     ^

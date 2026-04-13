@@ -1,0 +1,30 @@
+SQL: WITH params AS (
+    SELECT 
+        REGR_SLOPE((processed_date - opened_at), amount) as slope,
+        REGR_INTERCEPT((processed_date - opened_at), amount) as intercept,
+        REGR_R2((processed_date - opened_at), amount) as r_squared
+    FROM flag_25
+    WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+),
+residuals AS (
+    SELECT 
+        amount,
+        (processed_date - opened_at) as actual_days,
+        ROUND((p.intercept + p.slope * amount)::numeric, 2) as predicted_days,
+        ROUND(((processed_date - opened_at) - (p.intercept + p.slope * amount))::numeric, 2) as residual
+    FROM flag_25, params p
+    WHERE processed_date IS NOT NULL AND opened_at IS NOT NULL
+)
+SELECT 
+    (SELECT slope FROM params) as slope,
+    (SELECT intercept FROM params) as intercept,
+    (SELECT r_squared FROM params) as r_squared,
+    ROUND((AVG(ABS(residual)))::numeric, 4) as avg_abs_residual,
+    ROUND((MAX(ABS(residual)))::numeric, 4) as max_abs_residual,
+    ROUND((STDDEV(residual))::numeric, 4) as stddev_residual
+FROM residuals
+
+Error: function regr_slope(interval, integer) does not exist
+LINE 3:         REGR_SLOPE((processed_date - opened_at), amount) as ...
+                ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.

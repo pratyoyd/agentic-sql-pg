@@ -1,0 +1,24 @@
+SQL: WITH periods AS (
+    SELECT 
+        assigned_to,
+        COUNT(*) FILTER (WHERE opened_at BETWEEN '2023-06-01' AND '2023-08-28') as incidents_leave_window,
+        COUNT(*) FILTER (WHERE opened_at NOT BETWEEN '2023-06-01' AND '2023-08-28') as incidents_normal,
+        -- Leave window = 89 days, rest of dataset
+        (MAX(opened_at - MIN(opened_at))) - 89 as normal_days
+    FROM flag_15
+    WHERE assigned_to IN ('Luke Wilson', 'Beth Anglin', 'Charlie Whitherspoon', 'Howard Johnson', 'Fred Luddy')
+    GROUP BY assigned_to
+)
+SELECT 
+    assigned_to,
+    incidents_leave_window,
+    ROUND((incidents_leave_window / 89.0)::numeric, 3) as daily_rate_leave_window,
+    incidents_normal,
+    ROUND((incidents_normal / NULLIF(normal_days, 0))::numeric, 3) as daily_rate_normal,
+    ROUND(((incidents_leave_window / 89.0) / NULLIF(incidents_normal / NULLIF(normal_days, 0), 0))::numeric, 2) as load_multiplier
+FROM periods
+ORDER BY load_multiplier DESC NULLS LAST
+
+Error: aggregate function calls cannot be nested
+LINE 7:         (MAX(opened_at - MIN(opened_at))) - 89 as normal_day...
+                                 ^

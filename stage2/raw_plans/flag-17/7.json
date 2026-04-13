@@ -1,0 +1,109 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Aggregate",
+      "Strategy": "Sorted",
+      "Partial Mode": "Simple",
+      "Parallel Aware": false,
+      "Async Capable": false,
+      "Startup Cost": 51.66,
+      "Total Cost": 72.91,
+      "Plan Rows": 500,
+      "Plan Width": 90,
+      "Actual Startup Time": 0.79,
+      "Actual Total Time": 0.992,
+      "Actual Rows": 19,
+      "Actual Loops": 1,
+      "Group Key": [
+        "department",
+        "(CASE WHEN (warranty_expiration < CURRENT_TIMESTAMP) THEN 'Expired'::text WHEN (warranty_expiration < (CURRENT_TIMESTAMP + '6 mons'::interval)) THEN 'Expiring Soon'::text ELSE 'Active'::text END)"
+      ],
+      "Shared Hit Blocks": 18,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0,
+      "Plans": [
+        {
+          "Node Type": "Sort",
+          "Parent Relationship": "Outer",
+          "Parallel Aware": false,
+          "Async Capable": false,
+          "Startup Cost": 51.66,
+          "Total Cost": 52.91,
+          "Plan Rows": 500,
+          "Plan Width": 46,
+          "Actual Startup Time": 0.754,
+          "Actual Total Time": 0.798,
+          "Actual Rows": 500,
+          "Actual Loops": 1,
+          "Sort Key": [
+            "department",
+            "(CASE WHEN (warranty_expiration < CURRENT_TIMESTAMP) THEN 'Expired'::text WHEN (warranty_expiration < (CURRENT_TIMESTAMP + '6 mons'::interval)) THEN 'Expiring Soon'::text ELSE 'Active'::text END)"
+          ],
+          "Sort Method": "quicksort",
+          "Sort Space Used": 49,
+          "Sort Space Type": "Memory",
+          "Shared Hit Blocks": 18,
+          "Shared Read Blocks": 0,
+          "Shared Dirtied Blocks": 0,
+          "Shared Written Blocks": 0,
+          "Local Hit Blocks": 0,
+          "Local Read Blocks": 0,
+          "Local Dirtied Blocks": 0,
+          "Local Written Blocks": 0,
+          "Temp Read Blocks": 0,
+          "Temp Written Blocks": 0,
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Parallel Aware": false,
+              "Async Capable": false,
+              "Relation Name": "flag_17",
+              "Alias": "flag_17",
+              "Startup Cost": 0.0,
+              "Total Cost": 29.25,
+              "Plan Rows": 500,
+              "Plan Width": 46,
+              "Actual Startup Time": 0.016,
+              "Actual Total Time": 0.406,
+              "Actual Rows": 500,
+              "Actual Loops": 1,
+              "Shared Hit Blocks": 18,
+              "Shared Read Blocks": 0,
+              "Shared Dirtied Blocks": 0,
+              "Shared Written Blocks": 0,
+              "Local Hit Blocks": 0,
+              "Local Read Blocks": 0,
+              "Local Dirtied Blocks": 0,
+              "Local Written Blocks": 0,
+              "Temp Read Blocks": 0,
+              "Temp Written Blocks": 0
+            }
+          ]
+        }
+      ]
+    },
+    "Planning": {
+      "Shared Hit Blocks": 0,
+      "Shared Read Blocks": 0,
+      "Shared Dirtied Blocks": 0,
+      "Shared Written Blocks": 0,
+      "Local Hit Blocks": 0,
+      "Local Read Blocks": 0,
+      "Local Dirtied Blocks": 0,
+      "Local Written Blocks": 0,
+      "Temp Read Blocks": 0,
+      "Temp Written Blocks": 0
+    },
+    "Planning Time": 0.092,
+    "Triggers": [],
+    "Execution Time": 1.033
+  }
+]
