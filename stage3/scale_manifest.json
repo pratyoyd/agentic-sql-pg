@@ -1,0 +1,368 @@
+{
+  "flag-1": {
+    "task": "flag-1",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_1": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-2": {
+    "task": "flag-2",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_2": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-3": {
+    "task": "flag-3",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_3": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-4": {
+    "task": "flag-4",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_4": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-5": {
+    "task": "flag-5",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_5": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-6": {
+    "task": "flag-6",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_6": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-7": {
+    "task": "flag-7",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_7": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-8": {
+    "task": "flag-8",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_8": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-9": {
+    "task": "flag-9",
+    "scale_factor": 1667,
+    "tables": {
+      "flag_9": {
+        "original": 600,
+        "scaled": 1000200,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-10": {
+    "task": "flag-10",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_10": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-11": {
+    "task": "flag-11",
+    "scale_factor": 1667,
+    "tables": {
+      "flag_11": {
+        "original": 600,
+        "scaled": 1000200,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-12": {
+    "task": "flag-12",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_12": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-13": {
+    "task": "flag-13",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_13": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-14": {
+    "task": "flag-14",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_14": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      },
+      "flag_14_sysuser": {
+        "original": 5,
+        "scaled": 5,
+        "type": "dimension"
+      }
+    }
+  },
+  "flag-15": {
+    "task": "flag-15",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_15": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      },
+      "flag_15_sysuser": {
+        "original": 5,
+        "scaled": 5,
+        "type": "dimension"
+      }
+    }
+  },
+  "flag-16": {
+    "task": "flag-16",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_16": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-17": {
+    "task": "flag-17",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_17": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-18": {
+    "task": "flag-18",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_18": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      },
+      "flag_18_sysuser": {
+        "original": 183,
+        "scaled": 183,
+        "type": "dimension"
+      }
+    }
+  },
+  "flag-19": {
+    "task": "flag-19",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_19": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-20": {
+    "task": "flag-20",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_20": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-21": {
+    "task": "flag-21",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_21": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      },
+      "flag_21_sysuser": {
+        "original": 54,
+        "scaled": 54,
+        "type": "dimension"
+      }
+    }
+  },
+  "flag-22": {
+    "task": "flag-22",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_22": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-23": {
+    "task": "flag-23",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_23": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-24": {
+    "task": "flag-24",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_24": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-25": {
+    "task": "flag-25",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_25": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-26": {
+    "task": "flag-26",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_26": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-27": {
+    "task": "flag-27",
+    "scale_factor": 1693,
+    "tables": {
+      "flag_27": {
+        "original": 591,
+        "scaled": 1000563,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-28": {
+    "task": "flag-28",
+    "scale_factor": 1819,
+    "tables": {
+      "flag_28": {
+        "original": 550,
+        "scaled": 1000450,
+        "type": "fact"
+      },
+      "flag_28_sysuser": {
+        "original": 54,
+        "scaled": 54,
+        "type": "dimension"
+      }
+    }
+  },
+  "flag-29": {
+    "task": "flag-29",
+    "scale_factor": 1819,
+    "tables": {
+      "flag_29": {
+        "original": 550,
+        "scaled": 1000450,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-30": {
+    "task": "flag-30",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_30": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  },
+  "flag-31": {
+    "task": "flag-31",
+    "scale_factor": 2000,
+    "tables": {
+      "flag_31": {
+        "original": 500,
+        "scaled": 1000000,
+        "type": "fact"
+      }
+    }
+  }
+}
