@@ -181,26 +181,19 @@ def is_hintable(node: dict) -> tuple[bool, str | None]:
     Returns:
         (hintable, hint_string_or_None)
 
-    pg_hint_plan Rows() accepts:
-      - Single table: Rows(alias #n)  — for scan nodes
+    pg_hint_plan 1.6.1 Rows() requires ≥2 relations:
       - Join of relations: Rows(alias1 alias2 ... #n)  — for join nodes
+      - Single-table scans: NOT supported (rejected with "Rows hint requires
+        at least two relations")
 
     It does NOT accept hints for:
-      - Aggregation nodes (HashAggregate etc.) — grouping cardinality is estimator's own
-      - Filter nodes above a scan that don't push into the scan
+      - Single-table scan nodes (pg_hint_plan 1.6.1 limitation)
+      - Aggregation nodes (HashAggregate etc.)
       - Sort, Materialize, etc. (bookkeeping)
     """
     node_type = node["operator_type"]
     actual = node.get("actual_card")
     if actual is None:
-        return False, None
-
-    # Scan nodes — hintable as Rows(alias #n)
-    if node_type in ("Seq Scan", "Index Scan", "Index Only Scan",
-                     "Bitmap Heap Scan"):
-        alias = node.get("alias") or (node["tables"][0] if node["tables"] else None)
-        if alias:
-            return True, f"Rows({alias} #{actual})"
         return False, None
 
     # Join nodes — hintable as Rows(alias1 alias2 ... #n)
@@ -211,5 +204,5 @@ def is_hintable(node: dict) -> tuple[bool, str | None]:
             return True, f"Rows({alias_str} #{actual})"
         return False, None
 
-    # Everything else (aggregates, sorts, etc.) — not hintable
+    # Everything else (scans, aggregates, sorts, etc.) — not hintable via Rows()
     return False, None

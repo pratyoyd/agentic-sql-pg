@@ -1,0 +1,2094 @@
+[
+  {
+    "query_seq": 0,
+    "sql": "SELECT\n    u.name,\n    u.department,\n    u.start_date,\n    a.purchased_on,\n    a.warranty_expiration,\n    EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_asset_after_start,\n    EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)) AS warranty_duration_days\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nORDER BY ABS(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))\nLIMIT 20;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Limit",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 20,
+        "actual_card": 20,
+        "operator_signature": "ee6fd3826ce329f56f4505bcf55b3c987a7844d6",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 833348,
+        "actual_card": 20,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 60,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          4,
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      508.8315010070801,
+      510.71739196777344,
+      506.5619945526123,
+      507.8392028808594,
+      516.305685043335,
+      536.3316535949707
+    ],
+    "median_latency_ms": 512.0724439620972,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 1,
+    "sql": "SELECT\n    CASE\n        WHEN days_diff < 0 THEN 'Before start (pre-provisioned)'\n        WHEN days_diff = 0 THEN 'Same day'\n        WHEN days_diff BETWEEN 1 AND 7 THEN '1-7 days after'\n        WHEN days_diff BETWEEN 8 AND 30 THEN '8-30 days after'\n        WHEN days_diff BETWEEN 31 AND 180 THEN '1-6 months after'\n        ELSE 'More than 6 months after'\n    END AS procurement_timing,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(warranty_duration_days)) AS avg_warranty_days,\n    ROUND(MIN(warranty_duration_days)) AS min_warranty_days,\n    ROUND(MAX(warranty_duration_days)) AS max_warranty_days\nFROM (\n    SELECT\n        EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_diff,\n        EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)) AS warranty_duration_days\n    FROM flag_18 a\n    JOIN flag_18_sysuser u ON a.assigned_to = u.name\n) sub\nGROUP BY procurement_timing\nORDER BY asset_count DESC;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 91500,
+        "actual_card": 3,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN (EXTRACT(day FROM (a.purchased_on - u.start_date)) < '0'::numeric) THEN 'Before start (pre-provisioned)'::text WHEN (EXTRACT(day FROM (a.purchased_on - u.start_date)) = '0'::numeric) THEN 'Same day'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '1'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '7'::numeric)) THEN '1-7 days after'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '8'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '30'::numeric)) THEN '8-30 days after'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '31'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '180'::numeric)) THEN '1-6 months after'::text ELSE 'More than 6 months after'::text END)"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 3,
+        "operator_signature": "d6e26e813d65dd0b1c68165eb4f1cf53f551ade7",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183000,
+        "actual_card": 9,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN (EXTRACT(day FROM (a.purchased_on - u.start_date)) < '0'::numeric) THEN 'Before start (pre-provisioned)'::text WHEN (EXTRACT(day FROM (a.purchased_on - u.start_date)) = '0'::numeric) THEN 'Same day'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '1'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '7'::numeric)) THEN '1-7 days after'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '8'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '30'::numeric)) THEN '8-30 days after'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '31'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '180'::numeric)) THEN '1-6 months after'::text ELSE 'More than 6 months after'::text END)"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 9,
+        "operator_signature": "d6e26e813d65dd0b1c68165eb4f1cf53f551ade7",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          6,
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          8
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 8,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      980.2024364471436,
+      977.7894020080566,
+      921.2374687194824,
+      1226.9718647003174,
+      1020.7390785217285,
+      1188.951015472412
+    ],
+    "median_latency_ms": 1104.8450469970703,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 2,
+    "sql": "SELECT\n    CASE\n        WHEN days_diff BETWEEN -7 AND -1 THEN '1-7 days before'\n        WHEN days_diff BETWEEN -30 AND -8 THEN '8-30 days before'\n        WHEN days_diff BETWEEN -180 AND -31 THEN '1-6 months before'\n        WHEN days_diff BETWEEN -365 AND -181 THEN '6-12 months before'\n        ELSE 'More than 1 year before'\n    END AS pre_provision_window,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(warranty_duration_days)) AS avg_warranty_days,\n    ROUND(AVG(days_diff)) AS avg_days_before_start\nFROM (\n    SELECT\n        EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_diff,\n        EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)) AS warranty_duration_days\n    FROM flag_18 a\n    JOIN flag_18_sysuser u ON a.assigned_to = u.name\n    WHERE a.purchased_on < u.start_date\n) sub\nGROUP BY pre_provision_window\nORDER BY avg_days_before_start DESC;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 91500,
+        "actual_card": 5,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-7'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-1'::numeric)) THEN '1-7 days before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-30'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-8'::numeric)) THEN '8-30 days before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-180'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-31'::numeric)) THEN '1-6 months before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-365'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-181'::numeric)) THEN '6-12 months before'::text ELSE 'More than 1 year before'::text END)"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 5,
+        "operator_signature": "efd29e3d7f8c414e80716ffd49e34e936ce37fd5",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183000,
+        "actual_card": 15,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-7'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-1'::numeric)) THEN '1-7 days before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-30'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-8'::numeric)) THEN '8-30 days before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-180'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-31'::numeric)) THEN '1-6 months before'::text WHEN ((EXTRACT(day FROM (a.purchased_on - u.start_date)) >= '-365'::numeric) AND (EXTRACT(day FROM (a.purchased_on - u.start_date)) <= '-181'::numeric)) THEN '6-12 months before'::text ELSE 'More than 1 year before'::text END)"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 15,
+        "operator_signature": "efd29e3d7f8c414e80716ffd49e34e936ce37fd5",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 138891,
+        "actual_card": 626001,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)",
+          "(a.purchased_on < u.start_date)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 138891,
+        "actual_card": 626001,
+        "operator_signature": "9edca030ee08492a007dfc50bff568841e025d05",
+        "children_ids": [
+          6,
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          8
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 8,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      854.0711402893066,
+      661.3686084747314,
+      645.4236507415771,
+      650.3534317016602,
+      663.5487079620361,
+      872.9081153869629
+    ],
+    "median_latency_ms": 656.9510698318481,
+    "q_error_join_max": 4.507138691491889
+  },
+  {
+    "query_seq": 3,
+    "sql": "SELECT\n    CASE\n        WHEN warranty_at_start < 0 THEN 'Expired before start'\n        WHEN warranty_at_start BETWEEN 0 AND 90 THEN '0-90 days warranty at start'\n        WHEN warranty_at_start BETWEEN 91 AND 180 THEN '91-180 days warranty at start'\n        WHEN warranty_at_start BETWEEN 181 AND 365 THEN '6-12 months warranty at start'\n        ELSE 'More than 1 year warranty at start'\n    END AS warranty_coverage_at_onboarding,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(days_diff)) AS avg_days_purchased_before_start,\n    a.department\nFROM (\n    SELECT\n        EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_diff,\n        EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)) AS warranty_at_start,\n        u.department\n    FROM flag_18 a\n    JOIN flag_18_sysuser u ON a.assigned_to = u.name\n) a\nGROUP BY warranty_coverage_at_onboarding, department\nORDER BY department, asset_count DESC;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 91500,
+        "actual_card": 25,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) < '0'::numeric) THEN 'Expired before start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '0'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '90'::numeric)) THEN '0-90 days warranty at start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '91'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '180'::numeric)) THEN '91-180 days warranty at start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '181'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '365'::numeric)) THEN '6-12 months warranty at start'::text ELSE 'More than 1 year warranty at start'::text END)",
+          "u.department"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 25,
+        "operator_signature": "e8b064be4384bb115cb04e349ffc1eeb00652546",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183000,
+        "actual_card": 75,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) < '0'::numeric) THEN 'Expired before start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '0'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '90'::numeric)) THEN '0-90 days warranty at start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '91'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '180'::numeric)) THEN '91-180 days warranty at start'::text WHEN ((EXTRACT(day FROM (a.warranty_expiration - u.start_date)) >= '181'::numeric) AND (EXTRACT(day FROM (a.warranty_expiration - u.start_date)) <= '365'::numeric)) THEN '6-12 months warranty at start'::text ELSE 'More than 1 year warranty at start'::text END)",
+          "u.department"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 75,
+        "operator_signature": "e8b064be4384bb115cb04e349ffc1eeb00652546",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          6,
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          8
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 8,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      1332.5316905975342,
+      1527.3325443267822,
+      1776.8511772155762,
+      1542.5786972045898,
+      1412.3167991638184,
+      1502.7642250061035
+    ],
+    "median_latency_ms": 1522.6714611053467,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 4,
+    "sql": "SELECT\n    a.model_category,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_days,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_asset_after_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_days_at_start,\n    ROUND(AVG(a.cost)) AS avg_cost\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY a.model_category\nORDER BY avg_warranty_days_at_start ASC;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 7,
+        "actual_card": 7,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "a.model_category"
+        ],
+        "estimated_card": 7,
+        "actual_card": 7,
+        "operator_signature": "86b1143b8b4df219ed7f8633083f0cc081456e18",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 14,
+        "actual_card": 21,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 7,
+        "actual_card": 21,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "a.model_category"
+        ],
+        "estimated_card": 7,
+        "actual_card": 21,
+        "operator_signature": "86b1143b8b4df219ed7f8633083f0cc081456e18",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          6,
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          8
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 8,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      635.4169845581055,
+      528.8982391357422,
+      624.1865158081055,
+      499.2177486419678,
+      507.8089237213135,
+      502.55799293518066
+    ],
+    "median_latency_ms": 505.18345832824707,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 5,
+    "sql": "SELECT\n    EXTRACT(MONTH FROM a.purchased_on) AS purchase_month,\n    TO_CHAR(a.purchased_on, 'Mon') AS month_name,\n    COUNT(*) AS assets_purchased,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_before_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_duration\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY EXTRACT(MONTH FROM a.purchased_on), TO_CHAR(a.purchased_on, 'Mon')\nORDER BY EXTRACT(MONTH FROM a.purchased_on);",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(EXTRACT(month FROM a.purchased_on))",
+          "(to_char(a.purchased_on, 'Mon'::text))"
+        ],
+        "estimated_card": 500,
+        "actual_card": 12,
+        "operator_signature": "0659709d89afa6384944b0a5b3281365798b20a6",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000,
+        "actual_card": 36,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 500,
+        "actual_card": 36,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "EXTRACT(month FROM a.purchased_on)",
+          "to_char(a.purchased_on, 'Mon'::text)"
+        ],
+        "estimated_card": 500,
+        "actual_card": 36,
+        "operator_signature": "6cb03b66ab282315c23a048914e5569ada6bf1ec",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          5,
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      851.1834144592285,
+      1037.1384620666504,
+      966.505765914917,
+      924.156904220581,
+      759.2124938964844,
+      759.1037750244141
+    ],
+    "median_latency_ms": 841.6846990585327,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 6,
+    "sql": "SELECT\n    EXTRACT(MONTH FROM u.start_date) AS start_month,\n    TO_CHAR(u.start_date, 'Mon') AS month_name,\n    COUNT(DISTINCT u.name) AS employees_starting,\n    COUNT(a.asset_tag) AS assets_assigned,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_purchased_vs_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_remaining_at_start\nFROM flag_18_sysuser u\nLEFT JOIN flag_18 a ON a.assigned_to = u.name\nGROUP BY EXTRACT(MONTH FROM u.start_date), TO_CHAR(u.start_date, 'Mon')\nORDER BY EXTRACT(MONTH FROM u.start_date);",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(EXTRACT(month FROM u.start_date))",
+          "(to_char(u.start_date, 'Mon'::text))"
+        ],
+        "estimated_card": 183,
+        "actual_card": 11,
+        "operator_signature": "e0bdbf4759f69e708567c8e554da9b7ce0bf8384",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          3,
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 183,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 183,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      3990.6771183013916,
+      3981.843948364258,
+      4000.6470680236816,
+      4263.24725151062,
+      3964.7860527038574,
+      4063.021421432495
+    ],
+    "median_latency_ms": 4031.8342447280884,
+    "q_error_join_max": 1.000017
+  },
+  {
+    "query_seq": 7,
+    "sql": "SELECT\n    DATE_TRUNC('month', a.warranty_expiration) AS expiry_month,\n    COUNT(*) AS warranties_expiring,\n    ROUND(AVG(a.cost)) AS avg_asset_cost,\n    SUM(a.cost) AS total_replacement_cost_estimate,\n    array_agg(DISTINCT a.model_category) AS categories_expiring\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY DATE_TRUNC('month', a.warranty_expiration)\nORDER BY expiry_month;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(date_trunc('month'::text, a.warranty_expiration))"
+        ],
+        "estimated_card": 500,
+        "actual_card": 42,
+        "operator_signature": "e57cead1dfcfb5abdb2045b2dcbc10611410c8a8",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          3,
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 183,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 183,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      1386.8188858032227,
+      1384.0742111206055,
+      1380.0294399261475,
+      1397.3379135131836,
+      1665.445327758789,
+      1394.1891193389893
+    ],
+    "median_latency_ms": 1395.7635164260864,
+    "q_error_join_max": 1.000017
+  },
+  {
+    "query_seq": 8,
+    "sql": "SELECT\n    CASE\n        WHEN a.cost < 500 THEN 'Under $500'\n        WHEN a.cost BETWEEN 500 AND 1999 THEN '$500-$1,999'\n        WHEN a.cost BETWEEN 2000 AND 4999 THEN '$2,000-$4,999'\n        WHEN a.cost BETWEEN 5000 AND 9999 THEN '$5,000-$9,999'\n        ELSE '$10,000+'\n    END AS cost_tier,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_days,\n    ROUND(STDDEV(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS stddev_warranty_days,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    a.model_category\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY cost_tier, a.model_category\nORDER BY MIN(a.cost), a.model_category;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 2800,
+        "actual_card": 11,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(CASE WHEN (a.cost < 500) THEN 'Under $500'::text WHEN ((a.cost >= 500) AND (a.cost <= 1999)) THEN '$500-$1,999'::text WHEN ((a.cost >= 2000) AND (a.cost <= 4999)) THEN '$2,000-$4,999'::text WHEN ((a.cost >= 5000) AND (a.cost <= 9999)) THEN '$5,000-$9,999'::text ELSE '$10,000+'::text END)",
+          "a.model_category"
+        ],
+        "estimated_card": 2800,
+        "actual_card": 11,
+        "operator_signature": "9b9f818c3ea9883e2ec679c1ef9dbde99778b719",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 5600,
+        "actual_card": 33,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 2800,
+        "actual_card": 33,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "CASE WHEN (a.cost < 500) THEN 'Under $500'::text WHEN ((a.cost >= 500) AND (a.cost <= 1999)) THEN '$500-$1,999'::text WHEN ((a.cost >= 2000) AND (a.cost <= 4999)) THEN '$2,000-$4,999'::text WHEN ((a.cost >= 5000) AND (a.cost <= 9999)) THEN '$5,000-$9,999'::text ELSE '$10,000+'::text END",
+          "a.model_category"
+        ],
+        "estimated_card": 2800,
+        "actual_card": 33,
+        "operator_signature": "b9e1a50e5070fb1e8f87cf04d553631cd6fcab84",
+        "children_ids": [
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          6,
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          8
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 8,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      753.929615020752,
+      697.9889869689941,
+      612.73193359375,
+      693.6614513397217,
+      685.7399940490723,
+      625.3108978271484
+    ],
+    "median_latency_ms": 655.5254459381104,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 9,
+    "sql": "SELECT\n    u.name,\n    u.department,\n    u.title,\n    a.model_category,\n    a.asset_tag,\n    a.cost,\n    u.start_date::date AS employee_start,\n    a.purchased_on::date AS asset_purchased,\n    a.warranty_expiration::date AS warranty_expires,\n    ROUND(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)) / 30.0) AS warranty_months_from_start,\n    ROUND(EXTRACT(DAY FROM (a.purchased_on - u.start_date))) AS days_purchased_before_start\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nWHERE a.warranty_expiration < u.start_date + INTERVAL '12 months'\nORDER BY warranty_months_from_start ASC\nLIMIT 25;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Limit",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 25,
+        "actual_card": 25,
+        "operator_signature": "ee6fd3826ce329f56f4505bcf55b3c987a7844d6",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 277782,
+        "actual_card": 25,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 138891,
+        "actual_card": 75,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)",
+          "(a.warranty_expiration < (u.start_date + '1 year'::interval))"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 138891,
+        "actual_card": 252000,
+        "operator_signature": "a55e5afa40ca02dc25e42d9f008f241a9f4ea879",
+        "children_ids": [
+          4,
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      339.51854705810547,
+      354.902982711792,
+      461.02070808410645,
+      439.2969608306885,
+      389.3609046936035,
+      335.6034755706787
+    ],
+    "median_latency_ms": 414.328932762146,
+    "q_error_join_max": 1.8143724215391925
+  },
+  {
+    "query_seq": 10,
+    "sql": "SELECT\n    DATE_TRUNC('month', a.purchased_on) AS purchase_batch,\n    DATE_TRUNC('month', u.start_date) AS employee_start_cohort,\n    COUNT(DISTINCT u.name) AS affected_employees,\n    COUNT(a.asset_tag) AS assets_at_risk,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_days_at_start,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) AS assets_expiring_within_year1,\n    SUM(a.cost) AS total_cost_at_risk\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nWHERE a.purchased_on BETWEEN '2023-05-01' AND '2023-08-31'\nGROUP BY DATE_TRUNC('month', a.purchased_on), DATE_TRUNC('month', u.start_date)\nORDER BY purchase_batch, employee_start_cohort;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(date_trunc('month'::text, a.purchased_on))",
+          "(date_trunc('month'::text, u.start_date))"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 32,
+        "operator_signature": "99b38c3551e727426df4dff044cfa4378270a770",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 282719,
+        "actual_card": 282000,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 117800,
+        "actual_card": 282000,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 117800,
+        "actual_card": 282000,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          4,
+          5
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [
+          "((purchased_on >= '2023-05-01 00:00:00'::timestamp without time zone) AND (purchased_on <= '2023-08-31 00:00:00'::timestamp without time zone))"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 117800,
+        "actual_card": 282000,
+        "operator_signature": "e6e26cf7980a9f8fdd52a40526d75cc156dd9183",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      461.98058128356934,
+      467.3008918762207,
+      458.65392684936523,
+      562.8566741943359,
+      461.66515350341797,
+      467.41676330566406
+    ],
+    "median_latency_ms": 464.540958404541,
+    "q_error_join_max": 2.3938879456706283
+  },
+  {
+    "query_seq": 11,
+    "sql": "SELECT\n    width_bucket(EXTRACT(DAY FROM (a.purchased_on - u.start_date)), -400, 30, 10) AS bucket_num,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_before_start,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN a.cost ELSE 0 END) AS cost_expiring_yr1,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '24 months' THEN a.cost ELSE 0 END) AS cost_expiring_yr2\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY bucket_num\nORDER BY bucket_num;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(width_bucket(EXTRACT(day FROM (a.purchased_on - u.start_date)), '-400'::numeric, '30'::numeric, 10))"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 8,
+        "operator_signature": "2dad84f0cf3d00be8863a77ef7143ce836429cfb",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183000,
+        "actual_card": 24,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "(width_bucket(EXTRACT(day FROM (a.purchased_on - u.start_date)), '-400'::numeric, '30'::numeric, 10))"
+        ],
+        "estimated_card": 91500,
+        "actual_card": 24,
+        "operator_signature": "2dad84f0cf3d00be8863a77ef7143ce836429cfb",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          5,
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      1430.516004562378,
+      1389.87135887146,
+      1146.9135284423828,
+      1159.7974300384521,
+      1424.6551990509033,
+      1361.5684509277344
+    ],
+    "median_latency_ms": 1260.6829404830933,
+    "q_error_join_max": 2.39995536078565
+  },
+  {
+    "query_seq": 12,
+    "sql": "SELECT\n    u.department,\n    COUNT(DISTINCT u.name) AS employees,\n    COUNT(a.asset_tag) AS total_assets,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_purchase_vs_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start_days,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) AS assets_expiring_yr1,\n    ROUND(100.0 * SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) / COUNT(a.asset_tag), 1) AS pct_expiring_yr1,\n    ROUND(AVG(a.cost)) AS avg_asset_cost\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY u.department\nORDER BY avg_warranty_at_start_days DESC;",
+    "plan_tree": [
+      {
+        "node_id": 0,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 7,
+        "actual_card": 7,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          1
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 1,
+        "operator_type": "Aggregate",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [
+          "u.department"
+        ],
+        "estimated_card": 7,
+        "actual_card": 7,
+        "operator_signature": "17ab7a63bec6e30c6739af3b1ea19568b9e8b1ac",
+        "children_ids": [
+          2
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 2,
+        "operator_type": "Gather Merge",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 1000017,
+        "actual_card": 1000000,
+        "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f",
+        "children_ids": [
+          3
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 3,
+        "operator_type": "Sort",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc",
+        "children_ids": [
+          4
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 4,
+        "operator_type": "Hash Join",
+        "tables": [],
+        "predicates": [
+          "(a.assigned_to = u.name)"
+        ],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "children_ids": [
+          5,
+          6
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "a",
+          "u"
+        ]
+      },
+      {
+        "node_id": 5,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 416674,
+        "actual_card": 999999,
+        "operator_signature": "982ba5ad61ea0ebe4fc24fed92524876561b56d8",
+        "children_ids": [],
+        "alias": "a",
+        "relation_aliases": [
+          "a"
+        ]
+      },
+      {
+        "node_id": 6,
+        "operator_type": "Hash",
+        "tables": [],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222",
+        "children_ids": [
+          7
+        ],
+        "alias": "",
+        "relation_aliases": [
+          "u"
+        ]
+      },
+      {
+        "node_id": 7,
+        "operator_type": "Seq Scan",
+        "tables": [
+          "flag_18_sysuser"
+        ],
+        "predicates": [],
+        "groupby_keys": [],
+        "estimated_card": 183,
+        "actual_card": 549,
+        "operator_signature": "0e500906ec18924ea3d9cc1a0237a1c70730e595",
+        "children_ids": [],
+        "alias": "u",
+        "relation_aliases": [
+          "u"
+        ]
+      }
+    ],
+    "latencies_ms": [
+      1654.0582180023193,
+      1715.5516147613525,
+      1713.5930061340332,
+      1636.2354755401611,
+      1738.3506298065186,
+      1639.4422054290771
+    ],
+    "median_latency_ms": 1676.5176057815552,
+    "q_error_join_max": 2.39995536078565
+  }
+]

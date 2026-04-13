@@ -1,0 +1,329 @@
+{
+  "task": "flag-18",
+  "rep": "flag-18_rep_a",
+  "total_queries": 13,
+  "hinted_queries": 10,
+  "changed_queries": 0,
+  "diffs": [
+    {
+      "query_seq": 0,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 512.072,
+      "latency_hinted_ms": 500.484,
+      "latency_delta_ms": -11.589,
+      "latency_delta_pct": -2.26,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [],
+      "hint_block": "",
+      "injection_overhead_ms": 0.011
+    },
+    {
+      "query_seq": 1,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 1104.845,
+      "latency_hinted_ms": 1031.296,
+      "latency_delta_ms": -73.549,
+      "latency_delta_pct": -6.66,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 0,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 36.525
+    },
+    {
+      "query_seq": 2,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 656.951,
+      "latency_hinted_ms": 793.607,
+      "latency_delta_ms": 136.656,
+      "latency_delta_pct": 20.8,
+      "q_error_baseline_max": 4.51,
+      "q_error_hinted_max": 4.51,
+      "hints_injected": [],
+      "hint_block": "",
+      "injection_overhead_ms": 6.274
+    },
+    {
+      "query_seq": 3,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 1522.671,
+      "latency_hinted_ms": 1489.336,
+      "latency_delta_ms": -33.336,
+      "latency_delta_pct": -2.19,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 1,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 5.795
+    },
+    {
+      "query_seq": 4,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 505.183,
+      "latency_hinted_ms": 540.873,
+      "latency_delta_ms": 35.69,
+      "latency_delta_pct": 7.06,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 3,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 2.005
+    },
+    {
+      "query_seq": 5,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 841.685,
+      "latency_hinted_ms": 772.55,
+      "latency_delta_ms": -69.135,
+      "latency_delta_pct": -8.21,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 4,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 1.959
+    },
+    {
+      "query_seq": 6,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 4031.834,
+      "latency_hinted_ms": 3967.334,
+      "latency_delta_ms": -64.501,
+      "latency_delta_pct": -1.6,
+      "q_error_baseline_max": 1.0,
+      "q_error_hinted_max": 1.0,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 5,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 4.59
+    },
+    {
+      "query_seq": 7,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 1395.764,
+      "latency_hinted_ms": 1392.033,
+      "latency_delta_ms": -3.731,
+      "latency_delta_pct": -0.27,
+      "q_error_baseline_max": 1.0,
+      "q_error_hinted_max": 1.0,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 1000000,
+          "source_query_idx": 6,
+          "hint_string": "Rows(a u #1000000)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #1000000) */",
+      "injection_overhead_ms": 4.091
+    },
+    {
+      "query_seq": 8,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 655.525,
+      "latency_hinted_ms": 610.046,
+      "latency_delta_ms": -45.479,
+      "latency_delta_pct": -6.94,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 1000000,
+          "source_query_idx": 7,
+          "hint_string": "Rows(a u #1000000)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #1000000) */",
+      "injection_overhead_ms": 2.47
+    },
+    {
+      "query_seq": 9,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 414.329,
+      "latency_hinted_ms": 363.068,
+      "latency_delta_ms": -51.261,
+      "latency_delta_pct": -12.37,
+      "q_error_baseline_max": 1.81,
+      "q_error_hinted_max": 1.81,
+      "hints_injected": [],
+      "hint_block": "",
+      "injection_overhead_ms": 1.852
+    },
+    {
+      "query_seq": 10,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 464.541,
+      "latency_hinted_ms": 506.548,
+      "latency_delta_ms": 42.007,
+      "latency_delta_pct": 9.04,
+      "q_error_baseline_max": 2.39,
+      "q_error_hinted_max": 1.48,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 8,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 2.04
+    },
+    {
+      "query_seq": 11,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 1260.683,
+      "latency_hinted_ms": 1396.949,
+      "latency_delta_ms": 136.266,
+      "latency_delta_pct": 10.81,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 8.51,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 282000,
+          "source_query_idx": 10,
+          "hint_string": "Rows(a u #282000)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #282000) */",
+      "injection_overhead_ms": 5.297
+    },
+    {
+      "query_seq": 12,
+      "plan_changed_topology": false,
+      "plan_changed_parallelism": false,
+      "plan_changed_any": false,
+      "diffs": [],
+      "latency_baseline_ms": 1676.518,
+      "latency_hinted_ms": 1779.013,
+      "latency_delta_ms": 102.495,
+      "latency_delta_pct": 6.11,
+      "q_error_baseline_max": 2.4,
+      "q_error_hinted_max": 2.4,
+      "hints_injected": [
+        {
+          "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+          "relation_aliases": [
+            "a",
+            "u"
+          ],
+          "actual_card": 999999,
+          "source_query_idx": 11,
+          "hint_string": "Rows(a u #999999)"
+        }
+      ],
+      "hint_block": "/*+ Rows(a u #999999) */",
+      "injection_overhead_ms": 8.697
+    }
+  ],
+  "baseline_total_ms": 15042.6,
+  "hinted_total_ms": 15143.1
+}
