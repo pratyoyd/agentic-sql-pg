@@ -1,0 +1,59 @@
+=== Remaining tasks ===
+Started: Tue Apr 14 12:32:34 AM PDT 2026
+--- task4 rep c (restart) ---
+  Completed: 30 queries
+Post-processing task4...
+
+Post-processing task4...
+  Rep a: 16 queries
+  Saved 3 q-errors to qerror_distributions/task4_a.txt
+  CTE analysis: 16 queries, avg 1.6 CTEs/query, avg depth ratio 5.6
+  Pathological q-errors (>100×): 0 nodes
+  Rep b: 16 queries
+  Saved 0 q-errors to qerror_distributions/task4_b.txt
+  CTE analysis: 16 queries, avg 1.5 CTEs/query, avg depth ratio 7.8
+  Pathological q-errors (>100×): 0 nodes
+  Rep c: 30 queries
+  Saved 4 q-errors to qerror_distributions/task4_c.txt
+  CTE analysis: 30 queries, avg 1.0 CTEs/query, avg depth ratio 3.7
+  Pathological q-errors (>100×): 3 nodes
+--- task5 rep a ---
+  Completed: 10 queries
+--- task5 rep b ---
+  Completed: 10 queries
+--- task5 rep c ---
+  Completed: 11 queries
+Post-processing task5...
+
+Post-processing task5...
+  Rep a: 10 queries
+  Saved 21 q-errors to qerror_distributions/task5_a.txt
+  CTE analysis: 10 queries, avg 2.5 CTEs/query, avg depth ratio 8.8
+  Pathological q-errors (>100×): 2 nodes
+  Rep b: 10 queries
+  Saved 29 q-errors to qerror_distributions/task5_b.txt
+  CTE analysis: 10 queries, avg 2.9 CTEs/query, avg depth ratio 10.7
+  Pathological q-errors (>100×): 9 nodes
+  Rep c: 11 queries
+  Saved 18 q-errors to qerror_distributions/task5_c.txt
+  CTE analysis: 11 queries, avg 2.9 CTEs/query, avg depth ratio 7.5
+  Pathological q-errors (>100×): 1 nodes
+
+=== All remaining tasks complete at Tue Apr 14 12:59:39 AM PDT 2026 ===
+
+Full summary:
+  task1_rep_a           queries=13  wall= 374.7s  answer=no
+  task1_rep_b           queries=13  wall= 343.5s  answer=yes
+  task1_rep_c           queries=15  wall= 339.1s  answer=yes
+  task2_rep_a           queries= 9  wall=1624.7s  answer=yes
+  task2_rep_b           queries=13  wall= 502.7s  answer=yes
+  task2_rep_c           queries=13  wall= 430.8s  answer=yes
+  task3_rep_a           queries= 8  wall= 147.8s  answer=yes
+  task3_rep_b           queries=11  wall= 216.6s  answer=yes
+  task3_rep_c           queries=13  wall= 217.1s  answer=yes
+  task4_rep_a           queries=16  wall= 346.9s  answer=yes
+  task4_rep_b           queries=16  wall= 342.8s  answer=yes
+  task4_rep_c           queries=30  wall= 612.2s  answer=yes
+  task5_rep_a           queries=10  wall= 284.6s  answer=yes
+  task5_rep_b           queries=10  wall= 439.1s  answer=yes
+  task5_rep_c           queries=11  wall= 267.2s  answer=yes
