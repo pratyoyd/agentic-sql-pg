@@ -1,0 +1,6 @@
+# q-error distribution for task4 rep c
+# 4 join nodes at depth 3+
+2.4000
+2021.5575
+2077.2426
+2077.2426

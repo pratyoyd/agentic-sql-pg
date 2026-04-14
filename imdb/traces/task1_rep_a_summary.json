@@ -1,0 +1,10 @@
+{
+  "session_id": "task1_rep_a",
+  "task_key": "task1",
+  "task_name": "Critical success factors",
+  "rep": "a",
+  "num_queries": 13,
+  "parse_failures": 0,
+  "wall_clock_seconds": 374.7,
+  "trace_path": "traces/task1_rep_a.jsonl"
+}

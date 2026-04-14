@@ -1,0 +1,5 @@
+# q-error distribution for task4 rep a
+# 3 join nodes at depth 3+
+2.4000
+2.4000
+10.0000
