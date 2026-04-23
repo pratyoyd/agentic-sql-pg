@@ -1,0 +1,401 @@
+{
+  "query_seq": 12,
+  "sql": "WITH dirs AS (\n  SELECT ci.person_id AS director_id, ci.movie_id\n  FROM cast_info ci\n  WHERE ci.role_id = (SELECT id FROM role_type WHERE role = 'director')\n),\nacts AS (\n  SELECT ci.person_id AS actor_id, ci.movie_id\n  FROM cast_info ci\n  WHERE ci.role_id IN (SELECT id FROM role_type WHERE role IN ('actor', 'actress'))\n),\nrated_movies AS (\n  SELECT DISTINCT movie_id\n  FROM movie_info_idx\n  WHERE info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n    AND info::integer >= 500\n),\n-- Compare genre diversity: repeat pairs (>=4 films) vs one-off pairs (exactly 1 film)\ndir_ids AS (\n  SELECT id FROM name\n  WHERE name IN ('To, Johnnie','Marshall, Garry','Miike, Takashi',\n                 'Rodriguez, Robert','Egoyan, Atom','Kitano, Takeshi')\n),\nall_pairs AS (\n  SELECT d.director_id, a.actor_id,\n         COUNT(DISTINCT d.movie_id) AS film_count,\n         array_agg(DISTINCT d.movie_id) AS movie_ids\n  FROM dirs d\n  JOIN acts a ON d.movie_id = a.movie_id AND d.director_id != a.actor_id\n  JOIN title t ON t.id = d.movie_id\n  JOIN rated_movies rm ON rm.movie_id = t.id\n  JOIN dir_ids di ON di.id = d.director_id\n  WHERE t.production_year BETWEEN 1990 AND 2010 AND t.kind_id = 1\n  GROUP BY d.director_id, a.actor_id\n),\npair_genre_counts AS (\n  SELECT ap.director_id, ap.actor_id, ap.film_count,\n         COUNT(DISTINCT mi.info) AS distinct_genres\n  FROM all_pairs ap\n  JOIN movie_info mi ON mi.movie_id = ANY(ap.movie_ids)\n    AND mi.info_type_id = (SELECT id FROM info_type WHERE info = 'genres')\n  GROUP BY ap.director_id, ap.actor_id, ap.film_count\n)\nSELECT\n  CASE WHEN film_count >= 4 THEN 'repeat (4+ films)'\n       WHEN film_count = 1 THEN 'one-off (1 film)'\n       ELSE '2-3 films' END AS pair_type,\n  COUNT(*) AS num_pairs,\n  ROUND(AVG(film_count), 2) AS avg_films,\n  ROUND(AVG(distinct_genres), 2) AS avg_distinct_genres,\n  ROUND(AVG(distinct_genres::numeric / film_count), 3) AS genre_diversity_ratio\nFROM pair_genre_counts\nGROUP BY CASE WHEN film_count >= 4 THEN 'repeat (4+ films)'\n              WHEN film_count = 1 THEN 'one-off (1 film)'\n              ELSE '2-3 films' END\nORDER BY avg_films DESC;",
+  "plan_tree_summary": [
+    {
+      "node_id": 0,
+      "operator_type": "Sort",
+      "estimated_card": 1,
+      "actual_card": 3,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 1,
+      "operator_type": "Aggregate",
+      "estimated_card": 1,
+      "actual_card": 3,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "f31e786d9351b7d541d356994a8230766882a2bc"
+    },
+    {
+      "node_id": 2,
+      "operator_type": "Sort",
+      "estimated_card": 1,
+      "actual_card": 2899,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 3,
+      "operator_type": "Subquery Scan",
+      "estimated_card": 1,
+      "actual_card": 2899,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "e445fd636aeb951b221c3aae7b606201c3f67e66"
+    },
+    {
+      "node_id": 4,
+      "operator_type": "Aggregate",
+      "estimated_card": 1,
+      "actual_card": 2899,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "0e250a1971c2ad5f65e67385eef63f1e285114f3"
+    },
+    {
+      "node_id": 5,
+      "operator_type": "Seq Scan",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "info_type"
+      ],
+      "operator_signature": "eea304a47d302298a248e548523f5dc9d21bad87"
+    },
+    {
+      "node_id": 6,
+      "operator_type": "Incremental Sort",
+      "estimated_card": 6,
+      "actual_card": 11111,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "7bf739c0792f4bd5ba3c1ac3e1a1c0b84db78ef9"
+    },
+    {
+      "node_id": 7,
+      "operator_type": "Nested Loop",
+      "estimated_card": 6,
+      "actual_card": 11111,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "mi",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Aggregate",
+      "estimated_card": 1,
+      "actual_card": 2899,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "8882680e762d4a6b1fee4b103b42f710fa87a2d0"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Seq Scan",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "role_type_1"
+      ],
+      "operator_signature": "47c5e1848f3d2947d05c990e15d25fe4a310bc1f"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Incremental Sort",
+      "estimated_card": 2,
+      "actual_card": 4009,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "7bf739c0792f4bd5ba3c1ac3e1a1c0b84db78ef9"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 4009,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "movie_info_idx",
+        "name",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Nested Loop",
+      "estimated_card": 6,
+      "actual_card": 7375,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type_1",
+        "movie_info_idx",
+        "name",
+        "t"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 105,
+      "relation_aliases": [
+        "ci",
+        "info_type_1",
+        "movie_info_idx",
+        "name",
+        "t"
+      ],
+      "operator_signature": "d7ae43b122138ee593e984cd0b54eb13ccd0f391"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Gather Merge",
+      "estimated_card": 1,
+      "actual_card": 145,
+      "relation_aliases": [
+        "ci",
+        "name",
+        "t"
+      ],
+      "operator_signature": "e6b23f5bcc557b61a5370bc17e275ec079bf8c2f"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Sort",
+      "estimated_card": 1,
+      "actual_card": 144,
+      "relation_aliases": [
+        "ci",
+        "name",
+        "t"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 16,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 144,
+      "relation_aliases": [
+        "ci",
+        "name",
+        "t"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 17,
+      "operator_type": "Nested Loop",
+      "estimated_card": 4,
+      "actual_card": 270,
+      "relation_aliases": [
+        "ci",
+        "name"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 18,
+      "operator_type": "Seq Scan",
+      "estimated_card": 5,
+      "actual_card": 27,
+      "relation_aliases": [
+        "name"
+      ],
+      "operator_signature": "3e80bbb2c359c1acfa8bcd364c961fac89440238"
+    },
+    {
+      "node_id": 19,
+      "operator_type": "Index Scan",
+      "estimated_card": 46,
+      "actual_card": 270,
+      "relation_aliases": [
+        "ci"
+      ],
+      "operator_signature": "0fea580df9ae830cbbe0edbd8eb19c910f4f7bd3"
+    },
+    {
+      "node_id": 20,
+      "operator_type": "Index Scan",
+      "estimated_card": 1,
+      "actual_card": 269,
+      "relation_aliases": [
+        "t"
+      ],
+      "operator_signature": "1d76ee144830ea9ce3f107fed2dc77217fc26d57"
+    },
+    {
+      "node_id": 21,
+      "operator_type": "Aggregate",
+      "estimated_card": 105910,
+      "actual_card": 3177240,
+      "relation_aliases": [
+        "info_type_1",
+        "movie_info_idx"
+      ],
+      "operator_signature": "8511734047678aecdfaeef45c29b6ee9351bff8b"
+    },
+    {
+      "node_id": 22,
+      "operator_type": "Seq Scan",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "info_type_1"
+      ],
+      "operator_signature": "eea304a47d302298a248e548523f5dc9d21bad87"
+    },
+    {
+      "node_id": 23,
+      "operator_type": "Bitmap Heap Scan",
+      "estimated_card": 115003,
+      "actual_card": 33889,
+      "relation_aliases": [
+        "movie_info_idx"
+      ],
+      "operator_signature": "650a03a2763e7189ce8ca12fd8ddf4f7ab595db9"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Bitmap Index Scan",
+      "estimated_card": 345009,
+      "actual_card": 459925,
+      "relation_aliases": [],
+      "operator_signature": "388ec9d5b9302f14b0ea17554393a52d44de84a0"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Index Scan",
+      "estimated_card": 37,
+      "actual_card": 7350,
+      "relation_aliases": [
+        "ci_1"
+      ],
+      "operator_signature": "34b1c078010e4b531ff57b160a62966ce803f65d"
+    },
+    {
+      "node_id": 26,
+      "operator_type": "Index Scan",
+      "estimated_card": 1,
+      "actual_card": 7375,
+      "relation_aliases": [
+        "role_type"
+      ],
+      "operator_signature": "52c861dd0899e791b4368f9a92d9ba33d70383db"
+    },
+    {
+      "node_id": 27,
+      "operator_type": "Bitmap Heap Scan",
+      "estimated_card": 6,
+      "actual_card": 11596,
+      "relation_aliases": [
+        "mi"
+      ],
+      "operator_signature": "bcb2e2b6f190430c5bf5c38312ce11a97a4da2cf"
+    },
+    {
+      "node_id": 28,
+      "operator_type": "Bitmap Index Scan",
+      "estimated_card": 382,
+      "actual_card": 588497,
+      "relation_aliases": [],
+      "operator_signature": "8baa5479038a992d740be4d83fd79ad45b58abba"
+    }
+  ],
+  "run_times_ms": [
+    1350.6684303283691,
+    1479.752779006958,
+    1237.781047821045,
+    1310.15944480896,
+    1497.4017143249512,
+    1262.5010013580322
+  ],
+  "median_latency_ms": 1286.33,
+  "q_error_max": 4009.0,
+  "success": true,
+  "error": null
+}

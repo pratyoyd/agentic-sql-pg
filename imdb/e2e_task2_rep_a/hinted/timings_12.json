@@ -1,0 +1,144 @@
+{
+  "query_seq": 12,
+  "sql": "WITH vote_filter AS (\n    SELECT mii.movie_id\n    FROM movie_info_idx mii\n    WHERE mii.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n      AND mii.info::integer >= 5000\n),\npair_films AS (\n    SELECT\n        ci_dir.person_id AS director_id,\n        ci_act.person_id AS actor_id,\n        t.id AS movie_id\n    FROM cast_info ci_dir\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id <> ci_dir.person_id\n    JOIN title t ON t.id = ci_dir.movie_id\n    JOIN vote_filter vf ON vf.movie_id = t.id\n    WHERE ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n      AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n      AND t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\npair_totals AS (\n    SELECT director_id, actor_id, COUNT(DISTINCT movie_id) AS pair_total\n    FROM pair_films\n    GROUP BY director_id, actor_id\n),\npair_keyword_counts AS (\n    SELECT\n        pf.director_id,\n        pf.actor_id,\n        pt.pair_total,\n        mk.keyword_id,\n        COUNT(DISTINCT pf.movie_id) AS kw_film_count\n    FROM pair_films pf\n    JOIN pair_totals pt ON pt.director_id = pf.director_id AND pt.actor_id = pf.actor_id\n    JOIN movie_keyword mk ON mk.movie_id = pf.movie_id\n    GROUP BY pf.director_id, pf.actor_id, pt.pair_total, mk.keyword_id\n),\npair_top_keyword AS (\n    SELECT\n        director_id, actor_id, pair_total,\n        MAX(kw_film_count) AS top_kw_count\n    FROM pair_keyword_counts\n    GROUP BY director_id, actor_id, pair_total\n)\nSELECT\n    CASE WHEN pair_total = 1 THEN '1 film'\n         WHEN pair_total = 2 THEN '2 films'\n         WHEN pair_total BETWEEN 3 AND 5 THEN '3-5 films'\n         ELSE '6+ films'\n    END AS tier,\n    COUNT(*) AS pair_count,\n    ROUND(AVG(top_kw_count::float / pair_total)::numeric, 3) AS avg_top_keyword_concentration\nFROM pair_top_keyword\nGROUP BY tier\nORDER BY MIN(pair_total);",
+  "hint_block": "/*+ Rows(ci_act ci_dir mii role_type_1 t #257547) Rows(ci_act mii role_type_1 t #239181) Rows(ci_act mii t #543201) Rows(mii t #4425) */",
+  "hinted_sql": "/*+ Rows(ci_act ci_dir mii role_type_1 t #257547) Rows(ci_act mii role_type_1 t #239181) Rows(ci_act mii t #543201) Rows(mii t #4425) */\nWITH vote_filter AS (\n    SELECT mii.movie_id\n    FROM movie_info_idx mii\n    WHERE mii.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n      AND mii.info::integer >= 5000\n),\npair_films AS (\n    SELECT\n        ci_dir.person_id AS director_id,\n        ci_act.person_id AS actor_id,\n        t.id AS movie_id\n    FROM cast_info ci_dir\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id <> ci_dir.person_id\n    JOIN title t ON t.id = ci_dir.movie_id\n    JOIN vote_filter vf ON vf.movie_id = t.id\n    WHERE ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n      AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n      AND t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\npair_totals AS (\n    SELECT director_id, actor_id, COUNT(DISTINCT movie_id) AS pair_total\n    FROM pair_films\n    GROUP BY director_id, actor_id\n),\npair_keyword_counts AS (\n    SELECT\n        pf.director_id,\n        pf.actor_id,\n        pt.pair_total,\n        mk.keyword_id,\n        COUNT(DISTINCT pf.movie_id) AS kw_film_count\n    FROM pair_films pf\n    JOIN pair_totals pt ON pt.director_id = pf.director_id AND pt.actor_id = pf.actor_id\n    JOIN movie_keyword mk ON mk.movie_id = pf.movie_id\n    GROUP BY pf.director_id, pf.actor_id, pt.pair_total, mk.keyword_id\n),\npair_top_keyword AS (\n    SELECT\n        director_id, actor_id, pair_total,\n        MAX(kw_film_count) AS top_kw_count\n    FROM pair_keyword_counts\n    GROUP BY director_id, actor_id, pair_total\n)\nSELECT\n    CASE WHEN pair_total = 1 THEN '1 film'\n         WHEN pair_total = 2 THEN '2 films'\n         WHEN pair_total BETWEEN 3 AND 5 THEN '3-5 films'\n         ELSE '6+ films'\n    END AS tier,\n    COUNT(*) AS pair_count,\n    ROUND(AVG(top_kw_count::float / pair_total)::numeric, 3) AS avg_top_keyword_concentration\nFROM pair_top_keyword\nGROUP BY tier\nORDER BY MIN(pair_total);",
+  "hints_injected": 4,
+  "hints_applied": [
+    {
+      "signature": "98a3233ec84ee65dbf9df56833da7309141366b4",
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "actual_card": 257547,
+      "source_query_idx": 10,
+      "hint_string": "Rows(ci_act ci_dir mii role_type_1 t #257547)"
+    },
+    {
+      "signature": "ecd31782bd51fa9689766209a6700ca663ee781f",
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "actual_card": 239181,
+      "source_query_idx": 10,
+      "hint_string": "Rows(ci_act mii role_type_1 t #239181)"
+    },
+    {
+      "signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea",
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "actual_card": 543201,
+      "source_query_idx": 10,
+      "hint_string": "Rows(ci_act mii t #543201)"
+    },
+    {
+      "signature": "a7215a3711480e409e62057ed1617356561ad760",
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "actual_card": 4425,
+      "source_query_idx": 10,
+      "hint_string": "Rows(mii t #4425)"
+    }
+  ],
+  "hints_skipped": [],
+  "injection_overhead_ms": 15.16,
+  "plan_tree_summary": [
+    {
+      "node_id": 5,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "98a3233ec84ee65dbf9df56833da7309141366b4"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Hash Join",
+      "estimated_card": 37722,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "ecd31782bd51fa9689766209a6700ca663ee781f"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 226334,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 1844,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Nested Loop",
+      "estimated_card": 5240082,
+      "actual_card": 29336460,
+      "relation_aliases": [
+        "mk",
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "30960eecd8b56f1c8d7724577e46d8d0a104f497"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Merge Join",
+      "estimated_card": 114233,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "c0d8b44a456e4aa2cc6a5f34becf67a5bb864a5f"
+    }
+  ],
+  "run_times_ms": [
+    38867.57040023804,
+    39235.074520111084,
+    37610.06999015808,
+    37746.12736701965,
+    38600.027561187744,
+    37644.532918930054
+  ],
+  "median_latency_ms": 37695.33,
+  "q_error_max": 6.34,
+  "success": true,
+  "error": null
+}

@@ -1,0 +1,25 @@
+{
+  "query_seq": 5,
+  "sql": "WITH pair_movies AS (\n    SELECT kp.director, kp.actor, t.id AS movie_id\n    FROM (VALUES\n        ('Jordan, Neil', 'Rea, Stephen'),\n        ('Rodriguez, Robert', 'Trejo, Danny'),\n        ('Marshall, Garry', 'Elizondo, Hector'),\n        ('Lee, Spike', 'Turturro, John')\n    ) AS kp(director, actor)\n    JOIN name nd ON nd.name = kp.director\n    JOIN name na ON na.name = kp.actor\n    JOIN cast_info ci_dir ON ci_dir.person_id = nd.id\n        AND ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id = na.id\n        AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n    JOIN title t ON t.id = ci_dir.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\nkeyword_counts AS (\n    SELECT pm.director, pm.actor, k.keyword, COUNT(*) AS film_count\n    FROM pair_movies pm\n    JOIN movie_keyword mk ON mk.movie_id = pm.movie_id\n    JOIN keyword k ON k.id = mk.keyword_id\n    GROUP BY pm.director, pm.actor, k.keyword\n    HAVING COUNT(*) >= 3\n)\nSELECT director, actor, keyword, film_count\nFROM keyword_counts\nORDER BY director, actor, film_count DESC\nLIMIT 50;",
+  "hint_block": "/*+ Rows(\"*VALUES*\" ci_act ci_dir na nd role_type t #44) Rows(\"*VALUES*\" ci_act ci_dir nd role_type t #4452) Rows(\"*VALUES*\" ci_act ci_dir nd t #9383) Rows(\"*VALUES*\" ci_dir nd t #73) Rows(\"*VALUES*\" ci_dir nd #178) */",
+  "baseline_times": [
+    492.6431179046631,
+    436.6750717163086,
+    368.46232414245605,
+    408.13755989074707,
+    373.05593490600586,
+    393.4783935546875
+  ],
+  "baseline_median": 383.27,
+  "hinted_times": [
+    473.50192070007324,
+    462.2969627380371,
+    463.75441551208496,
+    492.3887252807617,
+    617.6707744598389,
+    477.6041507720947
+  ],
+  "hinted_median": 485.0,
+  "delta_ms": 101.73,
+  "delta_pct": 26.54
+}

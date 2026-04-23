@@ -1,0 +1,403 @@
+{
+  "query_seq": 7,
+  "sql": "WITH director_role AS (SELECT id FROM role_type WHERE role = 'director'),\nactor_roles AS (SELECT id FROM role_type WHERE role IN ('actor','actress')),\nmovies AS (SELECT id FROM title WHERE kind_id = 1 AND production_year BETWEEN 1990 AND 2010),\ndirs AS (\n  SELECT ci.person_id AS director_id, ci.movie_id\n  FROM cast_info ci JOIN director_role dr ON ci.role_id = dr.id\n  WHERE ci.movie_id IN (SELECT id FROM movies)\n),\nacts AS (\n  SELECT ci.person_id AS actor_id, ci.movie_id\n  FROM cast_info ci JOIN actor_roles ar ON ci.role_id = ar.id\n  WHERE ci.movie_id IN (SELECT id FROM movies)\n),\npair_films AS (\n  SELECT d.director_id, a.actor_id, d.movie_id,\n         COUNT(*) OVER (PARTITION BY d.director_id, a.actor_id) AS film_count\n  FROM dirs d JOIN acts a ON d.movie_id = a.movie_id\n  WHERE d.director_id <> a.actor_id\n),\npair_genre_counts AS (\n  SELECT pf.director_id, pf.actor_id, pf.film_count,\n         mi.info AS genre,\n         COUNT(DISTINCT pf.movie_id) AS genre_films\n  FROM pair_films pf\n  JOIN movie_info mi ON mi.movie_id = pf.movie_id\n    AND mi.info_type_id = (SELECT id FROM info_type WHERE info = 'genres')\n  WHERE pf.film_count >= 1\n  GROUP BY pf.director_id, pf.actor_id, pf.film_count, mi.info\n),\ntop_genre_per_pair AS (\n  SELECT director_id, actor_id, film_count,\n         MAX(genre_films) AS top_genre_films\n  FROM pair_genre_counts\n  GROUP BY director_id, actor_id, film_count\n),\nbucketed AS (\n  SELECT\n    CASE WHEN film_count = 1 THEN '1_oneoff'\n         WHEN film_count = 2 THEN '2_twofilm'\n         WHEN film_count BETWEEN 3 AND 5 THEN '3-5_repeat'\n         WHEN film_count BETWEEN 6 AND 10 THEN '6-10_frequent'\n         WHEN film_count BETWEEN 11 AND 20 THEN '11-20_prolific'\n         ELSE '21+_extreme'\n    END AS bucket,\n    COUNT(*) AS pair_count,\n    AVG(top_genre_films::float / film_count) AS avg_dominant_genre_fraction\n  FROM top_genre_per_pair\n  GROUP BY bucket\n)\nSELECT bucket, pair_count, ROUND(avg_dominant_genre_fraction::numeric, 3) AS avg_dominant_genre_share\nFROM bucketed\nORDER BY bucket;",
+  "plan_tree_summary": [
+    {
+      "node_id": 0,
+      "operator_type": "Subquery Scan",
+      "estimated_card": 200,
+      "actual_card": 6,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1",
+        "title"
+      ],
+      "operator_signature": "e445fd636aeb951b221c3aae7b606201c3f67e66"
+    },
+    {
+      "node_id": 1,
+      "operator_type": "Bitmap Heap Scan",
+      "estimated_card": 367765,
+      "actual_card": 241754,
+      "relation_aliases": [
+        "title"
+      ],
+      "operator_signature": "c9cfff7a06786e272a9584b9ee48feb564f44a32"
+    },
+    {
+      "node_id": 2,
+      "operator_type": "Bitmap Index Scan",
+      "estimated_card": 672758,
+      "actual_card": 662825,
+      "relation_aliases": [],
+      "operator_signature": "22323d099c8ec01257cdb8eed5f1019644035853"
+    },
+    {
+      "node_id": 3,
+      "operator_type": "Aggregate",
+      "estimated_card": 200,
+      "actual_card": 6,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "b6459025b401d49070c57b019c1d7fcefb0b19e0"
+    },
+    {
+      "node_id": 4,
+      "operator_type": "Sort",
+      "estimated_card": 50980,
+      "actual_card": 2147080,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 5,
+      "operator_type": "Subquery Scan",
+      "estimated_card": 50980,
+      "actual_card": 2147080,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "e445fd636aeb951b221c3aae7b606201c3f67e66"
+    },
+    {
+      "node_id": 6,
+      "operator_type": "Aggregate",
+      "estimated_card": 50980,
+      "actual_card": 2147080,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "d60ae4854789c28f7f5df00b9680a316a2318fd9"
+    },
+    {
+      "node_id": 7,
+      "operator_type": "Aggregate",
+      "estimated_card": 509797,
+      "actual_card": 4459917,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "info_type",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "212db80737a25a509bfe7588e44b27ac7ba83f1c"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Seq Scan",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "info_type"
+      ],
+      "operator_signature": "eea304a47d302298a248e548523f5dc9d21bad87"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Sort",
+      "estimated_card": 509797,
+      "actual_card": 4725013,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 509797,
+      "actual_card": 4725013,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "mi",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "e95fd0fb7750ad6746fa43359bfdaf20409ee72c"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Gather",
+      "estimated_card": 196900,
+      "actual_card": 1533909,
+      "relation_aliases": [
+        "mi"
+      ],
+      "operator_signature": "d3ea359367a876657cda2f5902311c35a0e16976"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Bitmap Heap Scan",
+      "estimated_card": 82042,
+      "actual_card": 1533909,
+      "relation_aliases": [
+        "mi"
+      ],
+      "operator_signature": "3077d8aae3cd5f456c2d710f294ec7210e0a22b4"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Bitmap Index Scan",
+      "estimated_card": 196900,
+      "actual_card": 1533909,
+      "relation_aliases": [],
+      "operator_signature": "388ec9d5b9302f14b0ea17554393a52d44de84a0"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Hash",
+      "estimated_card": 2559063,
+      "actual_card": 2436083,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Subquery Scan",
+      "estimated_card": 2559063,
+      "actual_card": 2436083,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "e445fd636aeb951b221c3aae7b606201c3f67e66"
+    },
+    {
+      "node_id": 16,
+      "operator_type": "WindowAgg",
+      "estimated_card": 2559063,
+      "actual_card": 2436083,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "158889157894e28029215d5f4c6447297eb18934"
+    },
+    {
+      "node_id": 17,
+      "operator_type": "Sort",
+      "estimated_card": 2559063,
+      "actual_card": 2436083,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "0d43b00b2bd74b2f9ad41224fae1824d4f0c92cc"
+    },
+    {
+      "node_id": 18,
+      "operator_type": "Hash Join",
+      "estimated_card": 2559063,
+      "actual_card": 2436083,
+      "relation_aliases": [
+        "ci",
+        "ci_1",
+        "role_type",
+        "role_type_1"
+      ],
+      "operator_signature": "80247551c614f42db322b56aeaac6256f6025583"
+    },
+    {
+      "node_id": 19,
+      "operator_type": "Hash Join",
+      "estimated_card": 2249179,
+      "actual_card": 2229373,
+      "relation_aliases": [
+        "ci_1",
+        "role_type_1"
+      ],
+      "operator_signature": "d2de2765e7dc06014c37ca6c9c53a79d4fde3a29"
+    },
+    {
+      "node_id": 20,
+      "operator_type": "Nested Loop",
+      "estimated_card": 13495075,
+      "actual_card": 4561911,
+      "relation_aliases": [
+        "ci_1"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 21,
+      "operator_type": "Aggregate",
+      "estimated_card": 200,
+      "actual_card": 241754,
+      "relation_aliases": [],
+      "operator_signature": "dfd45b65ea016d7b9ee86df2431710d0bd6e4a09"
+    },
+    {
+      "node_id": 22,
+      "operator_type": "CTE Scan",
+      "estimated_card": 367765,
+      "actual_card": 241754,
+      "relation_aliases": [],
+      "operator_signature": "6b89f9e50e12b05cb08358890185a28390e386ad"
+    },
+    {
+      "node_id": 23,
+      "operator_type": "Index Scan",
+      "estimated_card": 37,
+      "actual_card": 4593326,
+      "relation_aliases": [
+        "ci_1"
+      ],
+      "operator_signature": "b1b6c9346e8b958364d3c011c1a0c811327b4841"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Hash",
+      "estimated_card": 2,
+      "actual_card": 2,
+      "relation_aliases": [
+        "role_type_1"
+      ],
+      "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Seq Scan",
+      "estimated_card": 2,
+      "actual_card": 2,
+      "relation_aliases": [
+        "role_type_1"
+      ],
+      "operator_signature": "1dde076b670df0a10ad1381c17adaafa80d5ec22"
+    },
+    {
+      "node_id": 26,
+      "operator_type": "Hash",
+      "estimated_card": 1124590,
+      "actual_card": 259580,
+      "relation_aliases": [
+        "ci",
+        "role_type"
+      ],
+      "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222"
+    },
+    {
+      "node_id": 27,
+      "operator_type": "Hash Join",
+      "estimated_card": 1124590,
+      "actual_card": 259580,
+      "relation_aliases": [
+        "ci",
+        "role_type"
+      ],
+      "operator_signature": "8a683be5e7bb95d035085bc6d1d0d18f8b80fe1b"
+    },
+    {
+      "node_id": 28,
+      "operator_type": "Nested Loop",
+      "estimated_card": 13495075,
+      "actual_card": 4561911,
+      "relation_aliases": [
+        "ci"
+      ],
+      "operator_signature": "8d41482b988b72be1aea13b7328bb139e8b9c9c2"
+    },
+    {
+      "node_id": 29,
+      "operator_type": "Aggregate",
+      "estimated_card": 200,
+      "actual_card": 241754,
+      "relation_aliases": [],
+      "operator_signature": "e76a1de5661597066c74a088e2acbd87b5b10b34"
+    },
+    {
+      "node_id": 30,
+      "operator_type": "CTE Scan",
+      "estimated_card": 367765,
+      "actual_card": 241754,
+      "relation_aliases": [],
+      "operator_signature": "6b89f9e50e12b05cb08358890185a28390e386ad"
+    },
+    {
+      "node_id": 31,
+      "operator_type": "Index Scan",
+      "estimated_card": 37,
+      "actual_card": 4593326,
+      "relation_aliases": [
+        "ci"
+      ],
+      "operator_signature": "615ad5f18e01fd044e6ace95e33a9fdf6616aa36"
+    },
+    {
+      "node_id": 32,
+      "operator_type": "Hash",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "role_type"
+      ],
+      "operator_signature": "8f2bd2565687479581fe1683e1dcbc463b5ef222"
+    },
+    {
+      "node_id": 33,
+      "operator_type": "Seq Scan",
+      "estimated_card": 1,
+      "actual_card": 1,
+      "relation_aliases": [
+        "role_type"
+      ],
+      "operator_signature": "47c5e1848f3d2947d05c990e15d25fe4a310bc1f"
+    }
+  ],
+  "run_times_ms": [
+    94694.04482841492,
+    95128.91960144043,
+    108944.44608688354,
+    107313.39454650879,
+    90209.48028564453,
+    90787.49966621399
+  ],
+  "median_latency_ms": 99050.45,
+  "q_error_max": 9.27,
+  "success": true,
+  "error": null
+}

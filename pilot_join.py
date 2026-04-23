@@ -261,10 +261,12 @@ def run_hinted(trace: list[dict]) -> list[dict]:
 def main():
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-    trace_path = TRACE_DIR / "flag-18_rep_a.jsonl"
+    import sys
+    task = sys.argv[1] if len(sys.argv) > 1 else "flag-18"
+    trace_path = TRACE_DIR / f"{task}_rep_a.jsonl"
     trace = load_trace(trace_path)
     successful = [e for e in trace if e.get("success", True)]
-    print(f"flag-18_rep_a: {len(successful)} successful queries")
+    print(f"{task}_rep_a: {len(successful)} successful queries")
 
     print("\nRunning baseline...")
     baseline = run_baseline(successful)

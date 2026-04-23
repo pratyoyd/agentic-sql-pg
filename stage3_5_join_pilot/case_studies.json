@@ -1,241 +1,169 @@
 [
   {
-    "query_seq": 1,
-    "sql": "SELECT\n    CASE\n        WHEN days_diff < 0 THEN 'Before start (pre-provisioned)'\n        WHEN days_diff = 0 THEN 'Same day'\n        WHEN days_diff BETWEEN 1 AND 7 THEN '1-7 days after'\n        WHEN days_diff BETWEEN 8 AND 30 THEN '8-30 days after'\n        WHEN days_diff BETWEEN 31 AND 180 THEN '1-6 months after'\n        ELSE 'More than 6 months after'\n    END AS procurement_timing,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(warranty_duration_days)) AS avg_warranty_days,\n    ROUND(MIN(warranty_duration_days)) AS min_warranty_days,\n    ROUND(MAX(warranty_duration_days)) AS max_warranty_days\nFROM (\n    SELECT\n        EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_diff,\n        EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)) AS warranty_duration_days\n    FROM flag_18 a\n    JOIN flag_18_sysuser u ON a.assigned_to = u.name\n) sub\nGROUP BY procurement_timing\nORDER BY asset_count DESC;",
-    "hint_block": "/*+ Rows(a u #999999) */",
+    "query_seq": 2,
+    "sql": "SELECT \n    CASE \n        WHEN u.start_date IS NULL THEN 'Unknown'\n        WHEN EXTRACT(YEAR FROM AGE(e.opened_at, u.start_date)) < 1 THEN '< 1 year'\n        ELSE '1+ years'\n    END AS tenure_group,\n    e.category,\n    COUNT(*) AS total,\n    SUM(CASE WHEN e.state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN e.state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct\nFROM flag_21 e\nJOIN flag_21_sysuser u ON e.user = u.name\nGROUP BY tenure_group, e.category\nORDER BY tenure_group, decline_rate_pct DESC;",
+    "hint_block": "/*+ Rows(e u #999999) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "0ed20f4d42f7837ca2b073c0ed919531dd22c30e",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
         "actual_card": 999999,
         "source_query_idx": 0,
-        "hint_string": "Rows(a u #999999)"
+        "hint_string": "Rows(e u #999999)"
       }
     ],
-    "baseline_plan": "Sort  (est=91500 actual=3 time=1275.516ms)\n  Aggregate [Sorted]  (est=91500 actual=3 time=1275.466ms)\n    Gather Merge  (est=183000 actual=9 time=1275.35ms)\n      Aggregate [Sorted]  (est=91500 actual=3 time=1054.587ms)\n        Sort  (est=416674 actual=333333 time=819.453ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=589.229ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=110.077ms)\n            Hash  (est=183 actual=183 time=29.126ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=29.048ms)",
-    "hinted_plan": "Sort  (est=91500 actual=3 time=1009.906ms)\n  Aggregate [Sorted]  (est=91500 actual=3 time=1009.872ms)\n    Gather Merge  (est=183000 actual=9 time=1009.716ms)\n      Aggregate [Sorted]  (est=91500 actual=3 time=789.102ms)\n        Sort  (est=416666 actual=333333 time=553.799ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=333333 time=381.542ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=63.707ms)\n            Hash  (est=183 actual=183 time=28.926ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=28.85ms)",
-    "baseline_latency": 1104.845,
-    "hinted_latency": 1031.296,
-    "delta_pct": -6.66,
-    "plan_changed": false,
-    "diffs": []
-  },
-  {
-    "query_seq": 3,
-    "sql": "SELECT\n    CASE\n        WHEN warranty_at_start < 0 THEN 'Expired before start'\n        WHEN warranty_at_start BETWEEN 0 AND 90 THEN '0-90 days warranty at start'\n        WHEN warranty_at_start BETWEEN 91 AND 180 THEN '91-180 days warranty at start'\n        WHEN warranty_at_start BETWEEN 181 AND 365 THEN '6-12 months warranty at start'\n        ELSE 'More than 1 year warranty at start'\n    END AS warranty_coverage_at_onboarding,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(days_diff)) AS avg_days_purchased_before_start,\n    a.department\nFROM (\n    SELECT\n        EXTRACT(DAY FROM (a.purchased_on - u.start_date)) AS days_diff,\n        EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)) AS warranty_at_start,\n        u.department\n    FROM flag_18 a\n    JOIN flag_18_sysuser u ON a.assigned_to = u.name\n) a\nGROUP BY warranty_coverage_at_onboarding, department\nORDER BY department, asset_count DESC;",
-    "hint_block": "/*+ Rows(a u #999999) */",
-    "hints": [
-      {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
-        "relation_aliases": [
-          "a",
-          "u"
-        ],
-        "actual_card": 999999,
-        "source_query_idx": 1,
-        "hint_string": "Rows(a u #999999)"
-      }
-    ],
-    "baseline_plan": "Sort  (est=91500 actual=25 time=1435.684ms)\n  Aggregate [Sorted]  (est=91500 actual=25 time=1435.624ms)\n    Gather Merge  (est=183000 actual=75 time=1435.445ms)\n      Aggregate [Sorted]  (est=91500 actual=25 time=1160.076ms)\n        Sort  (est=416674 actual=333333 time=1026.987ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=704.122ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=78.67ms)\n            Hash  (est=183 actual=183 time=26.467ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=26.396ms)",
-    "hinted_plan": "Sort  (est=91500 actual=25 time=1636.282ms)\n  Aggregate [Sorted]  (est=91500 actual=25 time=1636.223ms)\n    Gather Merge  (est=183000 actual=75 time=1635.952ms)\n      Aggregate [Sorted]  (est=91500 actual=25 time=1321.956ms)\n        Sort  (est=416666 actual=333333 time=1182.604ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=333333 time=816.675ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=80.545ms)\n            Hash  (est=183 actual=183 time=27.165ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=27.088ms)",
-    "baseline_latency": 1522.671,
-    "hinted_latency": 1489.336,
-    "delta_pct": -2.19,
-    "plan_changed": false,
-    "diffs": []
-  },
-  {
-    "query_seq": 4,
-    "sql": "SELECT\n    a.model_category,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_days,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_asset_after_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_days_at_start,\n    ROUND(AVG(a.cost)) AS avg_cost\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY a.model_category\nORDER BY avg_warranty_days_at_start ASC;",
-    "hint_block": "/*+ Rows(a u #999999) */",
-    "hints": [
-      {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
-        "relation_aliases": [
-          "a",
-          "u"
-        ],
-        "actual_card": 999999,
-        "source_query_idx": 3,
-        "hint_string": "Rows(a u #999999)"
-      }
-    ],
-    "baseline_plan": "Sort  (est=7 actual=7 time=584.323ms)\n  Aggregate [Sorted]  (est=7 actual=7 time=584.301ms)\n    Gather Merge  (est=14 actual=21 time=584.161ms)\n      Sort  (est=7 actual=7 time=551.003ms)\n        Aggregate [Hashed]  (est=7 actual=7 time=550.936ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=241.406ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=74.862ms)\n            Hash  (est=183 actual=183 time=0.173ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.092ms)",
-    "hinted_plan": "Sort  (est=7 actual=7 time=623.712ms)\n  Aggregate [Sorted]  (est=7 actual=7 time=623.69ms)\n    Gather Merge  (est=14 actual=21 time=623.598ms)\n      Sort  (est=7 actual=7 time=590.854ms)\n        Aggregate [Hashed]  (est=7 actual=7 time=590.778ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=333333 time=255.647ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=66.778ms)\n            Hash  (est=183 actual=183 time=0.136ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.067ms)",
-    "baseline_latency": 505.183,
-    "hinted_latency": 540.873,
-    "delta_pct": 7.06,
+    "baseline_plan": "Incremental Sort  (est=104000 actual=11 time=763.731ms)\n  Aggregate [Sorted]  (est=104000 actual=11 time=763.667ms)\n    Gather Merge  (est=208000 actual=33 time=763.592ms)\n      Aggregate [Sorted]  (est=104000 actual=11 time=659.608ms)\n        Sort  (est=416668 actual=333333 time=589.638ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=416668 actual=333333 time=344.054ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=81.048ms)\n            Hash  (est=54 actual=54 time=21.973ms)\n              Seq Scan on flag_21_sysuser (u)  (est=54 actual=54 time=21.927ms)",
+    "hinted_plan": "Incremental Sort  (est=104000 actual=11 time=884.186ms)\n  Aggregate [Sorted]  (est=104000 actual=11 time=884.128ms)\n    Gather Merge  (est=208000 actual=33 time=884.051ms)\n      Aggregate [Sorted]  (est=104000 actual=11 time=744.625ms)\n        Sort  (est=416666 actual=333333 time=674.303ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=416666 actual=333333 time=393.011ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=71.468ms)\n            Hash  (est=54 actual=54 time=21.189ms)\n              Seq Scan on flag_21_sysuser (u)  (est=54 actual=54 time=21.15ms)",
+    "baseline_latency": 760.06,
+    "hinted_latency": 756.28,
+    "delta_pct": -0.5,
     "plan_changed": false,
     "diffs": []
   },
   {
     "query_seq": 5,
-    "sql": "SELECT\n    EXTRACT(MONTH FROM a.purchased_on) AS purchase_month,\n    TO_CHAR(a.purchased_on, 'Mon') AS month_name,\n    COUNT(*) AS assets_purchased,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_before_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_duration\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY EXTRACT(MONTH FROM a.purchased_on), TO_CHAR(a.purchased_on, 'Mon')\nORDER BY EXTRACT(MONTH FROM a.purchased_on);",
-    "hint_block": "/*+ Rows(a u #999999) */",
+    "sql": "SELECT \n    amount_bucket,\n    tenure_group,\n    COUNT(*) AS total,\n    SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct\nFROM (\n    SELECT \n        e.state AS e_state,\n        CASE \n            WHEN e.amount < 1000 THEN '< $1k'\n            WHEN e.amount < 2000 THEN '$1k-2k'\n            WHEN e.amount < 3000 THEN '$2k-3k'\n            WHEN e.amount < 5000 THEN '$3k-5k'\n            ELSE '$5k+'\n        END AS amount_bucket,\n        CASE \n            WHEN EXTRACT(YEAR FROM AGE(e.opened_at, u.start_date)) < 1 THEN '< 1 year'\n            ELSE '1+ years'\n        END AS tenure_group\n    FROM flag_21 e\n    JOIN flag_21_sysuser u ON e.user = u.name\n    WHERE u.start_date IS NOT NULL\n) sub\nGROUP BY amount_bucket, tenure_group\nORDER BY tenure_group,\n    CASE amount_bucket\n        WHEN '< $1k' THEN 1\n        WHEN '$1k-2k' THEN 2\n        WHEN '$2k-3k' THEN 3\n        WHEN '$3k-5k' THEN 4\n        ELSE 5\n    END;",
+    "hint_block": "/*+ Rows(e u #999999) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "0ed20f4d42f7837ca2b073c0ed919531dd22c30e",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
         "actual_card": 999999,
-        "source_query_idx": 4,
-        "hint_string": "Rows(a u #999999)"
+        "source_query_idx": 1,
+        "hint_string": "Rows(e u #999999)"
       }
     ],
-    "baseline_plan": "Aggregate [Sorted]  (est=500 actual=12 time=834.18ms)\n  Gather Merge  (est=1000 actual=36 time=834.057ms)\n    Sort  (est=500 actual=12 time=806.481ms)\n      Aggregate [Hashed]  (est=500 actual=12 time=806.391ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=419.097ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=75.125ms)\n          Hash  (est=183 actual=183 time=0.12ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.064ms)",
-    "hinted_plan": "Aggregate [Sorted]  (est=500 actual=12 time=856.57ms)\n  Gather Merge  (est=1000 actual=36 time=856.42ms)\n    Sort  (est=500 actual=12 time=825.374ms)\n      Aggregate [Hashed]  (est=500 actual=12 time=825.291ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=333333 time=426.253ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=64.553ms)\n          Hash  (est=183 actual=183 time=0.132ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.072ms)",
-    "baseline_latency": 841.685,
-    "hinted_latency": 772.55,
-    "delta_pct": -8.21,
-    "plan_changed": false,
-    "diffs": []
-  },
-  {
-    "query_seq": 6,
-    "sql": "SELECT\n    EXTRACT(MONTH FROM u.start_date) AS start_month,\n    TO_CHAR(u.start_date, 'Mon') AS month_name,\n    COUNT(DISTINCT u.name) AS employees_starting,\n    COUNT(a.asset_tag) AS assets_assigned,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_purchased_vs_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_remaining_at_start\nFROM flag_18_sysuser u\nLEFT JOIN flag_18 a ON a.assigned_to = u.name\nGROUP BY EXTRACT(MONTH FROM u.start_date), TO_CHAR(u.start_date, 'Mon')\nORDER BY EXTRACT(MONTH FROM u.start_date);",
-    "hint_block": "/*+ Rows(a u #999999) */",
-    "hints": [
-      {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
-        "relation_aliases": [
-          "a",
-          "u"
-        ],
-        "actual_card": 999999,
-        "source_query_idx": 5,
-        "hint_string": "Rows(a u #999999)"
-      }
-    ],
-    "baseline_plan": "Aggregate [Sorted]  (est=183 actual=11 time=4268.817ms)\n  Sort  (est=1000017 actual=1000000 time=3587.532ms)\n    Hash Join [Right]  Hash Cond: (a.assigned_to = u.name)  (est=1000017 actual=1000000 time=1144.964ms)\n      Seq Scan on flag_18 (a)  (est=1000017 actual=1000000 time=213.368ms)\n      Hash  (est=183 actual=183 time=23.836ms)\n        Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=23.746ms)",
-    "hinted_plan": "Aggregate [Sorted]  (est=183 actual=11 time=4205.09ms)\n  Sort  (est=1000017 actual=1000000 time=3528.878ms)\n    Hash Join [Right]  Hash Cond: (a.assigned_to = u.name)  (est=1000017 actual=1000000 time=1092.214ms)\n      Seq Scan on flag_18 (a)  (est=1000017 actual=1000000 time=168.51ms)\n      Hash  (est=183 actual=183 time=23.234ms)\n        Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=23.176ms)",
-    "baseline_latency": 4031.834,
-    "hinted_latency": 3967.334,
-    "delta_pct": -1.6,
+    "baseline_plan": "Sort  (est=962966 actual=9 time=1094.244ms)\n  Aggregate [Sorted]  (est=962966 actual=9 time=1094.217ms)\n    Gather Merge  (est=802472 actual=27 time=1094.118ms)\n      Aggregate [Sorted]  (est=401236 actual=9 time=852.34ms)\n        Sort  (est=401236 actual=320667 time=776.839ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=401236 actual=320667 time=479.094ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=97.989ms)\n            Hash  (est=52 actual=52 time=45.62ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=45.572ms)",
+    "hinted_plan": "Sort  (est=999999 actual=9 time=1338.88ms)\n  Aggregate [Sorted]  (est=999999 actual=9 time=1338.854ms)\n    Gather Merge  (est=833332 actual=27 time=1338.762ms)\n      Aggregate [Sorted]  (est=416666 actual=9 time=1172.573ms)\n        Sort  (est=416666 actual=320667 time=1115.079ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=416666 actual=320667 time=866.968ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=61.308ms)\n            Hash  (est=52 actual=52 time=580.003ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=579.96ms)",
+    "baseline_latency": 965.063,
+    "hinted_latency": 1371.587,
+    "delta_pct": 42.12,
     "plan_changed": false,
     "diffs": []
   },
   {
     "query_seq": 7,
-    "sql": "SELECT\n    DATE_TRUNC('month', a.warranty_expiration) AS expiry_month,\n    COUNT(*) AS warranties_expiring,\n    ROUND(AVG(a.cost)) AS avg_asset_cost,\n    SUM(a.cost) AS total_replacement_cost_estimate,\n    array_agg(DISTINCT a.model_category) AS categories_expiring\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY DATE_TRUNC('month', a.warranty_expiration)\nORDER BY expiry_month;",
-    "hint_block": "/*+ Rows(a u #1000000) */",
+    "sql": "SELECT \n    dept,\n    category,\n    COUNT(*) AS total,\n    SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct,\n    ROUND(AVG(amount)) AS avg_amount\nFROM (\n    SELECT \n        e.state AS e_state,\n        e.department AS dept,\n        e.category AS category,\n        e.amount AS amount,\n        EXTRACT(YEAR FROM AGE(e.opened_at, u.start_date)) AS tenure_years\n    FROM flag_21 e\n    JOIN flag_21_sysuser u ON e.user = u.name\n    WHERE u.start_date IS NOT NULL\n) sub\nWHERE tenure_years < 1\n  AND dept IN ('Development', 'Finance', 'HR')\nGROUP BY dept, category\nORDER BY dept, decline_rate_pct DESC;",
+    "hint_block": "/*+ Rows(e u #297999) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "2487dc8a3666e85ea74719f37115065d7f8e6c0c",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
-        "actual_card": 1000000,
-        "source_query_idx": 6,
-        "hint_string": "Rows(a u #1000000)"
+        "actual_card": 297999,
+        "source_query_idx": 2,
+        "hint_string": "Rows(e u #297999)"
       }
     ],
-    "baseline_plan": "Aggregate [Sorted]  (est=500 actual=42 time=1673.183ms)\n  Sort  (est=1000017 actual=1000000 time=1487.409ms)\n    Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=1000017 actual=1000000 time=726.773ms)\n      Seq Scan on flag_18 (a)  (est=1000017 actual=1000000 time=180.196ms)\n      Hash  (est=183 actual=183 time=19.171ms)\n        Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=19.114ms)",
-    "hinted_plan": "Aggregate [Sorted]  (est=500 actual=42 time=1679.819ms)\n  Sort  (est=1000000 actual=1000000 time=1491.843ms)\n    Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=1000000 actual=1000000 time=710.352ms)\n      Seq Scan on flag_18 (a)  (est=1000017 actual=1000000 time=142.609ms)\n      Hash  (est=183 actual=183 time=18.642ms)\n        Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=18.587ms)",
-    "baseline_latency": 1395.764,
-    "hinted_latency": 1392.033,
-    "delta_pct": -0.27,
+    "baseline_plan": "Incremental Sort  (est=28 actual=9 time=189.557ms)\n  Aggregate [Sorted]  (est=28 actual=9 time=189.536ms)\n    Gather Merge  (est=56 actual=27 time=189.498ms)\n      Sort  (est=28 actual=9 time=159.322ms)\n        Aggregate [Hashed]  (est=28 actual=9 time=159.257ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: (EXTRACT(year FROM age(e.opened_at, u.start_date)) < '1'::numeric)  (est=12995 actual=33333 time=143.18ms)\n            Seq Scan on flag_21 (e)  Filter: (department = ANY ('{Development,Finance,HR}'::text[]))  (est=40486 actual=33333 time=113.497ms)\n            Hash  (est=52 actual=52 time=0.08ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.044ms)",
+    "hinted_plan": "Incremental Sort  (est=28 actual=9 time=207.151ms)\n  Aggregate [Sorted]  (est=28 actual=9 time=207.108ms)\n    Gather Merge  (est=56 actual=27 time=207.063ms)\n      Sort  (est=28 actual=9 time=171.504ms)\n        Aggregate [Hashed]  (est=28 actual=9 time=171.436ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: (EXTRACT(year FROM age(e.opened_at, u.start_date)) < '1'::numeric)  (est=124166 actual=33333 time=153.382ms)\n            Seq Scan on flag_21 (e)  Filter: (department = ANY ('{Development,Finance,HR}'::text[]))  (est=40486 actual=33333 time=120.035ms)\n            Hash  (est=52 actual=52 time=0.068ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.038ms)",
+    "baseline_latency": 183.97,
+    "hinted_latency": 181.667,
+    "delta_pct": -1.25,
     "plan_changed": false,
     "diffs": []
   },
   {
-    "query_seq": 8,
-    "sql": "SELECT\n    CASE\n        WHEN a.cost < 500 THEN 'Under $500'\n        WHEN a.cost BETWEEN 500 AND 1999 THEN '$500-$1,999'\n        WHEN a.cost BETWEEN 2000 AND 4999 THEN '$2,000-$4,999'\n        WHEN a.cost BETWEEN 5000 AND 9999 THEN '$5,000-$9,999'\n        ELSE '$10,000+'\n    END AS cost_tier,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS avg_warranty_days,\n    ROUND(STDDEV(EXTRACT(DAY FROM (a.warranty_expiration - a.purchased_on)))) AS stddev_warranty_days,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    a.model_category\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY cost_tier, a.model_category\nORDER BY MIN(a.cost), a.model_category;",
-    "hint_block": "/*+ Rows(a u #1000000) */",
+    "query_seq": 15,
+    "sql": "SELECT \n    ci,\n    COUNT(*) AS total,\n    SUM(CASE WHEN state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct\nFROM (\n    SELECT \n        e.ci,\n        e.state,\n        FLOOR(EXTRACT(EPOCH FROM (e.opened_at - u.start_date)) / 86400.0)::int AS days_since_hire\n    FROM flag_21 e\n    JOIN flag_21_sysuser u ON e.user = u.name\n    WHERE u.start_date IS NOT NULL\n      AND e.opened_at >= u.start_date\n) sub\nWHERE days_since_hire BETWEEN 0 AND 4\nGROUP BY ci\nHAVING COUNT(*) >= 2\nORDER BY decline_rate_pct DESC, total DESC\nLIMIT 20;",
+    "hint_block": "/*+ Rows(e u #110001) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "eba5c7e8acb4fa63672dfb980fd56e1ea00201b5",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
-        "actual_card": 1000000,
-        "source_query_idx": 7,
-        "hint_string": "Rows(a u #1000000)"
+        "actual_card": 110001,
+        "source_query_idx": 9,
+        "hint_string": "Rows(e u #110001)"
       }
     ],
-    "baseline_plan": "Sort  (est=2800 actual=11 time=668.659ms)\n  Aggregate [Sorted]  (est=2800 actual=11 time=668.603ms)\n    Gather Merge  (est=5600 actual=33 time=668.466ms)\n      Sort  (est=2800 actual=11 time=636.975ms)\n        Aggregate [Hashed]  (est=2800 actual=11 time=636.91ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=265.666ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=72.384ms)\n            Hash  (est=183 actual=183 time=0.156ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.086ms)",
-    "hinted_plan": "Sort  (est=2800 actual=11 time=843.222ms)\n  Aggregate [Sorted]  (est=2800 actual=11 time=843.192ms)\n    Gather Merge  (est=5600 actual=33 time=843.046ms)\n      Sort  (est=2800 actual=11 time=812.663ms)\n        Aggregate [Hashed]  (est=2800 actual=11 time=812.593ms)\n          Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416667 actual=333333 time=332.192ms)\n            Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=76.943ms)\n            Hash  (est=183 actual=183 time=0.138ms)\n              Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.073ms)",
-    "baseline_latency": 655.525,
-    "hinted_latency": 610.046,
-    "delta_pct": -6.94,
+    "baseline_plan": "Limit  (est=20 actual=20 time=451.88ms)\n  Sort  (est=117 actual=20 time=451.873ms)\n    Aggregate [Sorted]  Filter: (count(*) >= 2)  (est=117 actual=51 time=451.805ms)\n      Gather Merge  (est=702 actual=153 time=451.691ms)\n        Sort  (est=351 actual=51 time=421.233ms)\n          Aggregate [Hashed]  (est=351 actual=51 time=421.085ms)\n            Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: ((e.opened_at >= u.start_date) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer >= 0) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer <= 4))  (est=14860 actual=36667 time=407.433ms)\n              Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=61.968ms)\n              Hash  (est=52 actual=52 time=0.087ms)\n                Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.046ms)",
+    "hinted_plan": "Limit  (est=20 actual=20 time=512.567ms)\n  Sort  (est=117 actual=20 time=512.561ms)\n    Aggregate [Sorted]  Filter: (count(*) >= 2)  (est=117 actual=51 time=512.488ms)\n      Gather Merge  (est=702 actual=153 time=512.382ms)\n        Sort  (est=351 actual=51 time=474.273ms)\n          Aggregate [Hashed]  (est=351 actual=51 time=474.077ms)\n            Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: ((e.opened_at >= u.start_date) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer >= 0) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer <= 4))  (est=45834 actual=36667 time=458.811ms)\n              Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=56.75ms)\n              Hash  (est=52 actual=52 time=0.071ms)\n                Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.039ms)",
+    "baseline_latency": 483.114,
+    "hinted_latency": 424.447,
+    "delta_pct": -12.14,
     "plan_changed": false,
     "diffs": []
   },
   {
-    "query_seq": 10,
-    "sql": "SELECT\n    DATE_TRUNC('month', a.purchased_on) AS purchase_batch,\n    DATE_TRUNC('month', u.start_date) AS employee_start_cohort,\n    COUNT(DISTINCT u.name) AS affected_employees,\n    COUNT(a.asset_tag) AS assets_at_risk,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_days_at_start,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) AS assets_expiring_within_year1,\n    SUM(a.cost) AS total_cost_at_risk\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nWHERE a.purchased_on BETWEEN '2023-05-01' AND '2023-08-31'\nGROUP BY DATE_TRUNC('month', a.purchased_on), DATE_TRUNC('month', u.start_date)\nORDER BY purchase_batch, employee_start_cohort;",
-    "hint_block": "/*+ Rows(a u #999999) */",
+    "query_seq": 16,
+    "sql": "SELECT \n    u.name,\n    u.department,\n    u.start_date::date AS hire_date,\n    COUNT(*) AS submissions_in_first_5_days,\n    SUM(CASE WHEN e.state = 'Declined' THEN 1 ELSE 0 END) AS declined\nFROM flag_21 e\nJOIN flag_21_sysuser u ON e.user = u.name\nWHERE u.start_date IS NOT NULL\n  AND e.opened_at >= u.start_date\n  AND FLOOR(EXTRACT(EPOCH FROM (e.opened_at - u.start_date)) / 86400.0)::int BETWEEN 0 AND 4\nGROUP BY u.name, u.department, u.start_date\nORDER BY declined DESC, submissions_in_first_5_days DESC;",
+    "hint_block": "/*+ Rows(e u #110001) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "eba5c7e8acb4fa63672dfb980fd56e1ea00201b5",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
-        "actual_card": 999999,
-        "source_query_idx": 8,
-        "hint_string": "Rows(a u #999999)"
+        "actual_card": 110001,
+        "source_query_idx": 12,
+        "hint_string": "Rows(e u #110001)"
       }
     ],
-    "baseline_plan": "Aggregate [Sorted]  (est=91500 actual=32 time=569.322ms)\n  Gather Merge  (est=282719 actual=282000 time=418.322ms)\n    Sort  (est=117800 actual=94000 time=280.055ms)\n      Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=117800 actual=94000 time=163.836ms)\n        Seq Scan on flag_18 (a)  Filter: ((purchased_on >= '2023-05-01 00:00:00'::timestamp without time zone) AND (purchased_on <= '2023-08-31 00:00:00'::timestamp without time zone))  (est=117800 actual=94000 time=91.847ms)\n        Hash  (est=183 actual=183 time=0.177ms)\n          Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.1ms)",
-    "hinted_plan": "Aggregate [Sorted]  (est=91500 actual=32 time=554.947ms)\n  Gather Merge  (est=999999 actual=282000 time=424.648ms)\n    Sort  (est=416666 actual=94000 time=285.507ms)\n      Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=94000 time=166.72ms)\n        Seq Scan on flag_18 (a)  Filter: ((purchased_on >= '2023-05-01 00:00:00'::timestamp without time zone) AND (purchased_on <= '2023-08-31 00:00:00'::timestamp without time zone))  (est=117800 actual=94000 time=103.622ms)\n        Hash  (est=183 actual=183 time=0.164ms)\n          Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.101ms)",
-    "baseline_latency": 464.541,
-    "hinted_latency": 506.548,
-    "delta_pct": 9.04,
+    "baseline_plan": "Sort  (est=52 actual=52 time=455.232ms)\n  Aggregate [Sorted]  (est=52 actual=52 time=455.189ms)\n    Gather Merge  (est=104 actual=156 time=455.095ms)\n      Sort  (est=52 actual=52 time=426.276ms)\n        Aggregate [Hashed]  (est=52 actual=52 time=426.146ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: ((e.opened_at >= u.start_date) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer >= 0) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer <= 4))  (est=14860 actual=36667 time=406.968ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=60.19ms)\n            Hash  (est=52 actual=52 time=0.082ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.047ms)",
+    "hinted_plan": "Sort  (est=52 actual=52 time=534.354ms)\n  Aggregate [Sorted]  (est=52 actual=52 time=534.304ms)\n    Gather Merge  (est=104 actual=156 time=534.224ms)\n      Sort  (est=52 actual=52 time=497.83ms)\n        Aggregate [Hashed]  (est=52 actual=52 time=497.67ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  Join Filter: ((e.opened_at >= u.start_date) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer >= 0) AND ((floor((EXTRACT(epoch FROM (e.opened_at - u.start_date)) / 86400.0)))::integer <= 4))  (est=45834 actual=36667 time=475.338ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=60.005ms)\n            Hash  (est=52 actual=52 time=0.066ms)\n              Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.034ms)",
+    "baseline_latency": 520.965,
+    "hinted_latency": 474.042,
+    "delta_pct": -9.01,
     "plan_changed": false,
     "diffs": []
   },
   {
-    "query_seq": 11,
-    "sql": "SELECT\n    width_bucket(EXTRACT(DAY FROM (a.purchased_on - u.start_date)), -400, 30, 10) AS bucket_num,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_before_start,\n    COUNT(*) AS asset_count,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN a.cost ELSE 0 END) AS cost_expiring_yr1,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '24 months' THEN a.cost ELSE 0 END) AS cost_expiring_yr2\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY bucket_num\nORDER BY bucket_num;",
-    "hint_block": "/*+ Rows(a u #282000) */",
+    "query_seq": 17,
+    "sql": "SELECT \n    CASE WHEN u.manager IS NULL THEN 'No Manager' ELSE 'Has Manager' END AS manager_status,\n    CASE \n        WHEN EXTRACT(YEAR FROM AGE(e.opened_at, u.start_date)) < 1 THEN '< 1 year'\n        ELSE '1+ years'\n    END AS tenure_group,\n    COUNT(*) AS total,\n    SUM(CASE WHEN e.state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN e.state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct\nFROM flag_21 e\nJOIN flag_21_sysuser u ON e.user = u.name\nWHERE u.start_date IS NOT NULL\nGROUP BY manager_status, tenure_group\nORDER BY tenure_group, decline_rate_pct DESC;",
+    "hint_block": "/*+ Rows(e u #962001) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "0ed20f4d42f7837ca2b073c0ed919531dd22c30e",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
-        "actual_card": 282000,
-        "source_query_idx": 10,
-        "hint_string": "Rows(a u #282000)"
+        "actual_card": 962001,
+        "source_query_idx": 3,
+        "hint_string": "Rows(e u #962001)"
       }
     ],
-    "baseline_plan": "Aggregate [Sorted]  (est=91500 actual=8 time=1268.627ms)\n  Gather Merge  (est=183000 actual=24 time=1268.42ms)\n    Aggregate [Sorted]  (est=91500 actual=8 time=942.085ms)\n      Sort  (est=416674 actual=333333 time=696.533ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=524.239ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=67.918ms)\n          Hash  (est=183 actual=183 time=25.225ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=25.147ms)",
-    "hinted_plan": "Aggregate [Sorted]  (est=91500 actual=8 time=1300.213ms)\n  Gather Merge  (est=183000 actual=24 time=1300.095ms)\n    Aggregate [Sorted]  (est=91500 actual=8 time=965.132ms)\n      Sort  (est=117500 actual=333333 time=707.409ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=117500 actual=333333 time=525.061ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=61.061ms)\n          Hash  (est=183 actual=183 time=0.133ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=0.075ms)",
-    "baseline_latency": 1260.683,
-    "hinted_latency": 1396.949,
-    "delta_pct": 10.81,
+    "baseline_plan": "Sort  (est=25000 actual=3 time=512.995ms)\n  Aggregate [Hashed]  (est=25000 actual=3 time=512.97ms)\n    Gather  (est=50000 actual=9 time=512.81ms)\n      Aggregate [Hashed]  (est=25000 actual=3 time=479.401ms)\n        Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=401236 actual=320667 time=349.571ms)\n          Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=67.752ms)\n          Hash  (est=52 actual=52 time=0.07ms)\n            Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.042ms)",
+    "hinted_plan": "Sort  (est=25000 actual=3 time=667.555ms)\n  Aggregate [Hashed]  (est=25000 actual=3 time=667.525ms)\n    Gather  (est=50000 actual=9 time=667.376ms)\n      Aggregate [Hashed]  (est=25000 actual=3 time=627.586ms)\n        Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=400834 actual=320667 time=453.66ms)\n          Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=73.131ms)\n          Hash  (est=52 actual=52 time=0.061ms)\n            Seq Scan on flag_21_sysuser (u)  Filter: (start_date IS NOT NULL)  (est=52 actual=52 time=0.034ms)",
+    "baseline_latency": 521.065,
+    "hinted_latency": 503.525,
+    "delta_pct": -3.37,
     "plan_changed": false,
     "diffs": []
   },
   {
-    "query_seq": 12,
-    "sql": "SELECT\n    u.department,\n    COUNT(DISTINCT u.name) AS employees,\n    COUNT(a.asset_tag) AS total_assets,\n    ROUND(AVG(EXTRACT(DAY FROM (a.purchased_on - u.start_date)))) AS avg_days_purchase_vs_start,\n    ROUND(AVG(EXTRACT(DAY FROM (a.warranty_expiration - u.start_date)))) AS avg_warranty_at_start_days,\n    SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) AS assets_expiring_yr1,\n    ROUND(100.0 * SUM(CASE WHEN a.warranty_expiration < u.start_date + INTERVAL '12 months' THEN 1 ELSE 0 END) / COUNT(a.asset_tag), 1) AS pct_expiring_yr1,\n    ROUND(AVG(a.cost)) AS avg_asset_cost\nFROM flag_18 a\nJOIN flag_18_sysuser u ON a.assigned_to = u.name\nGROUP BY u.department\nORDER BY avg_warranty_at_start_days DESC;",
-    "hint_block": "/*+ Rows(a u #999999) */",
+    "query_seq": 19,
+    "sql": "SELECT \n    days_bucket,\n    COUNT(*) AS total_submissions,\n    SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) AS declined,\n    ROUND(100.0 * SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) / COUNT(*), 2) AS decline_rate_pct,\n    ROUND(100.0 * SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END) / SUM(SUM(CASE WHEN e_state = 'Declined' THEN 1 ELSE 0 END)) OVER (), 2) AS pct_of_all_declines\nFROM (\n    SELECT \n        e.state AS e_state,\n        CASE \n            WHEN u.start_date IS NULL THEN 'Unknown start'\n            WHEN FLOOR(EXTRACT(EPOCH FROM (e.opened_at - u.start_date)) / 86400.0)::int BETWEEN 0 AND 4 THEN 'Days 0-4 (onboarding)'\n            WHEN EXTRACT(YEAR FROM AGE(e.opened_at, u.start_date)) < 1 THEN 'Days 5-364'\n            ELSE '1+ years'\n        END AS days_bucket\n    FROM flag_21 e\n    JOIN flag_21_sysuser u ON e.user = u.name\n) sub\nGROUP BY days_bucket\nORDER BY pct_of_all_declines DESC;",
+    "hint_block": "/*+ Rows(e u #962001) */",
     "hints": [
       {
-        "signature": "804f98c493b05094bc1210439b96b14d06a98781",
+        "signature": "0ed20f4d42f7837ca2b073c0ed919531dd22c30e",
         "relation_aliases": [
-          "a",
+          "e",
           "u"
         ],
-        "actual_card": 999999,
-        "source_query_idx": 11,
-        "hint_string": "Rows(a u #999999)"
+        "actual_card": 962001,
+        "source_query_idx": 14,
+        "hint_string": "Rows(e u #962001)"
       }
     ],
-    "baseline_plan": "Sort  (est=7 actual=7 time=1875.092ms)\n  Aggregate [Sorted]  (est=7 actual=7 time=1875.06ms)\n    Gather Merge  (est=1000017 actual=1000000 time=1186.257ms)\n      Sort  (est=416674 actual=333333 time=824.421ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416674 actual=333333 time=243.992ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=62.094ms)\n          Hash  (est=183 actual=183 time=19.166ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=19.074ms)",
-    "hinted_plan": "Sort  (est=7 actual=7 time=1818.847ms)\n  Aggregate [Sorted]  (est=7 actual=7 time=1818.807ms)\n    Gather Merge  (est=999999 actual=1000000 time=1109.426ms)\n      Sort  (est=416666 actual=333333 time=777.991ms)\n        Hash Join [Inner]  Hash Cond: (a.assigned_to = u.name)  (est=416666 actual=333333 time=229.748ms)\n          Seq Scan on flag_18 (a)  (est=416674 actual=333333 time=49.728ms)\n          Hash  (est=183 actual=183 time=21.821ms)\n            Seq Scan on flag_18_sysuser (u)  (est=183 actual=183 time=21.737ms)",
-    "baseline_latency": 1676.518,
-    "hinted_latency": 1779.013,
-    "delta_pct": 6.11,
+    "baseline_plan": "Sort  (est=26000 actual=4 time=962.174ms)\n  WindowAgg  (est=26000 actual=4 time=962.133ms)\n    Aggregate [Hashed]  (est=26000 actual=4 time=962.098ms)\n      Gather  (est=52000 actual=12 time=961.879ms)\n        Aggregate [Hashed]  (est=26000 actual=4 time=929.233ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=416668 actual=333333 time=792.633ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=78.902ms)\n            Hash  (est=54 actual=54 time=0.075ms)\n              Seq Scan on flag_21_sysuser (u)  (est=54 actual=54 time=0.041ms)",
+    "hinted_plan": "Sort  (est=26000 actual=4 time=801.098ms)\n  WindowAgg  (est=26000 actual=4 time=801.076ms)\n    Aggregate [Hashed]  (est=26000 actual=4 time=801.033ms)\n      Gather  (est=52000 actual=12 time=800.887ms)\n        Aggregate [Hashed]  (est=26000 actual=4 time=767.281ms)\n          Hash Join [Inner]  Hash Cond: (e.\"user\" = u.name)  (est=400834 actual=333333 time=654.643ms)\n            Seq Scan on flag_21 (e)  (est=416668 actual=333333 time=61.411ms)\n            Hash  (est=54 actual=54 time=0.064ms)\n              Seq Scan on flag_21_sysuser (u)  (est=54 actual=54 time=0.034ms)",
+    "baseline_latency": 801.126,
+    "hinted_latency": 883.41,
+    "delta_pct": 10.27,
     "plan_changed": false,
     "diffs": []
   }

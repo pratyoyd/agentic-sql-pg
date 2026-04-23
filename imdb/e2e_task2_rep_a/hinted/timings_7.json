@@ -1,0 +1,116 @@
+{
+  "query_seq": 7,
+  "sql": "WITH vote_filter AS (\n    SELECT mii.movie_id\n    FROM movie_info_idx mii\n    WHERE mii.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n      AND mii.info::integer >= 5000\n),\ndir_role AS (SELECT id FROM role_type WHERE role = 'director'),\nact_roles AS (SELECT id FROM role_type WHERE role IN ('actor','actress')),\npair_films AS (\n    SELECT\n        ci_dir.person_id AS director_id,\n        ci_act.person_id AS actor_id,\n        COUNT(DISTINCT t.id) AS film_count,\n        AVG(mii_votes.info::float) AS avg_votes,\n        COUNT(DISTINCT mi_genre.info) AS distinct_genres\n    FROM cast_info ci_dir\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id <> ci_dir.person_id\n    JOIN title t ON t.id = ci_dir.movie_id\n    JOIN vote_filter vf ON vf.movie_id = t.id\n    JOIN movie_info_idx mii_votes ON mii_votes.movie_id = t.id\n        AND mii_votes.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n    LEFT JOIN movie_info mi_genre ON mi_genre.movie_id = t.id\n        AND mi_genre.info_type_id = (SELECT id FROM info_type WHERE info = 'genres')\n    WHERE ci_dir.role_id = (SELECT id FROM dir_role)\n      AND ci_act.role_id IN (SELECT id FROM act_roles)\n      AND t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n    GROUP BY ci_dir.person_id, ci_act.person_id\n)\nSELECT\n    CASE WHEN film_count = 1 THEN '1 film (one-off)'\n         WHEN film_count = 2 THEN '2 films'\n         WHEN film_count BETWEEN 3 AND 5 THEN '3-5 films'\n         ELSE '6+ films'\n    END AS collaboration_tier,\n    COUNT(*) AS pair_count,\n    ROUND(AVG(avg_votes)::numeric, 0) AS avg_votes_per_film,\n    ROUND(AVG(distinct_genres)::numeric, 2) AS avg_distinct_genres\nFROM pair_films\nGROUP BY collaboration_tier\nORDER BY MIN(film_count);",
+  "hint_block": "/*+ Rows(mii t #4425) */",
+  "hinted_sql": "/*+ Rows(mii t #4425) */\nWITH vote_filter AS (\n    SELECT mii.movie_id\n    FROM movie_info_idx mii\n    WHERE mii.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n      AND mii.info::integer >= 5000\n),\ndir_role AS (SELECT id FROM role_type WHERE role = 'director'),\nact_roles AS (SELECT id FROM role_type WHERE role IN ('actor','actress')),\npair_films AS (\n    SELECT\n        ci_dir.person_id AS director_id,\n        ci_act.person_id AS actor_id,\n        COUNT(DISTINCT t.id) AS film_count,\n        AVG(mii_votes.info::float) AS avg_votes,\n        COUNT(DISTINCT mi_genre.info) AS distinct_genres\n    FROM cast_info ci_dir\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id <> ci_dir.person_id\n    JOIN title t ON t.id = ci_dir.movie_id\n    JOIN vote_filter vf ON vf.movie_id = t.id\n    JOIN movie_info_idx mii_votes ON mii_votes.movie_id = t.id\n        AND mii_votes.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n    LEFT JOIN movie_info mi_genre ON mi_genre.movie_id = t.id\n        AND mi_genre.info_type_id = (SELECT id FROM info_type WHERE info = 'genres')\n    WHERE ci_dir.role_id = (SELECT id FROM dir_role)\n      AND ci_act.role_id IN (SELECT id FROM act_roles)\n      AND t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n    GROUP BY ci_dir.person_id, ci_act.person_id\n)\nSELECT\n    CASE WHEN film_count = 1 THEN '1 film (one-off)'\n         WHEN film_count = 2 THEN '2 films'\n         WHEN film_count BETWEEN 3 AND 5 THEN '3-5 films'\n         ELSE '6+ films'\n    END AS collaboration_tier,\n    COUNT(*) AS pair_count,\n    ROUND(AVG(avg_votes)::numeric, 0) AS avg_votes_per_film,\n    ROUND(AVG(distinct_genres)::numeric, 2) AS avg_distinct_genres\nFROM pair_films\nGROUP BY collaboration_tier\nORDER BY MIN(film_count);",
+  "hints_injected": 1,
+  "hints_applied": [
+    {
+      "signature": "a7215a3711480e409e62057ed1617356561ad760",
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "actual_card": 4425,
+      "source_query_idx": 2,
+      "hint_string": "Rows(mii t #4425)"
+    }
+  ],
+  "hints_skipped": [],
+  "injection_overhead_ms": 21.63,
+  "plan_tree_summary": [
+    {
+      "node_id": 11,
+      "operator_type": "Hash Join",
+      "estimated_card": 31090,
+      "actual_card": 758733,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "dbf7dd178171a489b2fd09ccad06c60de412fcce"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Hash Join",
+      "estimated_card": 9320,
+      "actual_card": 699993,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "d6aa76a920aab9e42b0b9ba391b870817c9b501d"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Nested Loop",
+      "estimated_card": 55920,
+      "actual_card": 1614882,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "ec9991fa57c2da6f9ce6f6c4f23dd256c16336e0"
+    },
+    {
+      "node_id": 16,
+      "operator_type": "Nested Loop",
+      "estimated_card": 252,
+      "actual_card": 12918,
+      "relation_aliases": [
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "55a6939db9588f4f3fad290bfe6562907886052c"
+    },
+    {
+      "node_id": 17,
+      "operator_type": "Nested Loop",
+      "estimated_card": 252,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "20b1ea72c32276b2742abb6794be37f9bd5e9a5b"
+    },
+    {
+      "node_id": 18,
+      "operator_type": "Hash Join",
+      "estimated_card": 1844,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    }
+  ],
+  "run_times_ms": [
+    4450.281381607056,
+    4429.970741271973,
+    4389.783143997192,
+    4428.579568862915,
+    4441.741466522217,
+    4310.108184814453
+  ],
+  "median_latency_ms": 4409.18,
+  "q_error_max": 75.11,
+  "success": true,
+  "error": null
+}

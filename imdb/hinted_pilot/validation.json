@@ -1,0 +1,18 @@
+{
+  "row_counts": {
+    "cast_info": 36244344,
+    "title": 2528312,
+    "movie_info": 14835720,
+    "movie_info_idx": 1380035,
+    "name": 4167491,
+    "movie_companies": 2609129,
+    "keyword": 134170,
+    "movie_keyword": 4523930
+  },
+  "indexes": [],
+  "traces": {
+    "a": 9,
+    "b": 12,
+    "c": 12
+  }
+}

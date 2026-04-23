@@ -1,0 +1,181 @@
+{
+  "query_seq": 7,
+  "baseline_median_ms": 4359.17,
+  "hinted_median_ms": 4409.18,
+  "delta_ms": 50.01,
+  "delta_pct": 1.15,
+  "hints_injected": 1,
+  "plan_topology_changed": false,
+  "join_order_changed": false,
+  "join_method_changed": false,
+  "baseline_max_qerror": 75.11,
+  "hinted_max_qerror": 75.11,
+  "qerror_reduction": 0.0,
+  "classification": "unchanged",
+  "baseline_plan_summary": [
+    {
+      "node_id": 11,
+      "operator_type": "Hash Join",
+      "estimated_card": 31090,
+      "actual_card": 758733,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "dbf7dd178171a489b2fd09ccad06c60de412fcce"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Hash Join",
+      "estimated_card": 9320,
+      "actual_card": 699993,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "d6aa76a920aab9e42b0b9ba391b870817c9b501d"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Nested Loop",
+      "estimated_card": 55920,
+      "actual_card": 1614882,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "ec9991fa57c2da6f9ce6f6c4f23dd256c16336e0"
+    },
+    {
+      "node_id": 16,
+      "operator_type": "Nested Loop",
+      "estimated_card": 596,
+      "actual_card": 12918,
+      "relation_aliases": [
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "55a6939db9588f4f3fad290bfe6562907886052c"
+    },
+    {
+      "node_id": 17,
+      "operator_type": "Nested Loop",
+      "estimated_card": 596,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "20b1ea72c32276b2742abb6794be37f9bd5e9a5b"
+    },
+    {
+      "node_id": 18,
+      "operator_type": "Hash Join",
+      "estimated_card": 4366,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    }
+  ],
+  "hinted_plan_summary": [
+    {
+      "node_id": 11,
+      "operator_type": "Hash Join",
+      "estimated_card": 31090,
+      "actual_card": 758733,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "dbf7dd178171a489b2fd09ccad06c60de412fcce"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Hash Join",
+      "estimated_card": 9320,
+      "actual_card": 699993,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "d6aa76a920aab9e42b0b9ba391b870817c9b501d"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Nested Loop",
+      "estimated_card": 55920,
+      "actual_card": 1614882,
+      "relation_aliases": [
+        "ci_act",
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "ec9991fa57c2da6f9ce6f6c4f23dd256c16336e0"
+    },
+    {
+      "node_id": 16,
+      "operator_type": "Nested Loop",
+      "estimated_card": 252,
+      "actual_card": 12918,
+      "relation_aliases": [
+        "mi_genre",
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "55a6939db9588f4f3fad290bfe6562907886052c"
+    },
+    {
+      "node_id": 17,
+      "operator_type": "Nested Loop",
+      "estimated_card": 252,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "mii_votes",
+        "t"
+      ],
+      "operator_signature": "20b1ea72c32276b2742abb6794be37f9bd5e9a5b"
+    },
+    {
+      "node_id": 18,
+      "operator_type": "Hash Join",
+      "estimated_card": 1844,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    }
+  ]
+}

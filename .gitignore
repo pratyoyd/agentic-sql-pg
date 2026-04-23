@@ -1,0 +1,23 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Data files (large CSVs, tarballs)
+*.csv
+*.tgz
+*.sql.gz
+
+# Session traces and raw plans (large, regenerable)
+imdb/sessions/
+imdb/raw_plans/
+imdb/raw_plans_scenario1/
+
+# Editor/OS
+.DS_Store
+*.swp
+*~
+
+# Logs
+*.log
+imdb/job_repo/

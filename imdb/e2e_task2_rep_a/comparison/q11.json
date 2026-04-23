@@ -1,0 +1,165 @@
+{
+  "query_seq": 11,
+  "baseline_median_ms": 3393.68,
+  "hinted_median_ms": 3271.91,
+  "delta_ms": -121.77,
+  "delta_pct": -3.59,
+  "hints_injected": 5,
+  "plan_topology_changed": false,
+  "join_order_changed": false,
+  "join_method_changed": false,
+  "baseline_max_qerror": 8.96,
+  "hinted_max_qerror": 6.34,
+  "qerror_reduction": 2.62,
+  "classification": "unchanged",
+  "baseline_plan_summary": [
+    {
+      "node_id": 5,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "98a3233ec84ee65dbf9df56833da7309141366b4"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Hash Join",
+      "estimated_card": 26700,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "ecd31782bd51fa9689766209a6700ca663ee781f"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 160200,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 4366,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Hash Join",
+      "estimated_card": 84221,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "mii_r",
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "bd7db14148e60a734b3ed5899c6890baf320d18f"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Hash Join",
+      "estimated_card": 114233,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "7db51d92827409c07db5b875d7de8b891066d12c"
+    }
+  ],
+  "hinted_plan_summary": [
+    {
+      "node_id": 5,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "98a3233ec84ee65dbf9df56833da7309141366b4"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Hash Join",
+      "estimated_card": 37722,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "ecd31782bd51fa9689766209a6700ca663ee781f"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 226334,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 1844,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Hash Join",
+      "estimated_card": 84221,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "mii_r",
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "bd7db14148e60a734b3ed5899c6890baf320d18f"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Hash Join",
+      "estimated_card": 114233,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "7db51d92827409c07db5b875d7de8b891066d12c"
+    }
+  ]
+}

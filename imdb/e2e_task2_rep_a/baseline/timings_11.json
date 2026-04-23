@@ -1,0 +1,91 @@
+{
+  "query_seq": 11,
+  "sql": "WITH vote_filter AS (\n    SELECT mii.movie_id\n    FROM movie_info_idx mii\n    WHERE mii.info_type_id = (SELECT id FROM info_type WHERE info = 'votes')\n      AND mii.info::integer >= 5000\n),\npair_films AS (\n    SELECT\n        ci_dir.person_id AS director_id,\n        ci_act.person_id AS actor_id,\n        t.id AS movie_id\n    FROM cast_info ci_dir\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id <> ci_dir.person_id\n    JOIN title t ON t.id = ci_dir.movie_id\n    JOIN vote_filter vf ON vf.movie_id = t.id\n    WHERE ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n      AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n      AND t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\npair_totals AS (\n    SELECT director_id, actor_id, COUNT(DISTINCT movie_id) AS pair_total\n    FROM pair_films\n    GROUP BY director_id, actor_id\n),\npair_ratings AS (\n    SELECT\n        pf.director_id,\n        pf.actor_id,\n        pt.pair_total,\n        AVG(mii_r.info::float) AS avg_rating\n    FROM pair_films pf\n    JOIN pair_totals pt ON pt.director_id = pf.director_id AND pt.actor_id = pf.actor_id\n    JOIN movie_info_idx mii_r ON mii_r.movie_id = pf.movie_id\n        AND mii_r.info_type_id = (SELECT id FROM info_type WHERE info = 'rating')\n    GROUP BY pf.director_id, pf.actor_id, pt.pair_total\n)\nSELECT\n    CASE WHEN pair_total = 1 THEN '1 film'\n         WHEN pair_total = 2 THEN '2 films'\n         WHEN pair_total BETWEEN 3 AND 5 THEN '3-5 films'\n         ELSE '6+ films'\n    END AS tier,\n    COUNT(*) AS pair_count,\n    ROUND(AVG(avg_rating)::numeric, 2) AS avg_imdb_rating,\n    ROUND(STDDEV(avg_rating)::numeric, 2) AS rating_stddev\nFROM pair_ratings\nGROUP BY tier\nORDER BY MIN(pair_total);",
+  "plan_tree_summary": [
+    {
+      "node_id": 5,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "98a3233ec84ee65dbf9df56833da7309141366b4"
+    },
+    {
+      "node_id": 8,
+      "operator_type": "Hash Join",
+      "estimated_card": 26700,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "ecd31782bd51fa9689766209a6700ca663ee781f"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 160200,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 4366,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    },
+    {
+      "node_id": 24,
+      "operator_type": "Hash Join",
+      "estimated_card": 84221,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "mii_r",
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "bd7db14148e60a734b3ed5899c6890baf320d18f"
+    },
+    {
+      "node_id": 25,
+      "operator_type": "Hash Join",
+      "estimated_card": 114233,
+      "actual_card": 257546,
+      "relation_aliases": [
+        "pair_films",
+        "pf"
+      ],
+      "operator_signature": "7db51d92827409c07db5b875d7de8b891066d12c"
+    }
+  ],
+  "run_times_ms": [
+    3301.121234893799,
+    3406.754493713379,
+    3438.5528564453125,
+    3348.8128185272217,
+    3514.3308639526367,
+    3299.5517253875732
+  ],
+  "median_latency_ms": 3393.68,
+  "q_error_max": 8.96,
+  "success": true,
+  "error": null
+}

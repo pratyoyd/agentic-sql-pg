@@ -1,0 +1,251 @@
+{
+  "query_seq": 5,
+  "baseline_median_ms": 413.5,
+  "hinted_median_ms": 495.87,
+  "delta_ms": 82.37,
+  "delta_pct": 19.92,
+  "hints_injected": 2,
+  "plan_topology_changed": true,
+  "join_order_changed": true,
+  "join_method_changed": true,
+  "baseline_max_qerror": 3990.0,
+  "hinted_max_qerror": 2088.0,
+  "qerror_reduction": 1902.0,
+  "classification": "regressed",
+  "baseline_plan_summary": [
+    {
+      "node_id": 8,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 4176,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "k",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "ed322a978646188f0e2cb6e8b277d1f9879f94cc"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 4176,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "6ce31d9b385f48174106781cfe2bcffa68214947"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 36,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "7e9ec9e22f89ebcedc30f9d3c74c20ee52b5fc25"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Hash Join",
+      "estimated_card": 1,
+      "actual_card": 3990,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "e31c602a2ee86fd87731c84e0d2b38737514d8eb"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Nested Loop",
+      "estimated_card": 8,
+      "actual_card": 8229,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "operator_signature": "ca35de3714e2e16151cf8aff061c4a91c35d8ac1"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 60,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "operator_signature": "89cfe745d289ceb3db4310bee17513b956ced48b"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 150,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_dir",
+        "nd"
+      ],
+      "operator_signature": "866abda3dc1ec728050eec326f41a7fbeae7d42f"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 3,
+      "actual_card": 27,
+      "relation_aliases": [
+        "*VALUES*",
+        "nd"
+      ],
+      "operator_signature": "545b4a3414f7f6fbe1948d236c1d579722171207"
+    }
+  ],
+  "hinted_plan_summary": [
+    {
+      "node_id": 8,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 4176,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "k",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "ed322a978646188f0e2cb6e8b277d1f9879f94cc"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 4176,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "6ce31d9b385f48174106781cfe2bcffa68214947"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 36,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "bd05db6a87b435dc8766f0023f99ce214bfca5c8"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Nested Loop",
+      "estimated_card": 2,
+      "actual_card": 360,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "ab5f39f721ef45fa150ee2c7a057cd9520be4ba4"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 294,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "dda86d1f277036048c54c1a37d7bd0bb024ea790"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Hash Join",
+      "estimated_card": 5,
+      "actual_card": 1278,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na",
+        "role_type"
+      ],
+      "operator_signature": "6cba8be92a4ae48666ca38ff2ab21d43424dc167"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 29,
+      "actual_card": 1311,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na"
+      ],
+      "operator_signature": "866abda3dc1ec728050eec326f41a7fbeae7d42f"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 3,
+      "actual_card": 6,
+      "relation_aliases": [
+        "*VALUES*",
+        "na"
+      ],
+      "operator_signature": "f1083eaea01687e5c6a8aa32cf9297d8eb854c8d"
+    }
+  ]
+}

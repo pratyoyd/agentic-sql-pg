@@ -1,0 +1,209 @@
+{
+  "query_seq": 6,
+  "sql": "WITH pair_movies AS (\n    SELECT kp.director, kp.actor, t.id AS movie_id\n    FROM (VALUES\n        ('Rodriguez, Robert', 'Trejo, Danny'),\n        ('Marshall, Garry', 'Elizondo, Hector'),\n        ('Lee, Spike', 'Turturro, John')\n    ) AS kp(director, actor)\n    JOIN name nd ON nd.name = kp.director\n    JOIN name na ON na.name = kp.actor\n    JOIN cast_info ci_dir ON ci_dir.person_id = nd.id\n        AND ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id = na.id\n        AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n    JOIN title t ON t.id = ci_dir.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\nkeyword_counts AS (\n    SELECT pm.director, pm.actor, k.keyword, COUNT(*) AS film_count\n    FROM pair_movies pm\n    JOIN movie_keyword mk ON mk.movie_id = pm.movie_id\n    JOIN keyword k ON k.id = mk.keyword_id\n    GROUP BY pm.director, pm.actor, k.keyword\n    HAVING COUNT(*) >= 3\n)\nSELECT director, actor, keyword, film_count\nFROM keyword_counts\nORDER BY director, actor, film_count DESC\nLIMIT 60;",
+  "hint_block": "/*+ Rows(\"*VALUES*\" ci_act ci_dir k mk na nd role_type t #4176) Rows(\"*VALUES*\" ci_act ci_dir mk na nd role_type t #4176) Rows(\"*VALUES*\" ci_act ci_dir nd role_type t #360) Rows(\"*VALUES*\" ci_dir nd #1311) Rows(\"*VALUES*\" nd #27) */",
+  "hinted_sql": "/*+ Rows(\"*VALUES*\" ci_act ci_dir k mk na nd role_type t #4176) Rows(\"*VALUES*\" ci_act ci_dir mk na nd role_type t #4176) Rows(\"*VALUES*\" ci_act ci_dir nd role_type t #360) Rows(\"*VALUES*\" ci_dir nd #1311) Rows(\"*VALUES*\" nd #27) */\nWITH pair_movies AS (\n    SELECT kp.director, kp.actor, t.id AS movie_id\n    FROM (VALUES\n        ('Rodriguez, Robert', 'Trejo, Danny'),\n        ('Marshall, Garry', 'Elizondo, Hector'),\n        ('Lee, Spike', 'Turturro, John')\n    ) AS kp(director, actor)\n    JOIN name nd ON nd.name = kp.director\n    JOIN name na ON na.name = kp.actor\n    JOIN cast_info ci_dir ON ci_dir.person_id = nd.id\n        AND ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id = na.id\n        AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n    JOIN title t ON t.id = ci_dir.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\nkeyword_counts AS (\n    SELECT pm.director, pm.actor, k.keyword, COUNT(*) AS film_count\n    FROM pair_movies pm\n    JOIN movie_keyword mk ON mk.movie_id = pm.movie_id\n    JOIN keyword k ON k.id = mk.keyword_id\n    GROUP BY pm.director, pm.actor, k.keyword\n    HAVING COUNT(*) >= 3\n)\nSELECT director, actor, keyword, film_count\nFROM keyword_counts\nORDER BY director, actor, film_count DESC\nLIMIT 60;",
+  "hints_injected": 5,
+  "hints_applied": [
+    {
+      "signature": "ed322a978646188f0e2cb6e8b277d1f9879f94cc",
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "k",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "actual_card": 4176,
+      "source_query_idx": 5,
+      "hint_string": "Rows(\"*VALUES*\" ci_act ci_dir k mk na nd role_type t #4176)"
+    },
+    {
+      "signature": "6ce31d9b385f48174106781cfe2bcffa68214947",
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "actual_card": 4176,
+      "source_query_idx": 5,
+      "hint_string": "Rows(\"*VALUES*\" ci_act ci_dir mk na nd role_type t #4176)"
+    },
+    {
+      "signature": "ab5f39f721ef45fa150ee2c7a057cd9520be4ba4",
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "actual_card": 360,
+      "source_query_idx": 5,
+      "hint_string": "Rows(\"*VALUES*\" ci_act ci_dir nd role_type t #360)"
+    },
+    {
+      "signature": "866abda3dc1ec728050eec326f41a7fbeae7d42f",
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_dir",
+        "nd"
+      ],
+      "actual_card": 1311,
+      "source_query_idx": 5,
+      "hint_string": "Rows(\"*VALUES*\" ci_dir nd #1311)"
+    },
+    {
+      "signature": "545b4a3414f7f6fbe1948d236c1d579722171207",
+      "relation_aliases": [
+        "*VALUES*",
+        "nd"
+      ],
+      "actual_card": 27,
+      "source_query_idx": 3,
+      "hint_string": "Rows(\"*VALUES*\" nd #27)"
+    }
+  ],
+  "hints_skipped": [],
+  "injection_overhead_ms": 16.21,
+  "plan_tree_summary": [
+    {
+      "node_id": 8,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1740,
+      "actual_card": 3210,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "k",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "ed322a978646188f0e2cb6e8b277d1f9879f94cc"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1740,
+      "actual_card": 3210,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "mk",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "6ce31d9b385f48174106781cfe2bcffa68214947"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 27,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "bd05db6a87b435dc8766f0023f99ce214bfca5c8"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 264,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "ab5f39f721ef45fa150ee2c7a057cd9520be4ba4"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 240,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "dda86d1f277036048c54c1a37d7bd0bb024ea790"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Hash Join",
+      "estimated_card": 4,
+      "actual_card": 1077,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na",
+        "role_type"
+      ],
+      "operator_signature": "6cba8be92a4ae48666ca38ff2ab21d43424dc167"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 22,
+      "actual_card": 1113,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "na"
+      ],
+      "operator_signature": "866abda3dc1ec728050eec326f41a7fbeae7d42f"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 2,
+      "actual_card": 3,
+      "relation_aliases": [
+        "*VALUES*",
+        "na"
+      ],
+      "operator_signature": "f1083eaea01687e5c6a8aa32cf9297d8eb854c8d"
+    }
+  ],
+  "run_times_ms": [
+    419.40975189208984,
+    445.97363471984863,
+    548.3598709106445,
+    475.0196933746338,
+    557.8842163085938,
+    436.3410472869873
+  ],
+  "median_latency_ms": 511.69,
+  "q_error_max": 269.25,
+  "success": true,
+  "error": null
+}

@@ -1,0 +1,134 @@
+{
+  "query_seq": 4,
+  "sql": "WITH pair_movies AS (\n    SELECT kp.director, kp.actor, t.id AS movie_id\n    FROM (VALUES\n        ('Jordan, Neil', 'Rea, Stephen'),\n        ('Rodriguez, Robert', 'Trejo, Danny'),\n        ('Marshall, Garry', 'Elizondo, Hector'),\n        ('Lee, Spike', 'Turturro, John'),\n        ('Jordan, Neil', 'Rea, Stephen')\n    ) AS kp(director, actor)\n    JOIN name nd ON nd.name = kp.director\n    JOIN name na ON na.name = kp.actor\n    JOIN cast_info ci_dir ON ci_dir.person_id = nd.id\n        AND ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n    JOIN cast_info ci_act ON ci_act.movie_id = ci_dir.movie_id\n        AND ci_act.person_id = na.id\n        AND ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor','actress'))\n    JOIN title t ON t.id = ci_dir.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n),\ncompany_counts AS (\n    SELECT pm.director, pm.actor, cn.name AS company, COUNT(*) AS film_count\n    FROM pair_movies pm\n    JOIN movie_companies mc ON mc.movie_id = pm.movie_id\n        AND mc.company_type_id = (SELECT id FROM company_type WHERE kind = 'production companies')\n    JOIN company_name cn ON cn.id = mc.company_id\n    GROUP BY pm.director, pm.actor, cn.name\n    HAVING COUNT(*) >= 2\n    ORDER BY pm.director, pm.actor, film_count DESC\n)\nSELECT * FROM company_counts\nLIMIT 40;",
+  "plan_tree_summary": [
+    {
+      "node_id": 8,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 123,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "cn",
+        "mc",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "61ac4208a03f7726a17fa6bb40d7ca83c9cbd4a6"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 123,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "mc",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "218334c694c3dc9807f443ce39ff5d374119670d"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 45,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "7e9ec9e22f89ebcedc30f9d3c74c20ee52b5fc25"
+    },
+    {
+      "node_id": 11,
+      "operator_type": "Hash Join",
+      "estimated_card": 2,
+      "actual_card": 4452,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "e31c602a2ee86fd87731c84e0d2b38737514d8eb"
+    },
+    {
+      "node_id": 12,
+      "operator_type": "Nested Loop",
+      "estimated_card": 12,
+      "actual_card": 9384,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "operator_signature": "ca35de3714e2e16151cf8aff061c4a91c35d8ac1"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Nested Loop",
+      "estimated_card": 1,
+      "actual_card": 72,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "operator_signature": "89cfe745d289ceb3db4310bee17513b956ced48b"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 4,
+      "actual_card": 177,
+      "relation_aliases": [
+        "*VALUES*",
+        "ci_dir",
+        "nd"
+      ],
+      "operator_signature": "866abda3dc1ec728050eec326f41a7fbeae7d42f"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 5,
+      "actual_card": 27,
+      "relation_aliases": [
+        "*VALUES*",
+        "nd"
+      ],
+      "operator_signature": "545b4a3414f7f6fbe1948d236c1d579722171207"
+    }
+  ],
+  "run_times_ms": [
+    404.7045707702637,
+    401.31473541259766,
+    389.467716217041,
+    390.79999923706055,
+    492.7372932434082,
+    418.2624816894531
+  ],
+  "median_latency_ms": 404.53,
+  "q_error_max": 2226.0,
+  "success": true,
+  "error": null
+}

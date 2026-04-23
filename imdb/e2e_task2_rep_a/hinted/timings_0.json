@@ -1,0 +1,92 @@
+{
+  "query_seq": 0,
+  "sql": "WITH directors AS (\n    SELECT ci_dir.person_id AS director_id, ci_dir.movie_id\n    FROM cast_info ci_dir\n    WHERE ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n),\nactors AS (\n    SELECT ci_act.person_id AS actor_id, ci_act.movie_id\n    FROM cast_info ci_act\n    WHERE ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor', 'actress'))\n),\npairs AS (\n    SELECT\n        d.director_id,\n        a.actor_id,\n        COUNT(DISTINCT t.id) AS film_count\n    FROM directors d\n    JOIN actors a ON d.movie_id = a.movie_id\n    JOIN title t ON t.id = d.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n    GROUP BY d.director_id, a.actor_id\n    HAVING COUNT(DISTINCT t.id) >= 3\n)\nSELECT\n    nd.name AS director,\n    na.name AS actor,\n    p.film_count\nFROM pairs p\nJOIN name nd ON nd.id = p.director_id\nJOIN name na ON na.id = p.actor_id\nORDER BY p.film_count DESC\nLIMIT 30;",
+  "hint_block": "",
+  "hinted_sql": "WITH directors AS (\n    SELECT ci_dir.person_id AS director_id, ci_dir.movie_id\n    FROM cast_info ci_dir\n    WHERE ci_dir.role_id = (SELECT id FROM role_type WHERE role = 'director')\n),\nactors AS (\n    SELECT ci_act.person_id AS actor_id, ci_act.movie_id\n    FROM cast_info ci_act\n    WHERE ci_act.role_id IN (SELECT id FROM role_type WHERE role IN ('actor', 'actress'))\n),\npairs AS (\n    SELECT\n        d.director_id,\n        a.actor_id,\n        COUNT(DISTINCT t.id) AS film_count\n    FROM directors d\n    JOIN actors a ON d.movie_id = a.movie_id\n    JOIN title t ON t.id = d.movie_id\n    WHERE t.production_year BETWEEN 1990 AND 2010\n      AND t.kind_id = (SELECT id FROM kind_type WHERE kind = 'movie')\n    GROUP BY d.director_id, a.actor_id\n    HAVING COUNT(DISTINCT t.id) >= 3\n)\nSELECT\n    nd.name AS director,\n    na.name AS actor,\n    p.film_count\nFROM pairs p\nJOIN name nd ON nd.id = p.director_id\nJOIN name na ON na.id = p.actor_id\nORDER BY p.film_count DESC\nLIMIT 30;",
+  "hints_injected": 0,
+  "hints_applied": [],
+  "hints_skipped": [],
+  "injection_overhead_ms": 0.01,
+  "plan_tree_summary": [
+    {
+      "node_id": 2,
+      "operator_type": "Hash Join",
+      "estimated_card": 612398,
+      "actual_card": 26445,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "kind_type",
+        "na",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "b389af4f5a93577d76d3f1032ff5be3aff98920b"
+    },
+    {
+      "node_id": 3,
+      "operator_type": "Merge Join",
+      "estimated_card": 612398,
+      "actual_card": 26445,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "kind_type",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "b2a30fcbf9878d0481e13d5b40956c4be01a441b"
+    },
+    {
+      "node_id": 9,
+      "operator_type": "Hash Join",
+      "estimated_card": 765498,
+      "actual_card": 2472162,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "c0ff42673a2534e5e01b4db6a5db84cdc62da840"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 2518675,
+      "actual_card": 20122662,
+      "relation_aliases": [
+        "ci_act",
+        "role_type"
+      ],
+      "operator_signature": "8a8f02bc46233d5245cd70728a671023e70af9bf"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 125167,
+      "actual_card": 259581,
+      "relation_aliases": [
+        "ci_dir",
+        "t"
+      ],
+      "operator_signature": "c34c37b0eeebe1b9f68a94092fda7fe06fbed86c"
+    }
+  ],
+  "run_times_ms": [
+    10225.218534469604,
+    9848.413467407227,
+    9916.874647140503,
+    10098.809957504272,
+    10193.163871765137,
+    10086.45510673523
+  ],
+  "median_latency_ms": 10092.63,
+  "q_error_max": 23.16,
+  "success": true,
+  "error": null
+}

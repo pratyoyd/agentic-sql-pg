@@ -57,20 +57,55 @@ def _templatize_predicate(pred_str: str) -> str:
 
 def _operator_signature(operator_type: str, tables: list[str],
                         predicates: list[str], groupby_keys: list[str]) -> str:
-    """SHA1 hash over canonical operator representation (matches DuckDB logger)."""
+    """SHA1 hash over canonical operator representation.
+
+    For join nodes, `tables` should be the sorted set of base table names
+    from the entire subtree (not just the current node's Relation Name).
+    This ensures structurally different joins produce different signatures.
+    """
     normalized_preds = sorted(_templatize_predicate(p) for p in predicates)
     canonical = f"{operator_type}|{sorted(tables)}|{normalized_preds}|{sorted(groupby_keys)}"
     return hashlib.sha1(canonical.encode()).hexdigest()
 
 
+def _collect_subtree_base_tables(pg_node: dict) -> list[str]:
+    """Collect all base table names (not aliases) from a plan subtree.
+
+    Walks the subtree and returns a sorted list of Relation Name values
+    from scan nodes and CTE names from CTE Scan nodes.
+    Keeps duplicates so that joins of cast_info × cast_info × title
+    produce a different signature from cast_info × title.
+    """
+    tables = []
+    node_type = pg_node.get("Node Type", "")
+    if node_type in ("Seq Scan", "Index Scan", "Index Only Scan",
+                     "Bitmap Heap Scan", "Bitmap Index Scan"):
+        rel = pg_node.get("Relation Name")
+        if rel:
+            tables.append(rel)
+    elif node_type == "Values Scan":
+        tables.append("__values__")
+    elif node_type == "CTE Scan":
+        cte_name = pg_node.get("CTE Name")
+        if cte_name:
+            tables.append(f"__cte__{cte_name}")
+    for child in pg_node.get("Plans", []):
+        tables.extend(_collect_subtree_base_tables(child))
+    return sorted(tables)
+
+
 def _collect_relation_aliases(node: dict) -> set[str]:
-    """Recursively collect all base-relation aliases from a plan subtree."""
+    """Recursively collect all base-relation aliases from a plan subtree.
+
+    Includes CTE Scan aliases so that pg_hint_plan Rows() hints can
+    reference the correct full set of relations at each join node.
+    """
     aliases = set()
     alias = node.get("Alias")
     node_type = node.get("Node Type", "")
-    # Only count base relation scans (not subquery scans, CTE scans, etc.)
     if node_type in ("Seq Scan", "Index Scan", "Index Only Scan",
-                     "Bitmap Heap Scan", "Bitmap Index Scan"):
+                     "Bitmap Heap Scan", "Bitmap Index Scan",
+                     "CTE Scan", "Values Scan"):
         if alias:
             aliases.add(alias)
         elif node.get("Relation Name"):
@@ -151,7 +186,13 @@ def _extract_node(pg_node: dict, counter: list[int]) -> list[dict]:
             children_ids.append(child_tree[0]["node_id"])
             child_nodes.extend(child_tree)
 
-    sig = _operator_signature(node_type, tables, predicates, groupby_keys)
+    # For join nodes, use all base tables from the subtree for the signature.
+    # For scan/aggregate nodes, use just the current node's table.
+    if node_type in ("Hash Join", "Merge Join", "Nested Loop"):
+        sig_tables = _collect_subtree_base_tables(pg_node)
+    else:
+        sig_tables = tables
+    sig = _operator_signature(node_type, sig_tables, predicates, groupby_keys)
 
     this_node = {
         "node_id": node_id,

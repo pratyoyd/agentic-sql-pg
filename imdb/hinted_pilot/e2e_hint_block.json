@@ -1,0 +1,85 @@
+{
+  "hint_block": "/*+ Rows(ci_act ci_dir na nd role_type t #45) Rows(ci_act ci_dir nd role_type t #4452) Rows(ci_act ci_dir nd t #9384) Rows(ci_dir nd t #72) */",
+  "hints": [
+    {
+      "hint": "Rows(ci_act ci_dir na nd role_type t #45)",
+      "sig": "97fb41deef89",
+      "current_aliases": [
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "prior_aliases": [
+        "ci_act",
+        "ci_dir",
+        "na",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "prior_card": 45,
+      "prior_query": 4,
+      "est": 1
+    },
+    {
+      "hint": "Rows(ci_act ci_dir nd role_type t #4452)",
+      "sig": "2b2395b290a4",
+      "current_aliases": [
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "prior_aliases": [
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "role_type",
+        "t"
+      ],
+      "prior_card": 4452,
+      "prior_query": 4,
+      "est": 1
+    },
+    {
+      "hint": "Rows(ci_act ci_dir nd t #9384)",
+      "sig": "5987c4d28cc9",
+      "current_aliases": [
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "prior_aliases": [
+        "ci_act",
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "prior_card": 9384,
+      "prior_query": 4,
+      "est": 8
+    },
+    {
+      "hint": "Rows(ci_dir nd t #72)",
+      "sig": "9ba709a0a34d",
+      "current_aliases": [
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "prior_aliases": [
+        "ci_dir",
+        "nd",
+        "t"
+      ],
+      "prior_card": 72,
+      "prior_query": 4,
+      "est": 1
+    }
+  ]
+}

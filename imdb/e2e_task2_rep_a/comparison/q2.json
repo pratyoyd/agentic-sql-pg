@@ -1,0 +1,193 @@
+{
+  "query_seq": 2,
+  "baseline_median_ms": 6989.83,
+  "hinted_median_ms": 7083.99,
+  "delta_ms": 94.16,
+  "delta_pct": 1.35,
+  "hints_injected": 5,
+  "plan_topology_changed": false,
+  "join_order_changed": false,
+  "join_method_changed": false,
+  "baseline_max_qerror": 46.75,
+  "hinted_max_qerror": 46.75,
+  "qerror_reduction": 0.0,
+  "classification": "unchanged",
+  "baseline_plan_summary": [
+    {
+      "node_id": 2,
+      "operator_type": "Hash Join",
+      "estimated_card": 71253,
+      "actual_card": 1524,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "info_type",
+        "kind_type",
+        "mii",
+        "na",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "8e98abdb50feaad6e7c717053ee4c27ef2285efb"
+    },
+    {
+      "node_id": 3,
+      "operator_type": "Merge Join",
+      "estimated_card": 71253,
+      "actual_card": 1524,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "info_type",
+        "kind_type",
+        "mii",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "6cdf8b7de58f6856fd1b3bdba3d642c27fc45066"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "daf979006f6aaa639520b97f7287fc06938a5cc2"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Hash Join",
+      "estimated_card": 26700,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "912eaa5b12d713d889c8670702bc8e2dc4eb97d2"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 160200,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 4366,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    }
+  ],
+  "hinted_plan_summary": [
+    {
+      "node_id": 2,
+      "operator_type": "Hash Join",
+      "estimated_card": 71253,
+      "actual_card": 1524,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "info_type",
+        "kind_type",
+        "mii",
+        "na",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "8e98abdb50feaad6e7c717053ee4c27ef2285efb"
+    },
+    {
+      "node_id": 3,
+      "operator_type": "Merge Join",
+      "estimated_card": 71253,
+      "actual_card": 1524,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "info_type",
+        "kind_type",
+        "mii",
+        "nd",
+        "role_type",
+        "role_type_1",
+        "t"
+      ],
+      "operator_signature": "6cdf8b7de58f6856fd1b3bdba3d642c27fc45066"
+    },
+    {
+      "node_id": 10,
+      "operator_type": "Hash Join",
+      "estimated_card": 89067,
+      "actual_card": 257547,
+      "relation_aliases": [
+        "ci_act",
+        "ci_dir",
+        "mii",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "daf979006f6aaa639520b97f7287fc06938a5cc2"
+    },
+    {
+      "node_id": 13,
+      "operator_type": "Hash Join",
+      "estimated_card": 99659,
+      "actual_card": 239181,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "role_type",
+        "t"
+      ],
+      "operator_signature": "912eaa5b12d713d889c8670702bc8e2dc4eb97d2"
+    },
+    {
+      "node_id": 14,
+      "operator_type": "Nested Loop",
+      "estimated_card": 226334,
+      "actual_card": 543201,
+      "relation_aliases": [
+        "ci_act",
+        "mii",
+        "t"
+      ],
+      "operator_signature": "13402bd3c4f7a3ad370171e12217a74876b6eeea"
+    },
+    {
+      "node_id": 15,
+      "operator_type": "Hash Join",
+      "estimated_card": 1844,
+      "actual_card": 4425,
+      "relation_aliases": [
+        "mii",
+        "t"
+      ],
+      "operator_signature": "a7215a3711480e409e62057ed1617356561ad760"
+    }
+  ]
+}
