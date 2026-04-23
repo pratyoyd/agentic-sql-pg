@@ -1,0 +1,36 @@
+\section{Related Work}
+\label{sec:related}
+
+Concord draws on four lines of prior work: materialized views and result caching, classical multi-query optimization, adaptive physical tuning, and recent LLM-for-database systems. We discuss each in turn, emphasizing the design assumption each makes about how reuse opportunities are discovered.
+
+\subsection{Materialized Views and Result Caching}
+
+Materialized views~\cite{halevy2001mv, goldstein2001mv} and result recyclers~\cite{ivanova2010recycler,nagel2013recycling} maintain precomputed results that later queries can be rewritten against. The core technical challenges have been view-matching---determining whether a stored result can answer a query~\cite{goldstein2001mv}---and maintenance under updates~\cite{gupta1995mvmaint}. MonetDB's recycler~\cite{ivanova2010recycler} and related systems~\cite{phan2008predictableperf} demonstrate that operator-level intermediate caching can yield substantial speedups on workloads with repeated subexpressions.
+
+These systems are designed for workloads in which reuse opportunities must be discovered from observed history. Their decisions are reactive: a result is recycled when its reuse likelihood, estimated from workload statistics, justifies the storage and maintenance cost. Concord inverts this: the agent \emph{declares} which result will be reused, so the materialization decision is made at first execution, without requiring statistical evidence of recurrence. This is not a claim that declared intent is universally better---it is a claim that when the client can be trusted to declare faithfully, a richer optimization space becomes legal. Section~\ref{sec:protocol} makes the legality argument precise.
+
+\subsection{Classical Multi-Query Optimization}
+
+Multi-query optimization (MQO)~\cite{sellis1988mqo,roy2000mqo,dalvi2001pipelined} identifies common subexpressions across a known batch of queries and generates a shared plan that evaluates them together. MQO has been studied both as a static batch problem~\cite{roy2000mqo} and in pipelined~\cite{dalvi2001pipelined} and online~\cite{silva2012onlinemqo} settings. Recent work~\cite{mqo2020revisit} has revisited MQO in the context of modern analytical workloads.
+
+MQO classically assumes a \emph{static} batch of queries known in advance. Concord's M2 mechanism is closer in spirit to pipelined and online MQO: the agent declares a $k$-query lookahead window ahead of execution, and the harness co-optimizes within that window. What distinguishes Concord is not the shared-plan construction itself, which builds on established MQO techniques, but the signal used to identify the batch: an explicit lookahead declaration from the agent, rather than a scheduler buffering concurrent queries. This signal carries additional structure---the agent's declared \emph{diff clauses} between lookahead queries identify exactly which predicates and group-bys vary---that a scheduler observing only the query text cannot recover without further analysis.
+
+\subsection{Adaptive Physical Tuning}
+
+Database cracking~\cite{idreos2007cracking} and its descendants~\cite{idreos2011crackingupdates,petraki2015holistic} adapt physical structure (sort orders, indexes) from query predicates observed at runtime. Soft indexes~\cite{graefe2010softindex} and adaptive merging~\cite{graefe2010adaptivemerge} generalize the idea. These systems, like materialized view work, infer physical structure from observed queries.
+
+Concord's M3 mechanism adapts physical properties of the session workspace---sort order, partial aggregates, session-level GUCs---from the \emph{declared} access pattern in the lookahead window, not from observation. The distinction matters empirically: our index negative result (Section~\ref{sec:eval}) shows that traditional indexes do not help the agent's full-scan analytical workload, because the agent rarely issues point lookups on the workspace. What does help is physical structure aligned with the agent's declared aggregations---partial aggregates, sort orders matching declared \texttt{GROUP BY} keys---which observation-based systems cannot synthesize without seeing the queries first.
+
+\subsection{LLM Agents and Databases}
+
+Recent work has explored LLM agents as database clients in several roles. Text-to-SQL systems~\cite{spider2018,bird2023,spider2_2024} treat the agent as a natural-language-to-SQL translator benchmarked on single-shot translation accuracy. Benchmarks for multi-step analytical agents~\cite{insightbench2024,dabbench2024} evaluate longer-horizon task completion but do not consider database-side protocol adaptation. Systems such as DB-GPT~\cite{dbgpt2023}\TODO{verify cite} and related frameworks provide the agent with tool interfaces over the database but leave the underlying query execution unchanged.
+
+Closely related is the line of work on Automated Data Exploration by Milo and collaborators~\cite{linx2025,atena2020,atenapro2023}, which uses constrained reinforcement learning and LLM-derived specifications to \emph{generate} tree-structured exploration sessions for human analysts. LINX's generated sessions exhibit the same base-and-variants decomposition we observe empirically in agent sessions (Section~\ref{sec:motivation}), providing external corroboration of the pattern, but the optimization target is different: LINX generates sessions offline for later human consumption, while Concord optimizes the execution cost of an agent's sessions in the interactive loop.
+
+Earlier work on next-step recommendation in interactive data analysis~\cite{react2018} infers likely next queries from session logs and suggests them to human users. Concord inverts the signal direction: the LLM agent emits prospective declarations of its own intent, and the database uses those declarations to optimize execution.
+
+Concurrent with our work, several efforts have begun to ask whether databases should adapt to LLM-generated workloads \TODO{cite recent agentic-DB positioning papers}. To our knowledge, Concord is the first system to treat the agent's structured intent---declared reuse, declared lookahead---as the primary optimization signal, and to characterize empirically both the fidelity of agent-emitted declarations and the session-level speedup they enable.
+
+\subsection{Summary of Positioning}
+
+Prior cooperative-database mechanisms treat the client as a black box that emits queries. They infer what to cache, share, or index from observed workload history. Concord treats the LLM agent as a \emph{cooperative} client that can declare intent prospectively, and designs a minimal protocol to exploit that cooperation. The three mechanisms of Section~\ref{sec:protocol} each identify a specific form of intent the agent can declare and a specific optimization that becomes legal only under that declaration.

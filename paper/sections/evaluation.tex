@@ -1,0 +1,69 @@
+\section{Evaluation}
+\label{sec:eval}
+
+\TODO{Draft after all experiments run. Outline below reflects the locked study structure.}
+
+\subsection{Experimental Setup}
+\TODO{hardware, PG16 config, agent models, temperatures, query caps, benchmark datasets (IMDB/JOB and curated InsightBench subset)}
+
+\subsection{E1: End-to-End Headline on InsightBench}
+\TODO{Primary headline result. Protocol vs.\ Baseline A across \placeholder{} curated tasks. Table of per-task session time and quality-rubric agreement.}
+
+\subsection{E2: End-to-End Mechanism Study on IMDB}
+\TODO{Per-scenario session time breakdown across 20 reps. Table below is the structure; numbers update when pre-hoc and M2 land.}
+
+%% Placeholder table showing the result structure; numbers from current post-hoc M1 data
+\begin{table}[h]
+\centering
+\small
+\caption{IMDB session-time breakdown, M1 post-hoc implementation (20 reps across 10 scenarios). \TODO{Replace with pre-hoc + M2 + M3 numbers when measured.}}
+\label{tab:e2-imdb}
+\begin{tabular}{lrrrr}
+\toprule
+Scenario & With M1 (s) & Baseline (s) & Savings (s) & Speedup \\
+\midrule
+1.\ Genre Evolution & 29.8 & 51.1 & 21.3 & 1.72$\times$ \\
+2.\ Director Career & 393.5 & 496.8 & 103.3 & 1.26$\times$ \\
+3.\ Company Genre & 34.3 & 43.2 & 8.9 & 1.26$\times$ \\
+4.\ Cast Size & 100.7 & 117.0 & 16.4 & 1.16$\times$ \\
+5.\ Co-Production & 36.9 & 51.1 & 14.2 & 1.38$\times$ \\
+6.\ Franchise & 10.9 & 15.5 & 4.5 & 1.41$\times$ \\
+7.\ Writer-Director & 18.7 & 24.7 & 6.0 & 1.32$\times$ \\
+8.\ Actor Archetypes & 198.9 & 319.4 & 120.5 & 1.61$\times$ \\
+9.\ Spillover & 235.1 & 256.0 & 20.9 & 1.09$\times$ \\
+10.\ Budget & 16.6 & 23.4 & 6.8 & 1.41$\times$ \\
+\midrule
+\textbf{TOTAL} & \textbf{1075.3} & \textbf{1398.1} & \textbf{322.7} & \textbf{\imdbSpeedupPostHoc} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{E3: Per-Mechanism Ablation}
+\TODO{M1-only / M1+M2 / M1+M2+M3 / full protocol on IMDB. Bar chart or stacked bar.}
+
+\subsection{E4: Agent Adoption and Declaration Faithfulness}
+\TODO{Voluntary adoption rates, SAVE\_CTE distribution, M2 precision; documented failure mode ``iteration on base''}
+
+Observed across the 20-rep IMDB suite under M1 post-hoc:
+\begin{itemize}
+\item M1 adoption: \adoptionRate voluntary save rate (15/20 reps).
+\item SAVE\_CTE dominance: \saveCteRate of reps use SAVE\_CTE specifically.
+\item M2 declaration rate: \mTwoDeclRate (9/20 reps).
+\item M2 precision: \mTwoPrecision of declared variants actually issued.
+\item Task completion: \taskCompletionIMDB.
+\end{itemize}
+
+\subsection{E5: Intra- vs.\ Inter-Query Reuse}
+\TODO{Single-ref vs.\ multi-ref CTE subset. Measures Concord's contribution beyond PG16's built-in multi-ref CTE materialization.}
+
+Current post-hoc numbers:
+\begin{itemize}
+\item Single-reference reuse subset (44 queries): \imdbSingleRefSpeedup speedup. PG16 would inline the CTE; Concord's materialization is where the win comes from.
+\item Multi-reference subset (25 queries): \imdbMultiRefSpeedup speedup. PG16 already materializes; Concord's delta is smaller (but still positive, reflecting physical-property benefits from M3).
+\end{itemize}
+
+\subsection{E6: Sensitivity}
+\TODO{Lookahead depth $k \in \{1,2,3,5\}$; agent capability axis (Opus / Haiku / mid-tier); data scale (IMDB 10\% / 100\%).}
+
+\subsection{Quality Evaluation}
+\TODO{Pre-registered rubric, blinded human grading of paired outputs, LLM-judge cross-validation, symmetric reporting (agreement / protocol-wins / baseline-wins rates).}

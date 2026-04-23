@@ -1,0 +1,40 @@
+\section{Introduction}
+\label{sec:intro}
+
+LLM agents have emerged as a new class of database client. Unlike human analysts, who issue queries irregularly as analytical intuition develops, agents follow systematic task-decomposition patterns: they establish a working dataset, then issue a sequence of aggregations, filters, and breakdowns against it. Across a recent characterization of agent sessions on analytical workloads, we observe that the same plan-critical subexpressions recur at strikingly high rates within a session, and that the agent frequently telegraphs its next several queries in its chain of thought before executing them. This regularity is not incidental---it is a direct consequence of how modern LLM agents are trained and prompted to decompose analytical tasks.
+
+This regularity is an optimization opportunity that existing cooperative database mechanisms are poorly equipped to exploit. Materialized views, result recyclers~\cite{ivanova2010recycler}, adaptive indexing~\cite{idreos2007cracking}, and classical multi-query optimization~\cite{sellis1988mqo,roy2000mqo} all share a common design assumption: that reuse opportunities must be \emph{inferred} from observed workload history, after enough statistics have accumulated to justify the materialization or rewriting decision. This assumption is fundamental---it governs what the database is allowed to do, when, and at what cost. Under it, a database is reactive by necessity: it can only discover reuse after paying for it at least once.
+
+LLM agents invalidate this assumption. An agent operating under a cooperation protocol can \emph{declare} its intent prospectively: which results will be reused, which queries will follow, which physical access patterns will dominate. Given such declarations, a far richer space of optimizations becomes \emph{legal}---not merely heuristic. A result that the agent declares will be reused can be materialized on first execution without waiting for recurrence to prove the value. A set of queries the agent declares it will issue next can be co-optimized as a batch, their shared subexpressions materialized once, their physical properties synthesized from the union of their access patterns. None of this is safe under inferred intent; all of it is safe under declared intent.
+
+\paragraph{Extending reuse across the session.}
+Modern query engines already provide \emph{intra-query} reuse for free. PostgreSQL 16's multi-reference CTE auto-materialization, for instance, detects common subexpressions \emph{within} a single query and materializes them once. What has been missing is \emph{inter-query} reuse---sharing materialized state across the sequence of queries that constitutes an agent's session. Concord provides exactly this extension: a session-scoped workspace, addressable by declared names, whose contents persist across the agent's query sequence and are optimized using the agent's declared reuse and lookahead intent.
+
+\paragraph{Three cooperating mechanisms.}
+Concord consists of three mechanisms, each enabled by a specific declaration:
+
+\begin{itemize}
+\item \textbf{M1: Declared materialization.} The agent emits \texttt{-- WILL\_SAVE} before a query whose result will be reused, or \texttt{-- WILL\_SAVE\_CTE} to mark a named CTE body within a larger query as the reusable fragment. The session harness materializes the declared result on first execution via \texttt{CREATE TEMP TABLE AS}, eliminating the double-execution cost of a post-hoc save.
+
+\item \textbf{M2: Lookahead-informed multi-query optimization.} The agent emits \texttt{-- LOOKAHEAD} declaring its next $k$ queries. The harness identifies common subexpressions across the declared window, co-materializes them once with physical properties (sort order, partial aggregates, covering columns) synthesized from the union of declared access patterns, and rewrites the declared queries to exploit the shared result.
+
+\item \textbf{M3: Reuse-aware physical tuning.} The harness adapts session-level GUCs (e.g., \texttt{work\_mem}, parallelism) to the declared workspace's characteristics, and chooses clustering and partial-aggregate options from the declared access pattern.
+\end{itemize}
+
+Concord is implemented as a session harness over \emph{unmodified} PostgreSQL 16: no extensions, no planner patches. The declared-intent protocol is delivered through SQL comments and a small PL/pgSQL workspace catalog. This deliberately minimal integration surface is itself a design claim: if the protocol requires deep database modifications, its deployability story is weak.
+
+\paragraph{Contributions.}
+We make four contributions:
+
+\begin{itemize}
+\item A declared-intent protocol for cooperative agent-database optimization, with explicit legality conditions stating what each declaration entitles the database to do that it could not safely do otherwise (Section~\ref{sec:protocol}).
+
+\item An empirical characterization of agent adoption and predictability on IMDB/JOB: \adoptionRate voluntary save rate across 20 multi-step analytical sessions with no explicit reward for saving, \mTwoPrecision M2 declaration precision, and a detailed picture of \emph{when} agents declare intent faithfully versus \emph{when} they iterate on the base definition in ways that defeat reuse (Section~\ref{sec:motivation}, \ref{sec:eval}).
+
+\item A cost-model result establishing that lookahead-informed shared materialization is never worse than ad-hoc per-query optimization under stated assumptions on declaration fidelity (Section~\ref{sec:protocol}).
+
+\item An end-to-end evaluation showing Concord yields \imdbSpeedupFull session speedup on IMDB/JOB and \ibSpeedup on InsightBench at equal analytical quality, with the speedup net of PostgreSQL 16's existing intra-query CTE materialization (Section~\ref{sec:eval}).
+\end{itemize}
+
+\paragraph{Paper organization.}
+Section~\ref{sec:related} situates Concord against four prior cooperative-database traditions. Section~\ref{sec:motivation} presents the workload characterization that motivates the protocol, including a negative result on cardinality-feedback optimization for agent workloads that clarifies why the opportunity lies at the session level rather than at the single-query level. Section~\ref{sec:protocol} formalizes the protocol, the three mechanisms, and the cost model. Section~\ref{sec:impl} describes the implementation over PostgreSQL 16. Section~\ref{sec:eval} reports the empirical evaluation. Section~\ref{sec:discussion} discusses failure modes and generalization; Section~\ref{sec:conclusion} concludes.

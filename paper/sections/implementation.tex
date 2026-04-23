@@ -1,0 +1,22 @@
+\section{Implementation}
+\label{sec:impl}
+
+\TODO{Draft after pre-hoc save and M2 build are complete. Outline:}
+
+\subsection{Session Harness Architecture}
+\TODO{harness as a Python process; SQL pre-processor; workspace catalog in PL/pgSQL; interaction flow diagram if helpful}
+
+\subsection{Declaration Parsing}
+\TODO{comment-based parsing, grammar, handling of malformed declarations}
+
+\subsection{Pre-Hoc Save Implementation}
+\TODO{WILL\_SAVE rewrite to CREATE TEMP TABLE AS; WILL\_SAVE\_CTE via sqlglot CTE extraction; handling of nested CTEs}
+
+\subsection{Lookahead Execution Engine}
+\TODO{common-subexpression identification algorithm; physical-property synthesis heuristics; plan construction}
+
+\subsection{Physical Tuning Controller}
+\TODO{GUC adaptation logic; clustering decisions; partial-aggregate synthesis}
+
+\subsection{Extension-Free PostgreSQL Integration}
+\TODO{why no extensions needed; what we gave up by staying at the SQL layer; what this buys us in portability}

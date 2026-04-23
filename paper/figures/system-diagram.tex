@@ -1,0 +1,100 @@
+%% System diagram for Concord: Agent <-> Session Harness + Workspace <-> PostgreSQL
+%% Intended to be \input from protocol.tex inside a \begin{figure}...\end{figure}
+
+\begin{tikzpicture}[
+    font=\small,
+    node distance=10mm and 16mm,
+    %% component styles
+    agent/.style={
+        draw, rounded corners=2pt, thick,
+        minimum width=60mm, minimum height=14mm,
+        align=center, fill=blue!5
+    },
+    harness/.style={
+        draw, rounded corners=2pt, thick,
+        minimum width=60mm, minimum height=22mm,
+        align=left, fill=orange!8
+    },
+    catalog/.style={
+        draw, thick,
+        minimum width=30mm, minimum height=22mm,
+        align=left, fill=orange!15
+    },
+    db/.style={
+        draw, rounded corners=2pt, thick,
+        minimum width=60mm, minimum height=14mm,
+        align=center, fill=green!5
+    },
+    %% arrow styles
+    flow/.style={-{Latex[length=2.2mm]}, thick},
+    flowback/.style={-{Latex[length=2.2mm]}, thick, densely dashed},
+    bidir/.style={{Latex[length=2mm]}-{Latex[length=2mm]}, thick},
+    %% label styles
+    lbl/.style={font=\footnotesize, align=center}
+]
+
+    %% --- nodes ------------------------------------------------
+    \node[agent]   (agent)  {\textbf{LLM Agent} \\[1pt] \small Opus / Haiku / GPT / \ldots};
+
+    \node[harness] (harness) [below=18mm of agent] {%
+        \textbf{Session Harness}\\[2pt]
+        \footnotesize $\bullet$ parse declarations\\[-1pt]
+        \footnotesize $\bullet$ rewrite SQL\\[-1pt]
+        \footnotesize $\bullet$ orchestrate M2 batch\\[-1pt]
+        \footnotesize $\bullet$ set session GUCs (M3)
+    };
+
+    \node[catalog] (cat) [right=8mm of harness] {%
+        \textbf{Workspace}\\
+        \textbf{Catalog}\\[2pt]
+        \footnotesize name $\to$ relation\\[-1pt]
+        \footnotesize name $\to$ relation\\[-1pt]
+        \footnotesize name $\to$ relation\\[-1pt]
+        \footnotesize \ldots
+    };
+
+    \node[db] (db) [below=18mm of harness] {\textbf{PostgreSQL 16} \\[1pt] \small (unmodified)};
+
+    %% --- arrows: Agent <-> Harness ----------------------------
+    \draw[flow] ($(agent.south) + (-12mm,0)$) --
+        node[lbl, left=1mm, pos=0.5] {
+            SQL + declarations\\
+            \ttfamily\footnotesize
+            -- WILL\_SAVE\\
+            \ttfamily\footnotesize
+            -- WILL\_SAVE\_CTE\\
+            \ttfamily\footnotesize
+            -- LOOKAHEAD
+        }
+        ($(harness.north) + (-12mm,0)$);
+
+    \draw[flowback] ($(harness.north) + (12mm,0)$) --
+        node[lbl, right=1mm, pos=0.5] {
+            result rows\\
+            workspace state
+        }
+        ($(agent.south) + (12mm,0)$);
+
+    %% --- arrows: Harness <-> Workspace Catalog ----------------
+    \draw[bidir] (harness.east) -- node[lbl, above, pos=0.5] {lookup / register} (cat.west);
+
+    %% --- arrows: Harness <-> PostgreSQL -----------------------
+    \draw[flow] ($(harness.south) + (-12mm,0)$) --
+        node[lbl, left=1mm, pos=0.5] {
+            \ttfamily\footnotesize CREATE TEMP TABLE AS\\
+            \ttfamily\footnotesize SET work\_mem = \ldots\\
+            rewritten SQL
+        }
+        ($(db.north) + (-12mm,0)$);
+
+    \draw[flowback] ($(db.north) + (12mm,0)$) --
+        node[lbl, right=1mm, pos=0.5] {rows}
+        ($(harness.south) + (12mm,0)$);
+
+    %% --- session boundary (optional visual grouping) ----------
+    \begin{pgfonlayer}{background}
+        \node[draw=gray!50, densely dotted, rounded corners, inner sep=5mm,
+              fit=(harness) (cat), label={[gray, font=\footnotesize]below right:{session-scoped}}] {};
+    \end{pgfonlayer}
+
+\end{tikzpicture}

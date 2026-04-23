@@ -1,0 +1,131 @@
+\section{Protocol and System Model}
+\label{sec:protocol}
+
+This section presents Concord's cooperation protocol. We begin with the system model (Section~\ref{sec:protocol:model}) and the shared-state abstraction that connects the agent to the database (Section~\ref{sec:protocol:workspace}). We then define the three declaration types and, for each, state the \emph{legality condition}---what the harness is entitled to do because of the declaration that it could not safely do without it (Section~\ref{sec:protocol:declarations}). Section~\ref{sec:protocol:costmodel} sketches a cost-model result establishing that lookahead-informed materialization is never worse than per-query execution under stated assumptions on declaration fidelity.
+
+\subsection{System Model}
+\label{sec:protocol:model}
+
+Concord's architecture, shown in Figure~\ref{fig:system}, consists of three components:
+
+\begin{itemize}
+\item An \textbf{LLM Agent} that emits SQL queries interleaved with declarations, in response to an analytical task.
+\item A \textbf{Session Harness} that parses declarations, maintains workspace state, rewrites queries, and issues them to the database.
+\item An unmodified \textbf{PostgreSQL 16} instance.
+\end{itemize}
+
+\begin{figure*}[t]
+\centering
+\input{figures/system-diagram}
+\caption{Concord architecture. The agent emits SQL queries annotated with declarations (\texttt{WILL\_SAVE}, \texttt{WILL\_SAVE\_CTE}, \texttt{LOOKAHEAD}). The session harness parses declarations, registers materialized results in the workspace catalog, rewrites subsequent queries to reference them, and issues queries to an unmodified PostgreSQL~16. Dashed arrows denote data flow back to the agent.}
+\label{fig:system}
+\end{figure*}
+
+The separation of concerns between harness and database is deliberate. Placing the protocol logic in a session-level harness, rather than in the database itself, keeps the database unmodified and keeps the protocol portable across database systems. The cost of this decision is that the harness cannot intervene in the query planner; the benefit is that the protocol can be deployed without extensions, planner patches, or binary modifications. All optimizations Concord performs are expressible as SQL-level rewrites, \texttt{CREATE TEMP TABLE} statements, and session-level GUC adjustments.
+
+A \emph{session} is a bounded, ordered sequence of queries and declarations emitted by a single agent in service of a single analytical task. Sessions are the scope at which the workspace exists: when the session terminates, the workspace is dropped, and no state persists between sessions. This scoping is critical for the legality argument developed below---it bounds the surface over which the harness must reason about correctness.
+
+\subsection{The Session Workspace}
+\label{sec:protocol:workspace}
+
+The workspace is a mutable set of named, materialized relations, each derived from a prefix of the session's query history. Formally, let a session $S$ be a sequence $S = \langle q_1, q_2, \ldots, q_n \rangle$ of queries, with declarations attached to individual queries. The workspace $W_i$ after query $q_i$ is a function
+\[
+W_i : \text{Name} \to \text{Relation}
+\]
+mapping declared names (e.g., \texttt{genre\_year\_ratings}) to stored relations (PostgreSQL temporary tables). The workspace evolves by two operations:
+
+\begin{itemize}
+\item \textbf{Register.} When query $q_i$ carries a \texttt{WILL\_SAVE} declaration with name $n$, the harness executes $q_i$ as \texttt{CREATE TEMP TABLE $n$ AS $q_i$} and registers $n \mapsto \text{relation}(n)$ in $W_i$.
+\item \textbf{Resolve.} When query $q_j$ (for $j > i$) references $n$, the harness resolves the reference to the materialized relation.
+\end{itemize}
+
+Each materialized relation in the workspace is an immutable snapshot of the result at registration time. Concord does not maintain workspace entries under updates to the underlying tables; the assumption is that the underlying data is stable for the duration of an analytical session, which is consistent with the benchmark workloads we consider and with most practical agent-analytics scenarios. Relaxing this assumption is future work (Section~\ref{sec:discussion}).
+
+\subsection{Declarations}
+\label{sec:protocol:declarations}
+
+Concord defines three declaration types. Each is expressed as a SQL comment prefixing the query it applies to, requiring no changes to PostgreSQL's parser or wire protocol.
+
+\subsubsection{M1: Declared Materialization}
+\label{sec:protocol:m1}
+
+Two forms:
+
+\begin{verbatim}
+-- WILL_SAVE: <name> "<description>"
+<query>
+\end{verbatim}
+declares that the result of \texttt{<query>} will be reused in subsequent queries of the session.
+
+\begin{verbatim}
+-- WILL_SAVE_CTE: <name> "<description>" cte=<cte_name>
+WITH <cte_name> AS (<cte_body>)
+<outer_query>
+\end{verbatim}
+declares that the body of the named CTE within a larger query is the reusable fragment, not the full query result. This form is important empirically: in our trace data, 10 of 15 M1-firing sessions used SAVE\_CTE, reflecting a common agent pattern of wrapping an expensive base in a CTE for immediate use and future reuse.
+
+\paragraph{Legality condition.}
+Given \texttt{WILL\_SAVE} on $q_i$, the harness is entitled to materialize $q_i$'s result as a physical temporary relation on first execution, without waiting for recurrence to justify the materialization cost. This is not safe under inferred intent: an observation-based system cannot know, at the first execution of $q_i$, whether $q_i$'s result will be reused or discarded, and the upfront materialization cost is unrecoverable if reuse does not materialize. Under declared intent, the agent takes responsibility for the declaration's accuracy.
+
+\paragraph{What it enables.}
+The immediate benefit is elimination of the double-execution cost incurred by post-hoc save: without a prior declaration, the agent must run $q_i$ to see its result, then issue a separate \texttt{workspace.save()} call that re-executes $q_i$ to materialize it. Pre-hoc \texttt{WILL\_SAVE} materializes during the first execution, saving one full execution of the base query. For the IMDB sessions in Section~\ref{sec:eval}, this corresponds to \TODO{X}s of redundant work per session.
+
+\subsubsection{M2: Lookahead-Informed Multi-Query Optimization}
+\label{sec:protocol:m2}
+
+\begin{verbatim}
+-- LOOKAHEAD: 3
+-- q1: <query_1>
+-- q2: <query_2>
+-- q3: <query_3>
+-- diff: q1 vs q2 WHERE year, q2 vs q3 GROUP BY
+\end{verbatim}
+The agent declares its next $k$ queries ($k = 2{-}5$ in our implementation) before issuing any of them, optionally identifying the differences between them via a \texttt{diff} clause.
+
+\paragraph{Legality condition.}
+Given a \texttt{LOOKAHEAD} declaration of queries $q_{i+1}, \ldots, q_{i+k}$, the harness is entitled to: (i) identify common subexpressions across the declared window; (ii) construct a shared physical plan that materializes these subexpressions once, with physical properties (sort order, partial aggregates, covering columns) synthesized from the union of access patterns across the declared queries; and (iii) execute the shared plan once, satisfying each declared query from the shared result. Under inferred intent, steps (i)--(iii) are unsafe at the moment $q_{i+1}$ arrives, because the database does not know that $q_{i+2}, \ldots$ will be issued at all.
+
+\paragraph{What it enables.}
+Three classes of optimization become legal:
+
+\begin{itemize}
+\item \emph{Shared scan.} If $q_{i+1}, \ldots, q_{i+k}$ share a common table scan with overlapping filters, the harness executes the scan once and feeds results to each query's downstream operations. This subsumes M1 as a special case (where the shared subexpression is the entire base query) and extends it to cases where the agent has not explicitly declared a save but has declared a lookahead.
+\item \emph{Physical-property synthesis.} If all declared queries group by the same key, the shared materialization can be sorted on that key, enabling merge-based aggregations downstream. If all declared queries compute the same aggregate function over overlapping groups, a partial-aggregate materialization is legal.
+\item \emph{Covering column selection.} The shared materialization includes only the columns that appear in the union of projection, filter, and grouping clauses across declared queries, reducing I/O relative to a naive full-row materialization.
+\end{itemize}
+
+The \texttt{diff} clause, when present, identifies exactly which predicates or grouping dimensions vary across lookahead queries, allowing the harness to precompute the shared portion and parameterize only the variant portion.
+
+\subsubsection{M3: Reuse-Aware Physical Tuning}
+\label{sec:protocol:m3}
+
+M3 is not a distinct declaration in the sense of M1 and M2; it is a set of harness behaviors activated by the declarations of M1 and M2. Specifically, given the declared workspace contents (via M1) and declared access patterns (via M2), the harness sets session-level GUCs---\texttt{work\_mem}, \texttt{enable\_parallel\_append}, \texttt{jit\_above\_cost}---to values appropriate for the declared workload characteristics, and optionally clusters or sorts materialized temporary relations to match declared access patterns. The legality argument for M3 is subsumed by those of M1 and M2: it is what the harness does with the declarations it has already received.
+
+\paragraph{What it enables.}
+For the full-scan analytical workloads that dominate agent sessions, the primary wins are: (i) sizing \texttt{work\_mem} to fit the declared temp-table's hash aggregation, avoiding spill; (ii) enabling parallelism on temp-table scans; and (iii) sorting the temp table on the dominant declared group-by key, converting hash aggregations to merge aggregations. Conventional indexing is \emph{not} part of M3; our measurements in Section~\ref{sec:eval} show that indexes on temporary workspace relations do not help and sometimes hurt this workload.
+
+\subsection{Cost Model: Lookahead Is Never Worse}
+\label{sec:protocol:costmodel}
+
+We sketch a cost-model result establishing that under faithful declarations, lookahead-informed execution is never worse than ad-hoc per-query execution. The full formal development is deferred to an extended version; the sketch below names the assumptions and the result.
+
+\paragraph{Setup.}
+Let $C(q)$ denote the execution cost of query $q$ under PostgreSQL's cost model, executed in isolation. Let $C_{\text{shared}}(q_{i+1}, \ldots, q_{i+k})$ denote the cost of executing a shared-plan materialization of the $k$ declared queries followed by the per-query residual computations over the shared result. Let $\tilde{C}(q)$ denote the cost of query $q$ executed against the shared materialization (typically $\tilde{C}(q) \ll C(q)$ because the expensive join-and-filter base is already materialized).
+
+\paragraph{Assumptions.}
+\textbf{(A1)} The agent's lookahead declaration is faithful: declared queries $q_{i+1}, \ldots, q_{i+k}$ are exactly the queries the agent will subsequently issue, in the declared order.
+\textbf{(A2)} The harness's common-subexpression identification is correct: the shared subexpression identified across the window is a subexpression of each declared query.
+\textbf{(A3)} PostgreSQL's cost model is monotone: executing a query against a materialized subexpression costs no more than executing it from scratch.
+
+\paragraph{Claim (informal).}
+Under (A1)--(A3), for any lookahead window $\langle q_{i+1}, \ldots, q_{i+k}\rangle$,
+\[
+C_{\text{shared}}(q_{i+1}, \ldots, q_{i+k}) \;\leq\; \sum_{j=1}^{k} C(q_{i+j}).
+\]
+
+\paragraph{Proof sketch.}
+The shared plan computes the common subexpression once (cost $C_{\text{common}}$) and then each residual (cost $\tilde{C}(q_{i+j})$ for $j = 1, \ldots, k$). The per-query baseline pays $C(q_{i+j})$ for each query, which, under (A2)--(A3), satisfies $C(q_{i+j}) \geq C_{\text{common, j}} + \tilde{C}(q_{i+j})$ where $C_{\text{common, j}}$ is the cost of computing the common subexpression within query $q_{i+j}$. Summing over $j$ and noting that the shared plan computes $C_{\text{common}}$ once rather than $k$ times yields the inequality.
+\qed
+
+\paragraph{What this result does and does not establish.}
+It establishes that faithful lookahead declarations cannot \emph{worsen} session cost relative to per-query execution, modulo the correctness of the harness's subexpression identification. It does \emph{not} establish a lower bound on the speedup, which depends on the weight of the shared subexpression relative to the residuals---an empirical question addressed in Section~\ref{sec:eval}. It also does not address unfaithful declarations: if the agent declares $q_{i+2}$ but never issues it, the shared materialization's cost is wasted on the unused residual. Empirically (Section~\ref{sec:eval}), we find that agents achieve \mTwoPrecision precision on declared queries, so the unfaithful-declaration regime is rare; we discuss adversarial cases in Section~\ref{sec:discussion}.

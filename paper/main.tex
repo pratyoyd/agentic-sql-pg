@@ -1,0 +1,93 @@
+%% ============================================================
+%% Concord: Cooperative Query Optimization for LLM Agent
+%%          Database Sessions
+%%
+%% Target venue: SIGMOD/VLDB (currently set up as acmart sigconf;
+%%               swap to pvldb class when venue is finalized)
+%% ============================================================
+
+%% --- Title alternatives (uncomment to swap) --------------------
+%% Concord: Cooperative Query Optimization for LLM Agent Database Sessions
+%% Covenant: A Declared-Intent Protocol for Agent-Database Cooperation
+%% Agora: Shared Workspaces for Cooperative LLM Agent SQL Sessions
+%% Declared-Intent Cooperation: Optimizing LLM Agent Database Sessions at the Protocol Layer
+%% ---------------------------------------------------------------
+
+\documentclass[sigconf, nonacm, review]{acmart}
+
+%% acmart options explained:
+%%   sigconf  -- SIGMOD/ACM conference two-column style
+%%   nonacm   -- suppress ACM rights/permissions block while drafting
+%%   review   -- line numbers on (remove for submission)
+
+\settopmatter{printacmref=false, printfolios=true}
+
+%% --- Packages -------------------------------------------------
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc, fit, backgrounds}
+\usepackage{xspace}
+
+%% --- Numerical macros (update these as measurements land) -----
+\newcommand{\TODO}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+\newcommand{\placeholder}[1]{\textcolor{orange}{\textbf{??}\xspace}}
+
+%% Measured numbers (current IMDB M1 post-hoc)
+\newcommand{\adoptionRate}{75\%\xspace}           % voluntary save rate
+\newcommand{\saveCteRate}{50\%\xspace}            % of reps using SAVE_CTE
+\newcommand{\mTwoDeclRate}{45\%\xspace}           % reps emitting M2 declarations
+\newcommand{\mTwoPrecision}{100\%\xspace}         % declared variants actually issued
+\newcommand{\imdbSpeedupPostHoc}{1.30$\times$\xspace}    % measured, 20-rep IMDB
+\newcommand{\imdbReuseSpeedup}{2.1$\times$\xspace}        % reuse-only queries
+\newcommand{\imdbSingleRefSpeedup}{5.7$\times$\xspace}    % single-ref CTE subset
+\newcommand{\imdbMultiRefSpeedup}{1.4$\times$\xspace}     % multi-ref CTE subset
+\newcommand{\taskCompletionIMDB}{20/20\xspace}    % task completion
+
+%% Projected / unmeasured numbers (TODO: replace when measured)
+\newcommand{\imdbSpeedupPreHoc}{\placeholder{}}   % TODO: measure post pre-hoc impl
+\newcommand{\imdbSpeedupFull}{\placeholder{}}     % TODO: measure with M1+M2+M3
+\newcommand{\ibSpeedup}{\placeholder{}}           % TODO: InsightBench headline
+\newcommand{\ibQualityAgreement}{\placeholder{}}  % TODO: rubric agreement rate
+
+%% --- Title and authors ----------------------------------------
+\title{Concord: Cooperative Query Optimization for LLM Agent Database Sessions}
+
+\author{Pratyoy}
+\affiliation{%
+  \institution{Institution TBD}
+  \country{USA}
+}
+\email{email@tbd.edu}
+
+%% --- Abstract -------------------------------------------------
+\begin{abstract}
+LLM agents now run extended analytical sessions against relational databases, issuing dozens of queries against a shared working set over the course of a single task. Existing cooperative database mechanisms---materialized views, recycler-style result caching, classical multi-query optimization, adaptive indexing---were designed under the assumption that reuse opportunities must be \emph{inferred} from workload history. LLM agents, however, expose structured intent directly: they can \emph{declare} which results will be reused, and which queries will follow.
+
+This paper presents Concord, a protocol and session-level execution harness that converts declared intent into end-to-end session speedup. Concord comprises three cooperating mechanisms: a session workspace with named result handles materialized at first execution (M1), a $k$-query lookahead declaration enabling cross-query co-materialization and lookahead-aware physical property synthesis (M2), and reuse-aware physical tuning of the workspace (M3). Each mechanism is enabled by a specific declaration the agent emits; none is safely implementable from inferred intent alone. We position Concord as extending the intra-query reuse already provided by modern query engines (e.g., PostgreSQL~16's multi-reference CTE auto-materialization) to inter-query reuse across the agent's session.
+
+We evaluate Concord on two benchmarks: 20 multi-step analytical sessions on IMDB/JOB, and \placeholder{} curated tasks from InsightBench. Across the IMDB suite, agents voluntarily adopt the workspace at \adoptionRate, Concord yields \imdbSpeedupFull end-to-end session speedup over a protocol-na\"{\i}ve baseline, and blinded rubric grading confirms equal analytical quality \ibQualityAgreement. On InsightBench, Concord yields \ibSpeedup session speedup. We release Concord as an extension-free harness over unmodified PostgreSQL~16.
+\end{abstract}
+
+\keywords{LLM agents, query optimization, materialization, multi-query optimization, cooperative databases}
+
+\begin{document}
+
+\maketitle
+
+\input{sections/intro}
+\input{sections/related}
+\input{sections/motivation}
+\input{sections/protocol}
+\input{sections/implementation}
+\input{sections/evaluation}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{bib/refs}
+
+\end{document}

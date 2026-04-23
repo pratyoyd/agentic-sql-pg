@@ -1,0 +1,49 @@
+\section{Motivation and Workload Characterization}
+\label{sec:motivation}
+
+This section makes two empirical points that together motivate Concord's design. First, LLM agents operating on analytical workloads are substantially more systematic than human analysts, and this systematicity manifests as high reuse of plan-critical subexpressions within a session. Second, point optimizations at the single-query level---specifically, cardinality feedback, the most natural first attempt to exploit this regularity---fail to convert into end-to-end session speedup, confirming prior negative results on the decoupling of cardinality accuracy from plan quality. These two observations together identify the session, not the single query, as the right level at which to exploit agent regularity.
+
+\subsection{Agents Are Systematic}
+\label{sec:motivation:systematic}
+
+Human analysts approach analytical databases irregularly. A human operator's queries reflect evolving intuition; subexpressions recur between queries only by coincidence, and physical access patterns vary widely across operators and tasks. LLM agents, in contrast, decompose analytical tasks following a narrow set of patterns---typically: (1) establish a filtered and joined working set, (2) issue a sequence of aggregations and breakdowns over it, (3) drill into specific slices identified in step 2. This pattern is a direct consequence of how agents are trained and prompted to decompose analytical work, and it is visible as structural regularity in the queries they emit.
+
+We characterize this regularity across \TODO{N} agent sessions on \TODO{benchmark details}. We observe three phenomena that motivate a session-level protocol:
+
+\begin{itemize}
+\item \emph{Plan-critical subexpression reuse is high.} Across 20 multi-step sessions on IMDB/JOB (Section~\ref{sec:eval}), \TODO{X\%} of the plan-critical subexpressions in each session appear in at least two distinct queries.
+
+\item \emph{Agents signal reuse prospectively.} When prompted to declare reuse intent before issuing queries, agents correctly identify \adoptionRate of their subsequent reused results in advance, with \mTwoPrecision precision on declared lookahead queries.
+
+\item \emph{The reuse is structurally stable.} Across repetitions of the same analytical task, different agent runs converge on similar intermediate representations of the working set, even when the specific aggregations they compute from that working set vary.
+\end{itemize}
+
+Each of these phenomena is a property of the agent-as-client rather than of the workload per se. The same database running the same underlying data, queried by a human analyst, would exhibit none of them reliably. This is what makes agent workloads a genuinely new cooperative-optimization target.
+
+The systematicity we observe is not unique to conversational LLM agents. Systems explicitly trained to generate analytical exploration sessions~\cite{linx2025,atena2020} converge on the same tree-structured base-and-variants decomposition, suggesting the pattern reflects the structure of analytical work itself rather than any particular agent's training. This convergence strengthens the case for a protocol-level intervention: the reuse structure we exploit is not an artifact of prompting but a property of how analytical tasks decompose.
+
+\subsection{Cardinality Feedback Does Not Convert to Plan Quality}
+\label{sec:motivation:cardfeedback}
+
+Given the regularity observed in Section~\ref{sec:motivation:systematic}, the most immediate optimization idea is to exploit it at the single-query level: because subexpressions recur, the database can cache \emph{cardinality estimates} for plan-critical joins, improving the optimizer's plan selection on subsequent queries that touch the same subexpressions. This is the mechanism underlying several recent learning-based cardinality estimation systems~\cite{han2022cardeval,negi2021flowloss,lee2023dutt}\TODO{verify Lee/Dutt cite}.
+
+We investigated this approach as our initial direction. We implemented cardinality feedback on PostgreSQL over IMDB/JOB, caching true cardinalities for recurring subexpressions and feeding them to the planner via \texttt{pg\_hint\_plan}-style hint injection. Across a representative workload derived from agent sessions, we measured both q-error (cardinality estimation accuracy) and end-to-end query latency, before and after feedback.
+
+The result confirms and extends prior findings~\cite{han2022cardeval,negi2021flowloss}: improvements in q-error do not translate into proportionate improvements in query latency. Our measurements show \TODO{X}$\times$ q-error reduction on cache-hit queries but only \TODO{Y}\% median latency improvement, with a long tail of queries in which corrected cardinalities produced \emph{worse} plans. \TODO{one-paragraph empirical detail with specific numbers from PoC} The mechanism by which cardinality errors propagate to bad plans turns out to be highly structural: most plan-critical errors occur at deep join positions where the planner has few alternative shapes to consider, and where even large cardinality corrections leave the planner's preferred shape unchanged.
+
+This is not a novel finding in isolation---it replicates results from the cardinality-estimation literature~\cite{han2022cardeval}. Its role in Concord's design is different: it establishes that the \emph{point-query} opportunity is limited, which in turn forces the optimization story to the session level. If per-query optimization delivered the expected returns, there would be no need for a session-level protocol.
+
+\subsection{The Pivot: Cross-Query Structure}
+\label{sec:motivation:pivot}
+
+The conjunction of Sections~\ref{sec:motivation:systematic} and~\ref{sec:motivation:cardfeedback} identifies the research opportunity. Agents expose session-level regularity; single-query optimization cannot convert that regularity into end-to-end speedup; therefore the mechanism must operate at the session level, exploiting structure \emph{across} queries rather than within them.
+
+Three observations guide the protocol design:
+
+First, the regularity is \emph{subexpression-level}, not query-level. Agents do not typically issue identical queries twice; they issue queries that share a join-and-filter \emph{base}, then vary the aggregation or group-by over that base. The unit of reuse is thus the intermediate relation, not the final result.
+
+Second, agents emit reuse signals voluntarily when prompted. Our empirical finding that \adoptionRate of sessions produce faithful \texttt{WILL\_SAVE} declarations with no explicit reward for doing so suggests that the cost of eliciting declared intent is low---it is a prompting change, not a capability change.
+
+Third, agents plan multiple queries ahead. The chain-of-thought that precedes query emission frequently enumerates the next several queries before executing any of them. A protocol that captures this enumeration as an explicit declaration enables multi-query optimization with a signal not available to observation-based schedulers: the agent's declared \emph{diff clauses} between lookahead queries identify exactly which dimensions will vary.
+
+These three observations map directly onto the three mechanisms of Section~\ref{sec:protocol}: declared reuse (M1), declared lookahead with diff clauses (M2), and physical tuning from declared access patterns (M3).

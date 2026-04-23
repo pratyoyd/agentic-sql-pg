@@ -1,0 +1,260 @@
+%% =============================================================
+%% References for Concord
+%% Entries marked "% VERIFY" should have their bibtex details
+%% double-checked against DBLP or the original paper before
+%% submission. Authors, years, and venues for these are LLM-
+%% drafted and may be slightly off.
+%% =============================================================
+
+%% ---- Materialized views and recycling -----------------------
+
+% VERIFY
+@article{halevy2001mv,
+  author = {Alon Y. Halevy},
+  title = {Answering queries using views: A survey},
+  journal = {The VLDB Journal},
+  volume = {10},
+  number = {4},
+  pages = {270--294},
+  year = {2001}
+}
+
+% VERIFY
+@inproceedings{goldstein2001mv,
+  author = {Jonathan Goldstein and Per-{\AA}ke Larson},
+  title = {Optimizing queries using materialized views: A practical, scalable solution},
+  booktitle = {SIGMOD},
+  year = {2001}
+}
+
+% VERIFY
+@article{gupta1995mvmaint,
+  author = {Ashish Gupta and Inderpal Singh Mumick},
+  title = {Maintenance of materialized views: Problems, techniques, and applications},
+  journal = {IEEE Data Engineering Bulletin},
+  year = {1995}
+}
+
+% VERIFY  -- pretty sure this exists in SIGMOD '10 by Ivanova et al., MonetDB recycler
+@inproceedings{ivanova2010recycler,
+  author = {Milena G. Ivanova and Martin L. Kersten and Niels J. Nes and Romulo A. P. Gon{\c{c}}alves},
+  title = {An architecture for recycling intermediates in a column-store},
+  booktitle = {SIGMOD},
+  year = {2010}
+}
+
+% VERIFY
+@inproceedings{nagel2013recycling,
+  author = {Fabian Nagel and Peter A. Boncz and Stratis D. Viglas},
+  title = {Recycling in pipelined query evaluation},
+  booktitle = {ICDE},
+  year = {2013}
+}
+
+% VERIFY
+@inproceedings{phan2008predictableperf,
+  author = {Tsz-Wo Phan and Per-{\AA}ke Larson},
+  title = {Predictable performance for unpredictable workloads},
+  booktitle = {VLDB},
+  year = {2008}
+}
+
+%% ---- Multi-query optimization -------------------------------
+
+@article{sellis1988mqo,
+  author = {Timos K. Sellis},
+  title = {Multiple-Query Optimization},
+  journal = {ACM Transactions on Database Systems},
+  volume = {13},
+  number = {1},
+  pages = {23--52},
+  year = {1988}
+}
+
+% VERIFY
+@inproceedings{roy2000mqo,
+  author = {Prasan Roy and S. Seshadri and S. Sudarshan and Siddhesh Bhobe},
+  title = {Efficient and extensible algorithms for multi query optimization},
+  booktitle = {SIGMOD},
+  year = {2000}
+}
+
+% VERIFY
+@inproceedings{dalvi2001pipelined,
+  author = {Nilesh N. Dalvi and Sumit K. Sanghai and Prasan Roy and S. Sudarshan},
+  title = {Pipelining in multi-query optimization},
+  booktitle = {PODS},
+  year = {2001}
+}
+
+% VERIFY -- placeholder for an online MQO paper; check latest
+@inproceedings{silva2012onlinemqo,
+  author = {\TODO{authors}},
+  title = {\TODO{Online multi-query optimization title}},
+  booktitle = {\TODO{venue}},
+  year = {2012}
+}
+
+% VERIFY
+@inproceedings{mqo2020revisit,
+  author = {\TODO{authors}},
+  title = {\TODO{recent MQO revisit paper}},
+  booktitle = {\TODO{SIGMOD or VLDB, 2020s}},
+  year = {2020}
+}
+
+%% ---- Adaptive indexing / cracking ---------------------------
+
+@inproceedings{idreos2007cracking,
+  author = {Stratos Idreos and Martin L. Kersten and Stefan Manegold},
+  title = {Database cracking},
+  booktitle = {CIDR},
+  year = {2007}
+}
+
+% VERIFY
+@inproceedings{idreos2011crackingupdates,
+  author = {Stratos Idreos and Martin L. Kersten and Stefan Manegold},
+  title = {Updating a cracked database},
+  booktitle = {SIGMOD},
+  year = {2007}
+}
+
+% VERIFY
+@inproceedings{petraki2015holistic,
+  author = {Eleni Petraki and Stratos Idreos and Stefan Manegold},
+  title = {Holistic indexing in main-memory column-stores},
+  booktitle = {SIGMOD},
+  year = {2015}
+}
+
+% VERIFY
+@inproceedings{graefe2010softindex,
+  author = {Goetz Graefe and Harumi Kuno},
+  title = {Self-selecting, self-tuning, incrementally optimized indexes},
+  booktitle = {EDBT},
+  year = {2010}
+}
+
+% VERIFY
+@inproceedings{graefe2010adaptivemerge,
+  author = {Goetz Graefe and Harumi Kuno},
+  title = {Adaptive indexing for relational keys},
+  booktitle = {SMDB/ICDE Workshop},
+  year = {2010}
+}
+
+%% ---- Cardinality estimation (negative result) ---------------
+
+% VERIFY -- this one is well-known; check exact authors and venue
+@article{han2022cardeval,
+  author = {Yuxing Han and Ziniu Wu and Peizhi Wu and others},
+  title = {Cardinality estimation in DBMS: A comprehensive benchmark evaluation},
+  journal = {PVLDB},
+  volume = {15},
+  number = {4},
+  pages = {752--765},
+  year = {2021}
+}
+
+% VERIFY
+@inproceedings{negi2021flowloss,
+  author = {Parimarjan Negi and Ryan Marcus and Andreas Kipf and Hongzi Mao and Nesime Tatbul and Tim Kraska and Mohammad Alizadeh},
+  title = {Flow-loss: Learning cardinality estimates that matter},
+  booktitle = {VLDB},
+  year = {2021}
+}
+
+% VERIFY -- user mentioned "Lee/Dutt 2023"; confirm actual cite
+@article{lee2023dutt,
+  author = {\TODO{Lee and Dutt et al.}},
+  title = {\TODO{title on cardinality feedback / plan quality decoupling}},
+  journal = {\TODO{venue}},
+  year = {2023}
+}
+
+%% ---- Automated Data Exploration (Milo group and related) ---
+
+@inproceedings{linx2025,
+  author = {Tavor Lipman and Tova Milo and Amit Somech and Tomer Wolfson and Oz Zafar},
+  title = {{LINX}: A Language Driven Generative System for Goal-Oriented Automated Data Exploration},
+  booktitle = {EDBT},
+  pages = {270--283},
+  year = {2025}
+}
+
+@inproceedings{atena2020,
+  author = {Ori Bar El and Tova Milo and Amit Somech},
+  title = {Automatically Generating Data Exploration Sessions Using Deep Reinforcement Learning},
+  booktitle = {SIGMOD},
+  pages = {1527--1537},
+  year = {2020}
+}
+
+@inproceedings{atenapro2023,
+  author = {Tavor Lipman and Tova Milo and Amit Somech},
+  title = {{ATENA-PRO}: Generating Personalized Exploration Notebooks with Constrained Reinforcement Learning},
+  booktitle = {SIGMOD Companion},
+  pages = {167--170},
+  year = {2023}
+}
+
+% VERIFY -- REACT / next-step-recommendation paper; the Milo-Somech line
+% also appears in SIGMOD Record 2018 and ICDE 2018 demo form. Cross-check
+% the canonical cite before submission.
+@article{react2018,
+  author = {Tova Milo and Amit Somech},
+  title = {Next-Step Suggestions for Modern Interactive Data Analysis Platforms},
+  journal = {\TODO{SIGMOD Record or KDD 2018; verify}},
+  year = {2018}
+}
+
+%% ---- Text-to-SQL and agent benchmarks -----------------------
+
+% VERIFY
+@inproceedings{spider2018,
+  author = {Tao Yu and Rui Zhang and Kai Yang and Michihiro Yasunaga and Dongxu Wang and Zifan Li and James Ma and Irene Li and Qingning Yao and Shanelle Roman and Zilin Zhang and Dragomir R. Radev},
+  title = {Spider: A large-scale human-labeled dataset for complex and cross-domain semantic parsing and text-to-SQL task},
+  booktitle = {EMNLP},
+  year = {2018}
+}
+
+% VERIFY
+@inproceedings{bird2023,
+  author = {Jinyang Li and Binyuan Hui and Ge Qu and Jiaxi Yang and Binhua Li and Bowen Li and Bailin Wang and Bowen Qin and Ruiying Geng and Nan Huo and others},
+  title = {Can {LLM} already serve as a database interface? {A} big bench for large-scale database grounded text-to-{SQL}s},
+  booktitle = {NeurIPS},
+  year = {2023}
+}
+
+% VERIFY
+@misc{spider2_2024,
+  author = {\TODO{Spider 2.0 authors}},
+  title = {Spider 2.0},
+  year = {2024},
+  note = {\TODO{check venue/url}}
+}
+
+% VERIFY
+@misc{insightbench2024,
+  author = {\TODO{InsightBench authors}},
+  title = {InsightBench},
+  year = {2024},
+  note = {\TODO{check venue/url}}
+}
+
+% VERIFY
+@misc{dabbench2024,
+  author = {\TODO{DAB benchmark authors}},
+  title = {\TODO{DAB benchmark full title}},
+  year = {2024},
+  note = {\TODO{venue/url}}
+}
+
+% VERIFY
+@misc{dbgpt2023,
+  author = {\TODO{authors}},
+  title = {DB-GPT},
+  year = {2023},
+  note = {\TODO{venue/url}}
+}

@@ -1,0 +1,19 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\TODO{Draft last. Candidate threads:}
+
+\subsection{Failure Modes}
+\TODO{iteration-on-base pattern (documented in IMDB); adversarial / unfaithful declarations; workloads without reuse structure}
+
+\subsection{Generalization Beyond PostgreSQL}
+\TODO{The protocol is SQL-level. What would it take to port to DuckDB, Snowflake, BigQuery? What breaks?}
+
+\subsection{Transparent Query Rewriting (Future Work)}
+\TODO{The M3-as-originally-scoped ``transparent rewriting'' idea --- detecting reuse opportunities the agent did not declare and rewriting queries behind the agent's back --- is deferred as future work. Briefly motivate why the current paper stops at declared intent.}
+
+\subsection{Data Staleness and Long Sessions}
+\TODO{workspace assumes stable underlying data; sessions that span updates need invalidation; briefly discuss what that would look like}
+
+\subsection{Protocol in a World of Stronger Agents}
+\TODO{as agents become better SQL writers, does the protocol become less valuable or more? Argument: more, because better agents declare more faithfully.}
